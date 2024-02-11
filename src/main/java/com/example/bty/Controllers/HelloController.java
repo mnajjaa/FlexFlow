@@ -1,4 +1,4 @@
-package com.example.bty;
+package com.example.bty.Controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

@@ -8,4 +8,6 @@ module com.example.bty {
 
     opens com.example.bty to javafx.fxml;
     exports com.example.bty;
+    exports com.example.bty.Controllers;
+    opens com.example.bty.Controllers to javafx.fxml;
 }
