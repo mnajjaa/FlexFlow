@@ -1,0 +1,97 @@
+package com.example.bty.Entities;
+
+
+
+public class User {
+
+   private int id;
+   private String name;
+   private String email;
+   private String password ;
+   private String telephone ;
+   private Role role;
+
+
+
+
+
+
+    public User(int id, String name, String email, String password,String telephone,Role role) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.telephone=telephone;
+        this.role=role;
+
+    }
+
+    public User() {
+    }
+
+    public User(String name, String email, String password,Role role) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.role=role;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", telephone='" + telephone + '\'' +
+                ", role=" + role +
+                '}';
+    }
+
+    public Role getRole() {
+        return  role;
+    }
+    public String getTelephone() {
+        return telephone;
+    }
+}
