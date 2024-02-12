@@ -10,7 +10,7 @@ public class Cours {
     String objectif;
     boolean etat;
     int nbr_participant;
-// babahaah
+
     User coach;
 
     public Cours() {
@@ -96,15 +96,15 @@ public class Cours {
         this.coach = coach;
     }
 
-    public Cours(String nom, String duree, String intensite, String cible, String categorie, String objectif, boolean etat, int nbr_participant, User coach) {
+    public Cours(String nom, String duree, String intensite, String cible, String categorie, String objectif,  int nbr_participant,boolean etat) {
         this.nom = nom;
         this.duree = duree;
         this.intensite = intensite;
         this.cible = cible;
         this.categorie = categorie;
         this.objectif = objectif;
-        this.etat = etat;
         this.nbr_participant = nbr_participant;
+        this.etat = etat;
         this.coach = coach;
     }
 
