@@ -1,39 +1,33 @@
 package com.example.bty.Entities;
 
 public class Produit {
-int id;
-String nom;
-String description;
-float prix;
-String type;
-int quantite;
 
-    public Produit() {
-    }
+    private int idProduit;
+    private String nom;
+    private String Description;
+    private double Prix;
+    private String Type;
+    private int Quantite;
 
-    public Produit(int id, String nom, String description, float prix, String type, int quantite) {
-        this.id = id;
+    private int quantiteVendues;
+
+    public Produit (){}
+    public Produit(int idProduit,String nom, String description, double prix, String type, int quantite , int quantiteVendues) {
+        this.idProduit = idProduit ;
         this.nom = nom;
-        this.description = description;
-        this.prix = prix;
-        this.type = type;
-        this.quantite = quantite;
+        Description = description;
+        Prix = prix;
+        Type = type;
+        Quantite = quantite;
+        this.quantiteVendues = quantiteVendues;
     }
 
-    public Produit(String nom, String description, float prix, String type, int quantite) {
-        this.nom = nom;
-        this.description = description;
-        this.prix = prix;
-        this.type = type;
-        this.quantite = quantite;
+    public int getIdProduit() {
+        return idProduit;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+    public void setIdProduit(int idProduit) {
+        this.idProduit = idProduit;
     }
 
     public String getNom() {
@@ -45,46 +39,55 @@ int quantite;
     }
 
     public String getDescription() {
-        return description;
+        return Description;
     }
 
     public void setDescription(String description) {
-        this.description = description;
+        Description = description;
     }
 
-    public float getPrix() {
-        return prix;
+    public double getPrix() {
+        return Prix;
     }
 
-    public void setPrix(float prix) {
-        this.prix = prix;
+    public void setPrix(double prix) {
+        Prix = prix;
     }
 
     public String getType() {
-        return type;
+        return Type;
     }
 
     public void setType(String type) {
-        this.type = type;
+        Type = type;
     }
 
     public int getQuantite() {
-        return quantite;
+        return Quantite;
     }
 
     public void setQuantite(int quantite) {
-        this.quantite = quantite;
+        Quantite = quantite;
+    }
+
+    public int getQuantiteVendues() {
+        return quantiteVendues;
+    }
+
+    public void setQuantiteVendues(int quantiteVendues) {
+        this.quantiteVendues = quantiteVendues;
     }
 
     @Override
     public String toString() {
         return "Produit{" +
-                "id=" + id +
+                "idProduit=" + idProduit +
                 ", nom='" + nom + '\'' +
-                ", description='" + description + '\'' +
-                ", prix=" + prix +
-                ", type='" + type + '\'' +
-                ", quantite=" + quantite +
+                ", Description='" + Description + '\'' +
+                ", Prix=" + Prix +
+                ", Type='" + Type + '\'' +
+                ", Quantite=" + Quantite +
+                ", quantiteVendues=" + quantiteVendues +
                 '}';
     }
 }
