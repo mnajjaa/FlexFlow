@@ -10,7 +10,7 @@ public class Cours {
     String objectif;
     boolean etat;
     int nbr_participant;
-
+// babahaah
     User coach;
 
     public Cours() {
