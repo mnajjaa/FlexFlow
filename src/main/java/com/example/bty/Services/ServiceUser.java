@@ -16,14 +16,16 @@ public class ServiceUser implements IServiceUser{
     Connection cnx = ConnexionDB.getInstance().getConnexion();
     @Override
     public void register(User u) {
-        String req = "INSERT INTO `user` (`name`,`email`, `password`,`role`,`telephone`) VALUE (?,?,?,?,?)";
+        String req = "INSERT INTO `user` (`nom`,`email`, `password`,`telephone`,`role`) VALUE (?,?,?,?,?)";
         try {
             pste = cnx.prepareStatement(req);
             pste.setString(1, u.getName());
             pste.setString(2, u.getEmail());
             pste.setString(3, BCrypt.hashpw(u.getPassword(), BCrypt.gensalt()));
-            pste.setString(4,u.getRole().toString());
-            pste.setString(5,u.getTelephone());
+            pste.setString(4,u.getTelephone());
+            pste.setString(5,u.getRole().toString());
+
+
             pste.executeUpdate();
             System.out.println("utilisateur créée");
         } catch (SQLException ex) {
@@ -49,8 +51,8 @@ public class ServiceUser implements IServiceUser{
         return false;
     }
     @Override
-    public boolean Authentification(String email,String password) {
-        boolean status = false;
+    public int Authentification(String email,String password) {
+        int status = 0;
         try {
             String req = "select * from user where email=? ";
 
@@ -59,19 +61,75 @@ public class ServiceUser implements IServiceUser{
 
             ResultSet rs = pste.executeQuery();
 
-            while (rs.next()) {
+            while (rs.next()) //l9a une ligne fi wosset lbase de donnee
+            {
                 //User u = this.findByEmail(email);
-                Role userRole = Role.ADMIN;
-                User u =new User(rs.getInt("id"),rs.getString("name"),rs.getString("email"),rs.getString("password"),rs.getString("telephone"),userRole);
-                Session s=Session.getInstance();
-                s.setLoggedInUser(u);
-                status = BCrypt.checkpw(password, rs.getString("password"));
+                if(rs.getString("etat").equals("0"))
+                {
+
+                    return 2 ;
+                }
+                //explain : f session bch y7ott le vrai role du user connecté khater 9bal ken y7ott role.admin meme si
+                // user connecté est un coach ou un membre
+
+
+               if( BCrypt.checkpw(password, rs.getString("password"))) {
+                   //if logged in successfully yemchy yasnaalou session w y7ottou fiha les informations mte3ou
+
+                   Role userRole = Role.valueOf(rs.getString("role"));
+                   User u =new User(rs.getInt("id"),rs.getString("nom"),rs.getString("email"),rs.getString("password"),rs.getString("telephone"),userRole);
+
+                   Session s=Session.getInstance();
+                   s.setLoggedInUser(u);
+                   System.out.println("The connected is "+s.getLoggedInUser().getRole());
+                   return 1;
+               }
 
             }
         } catch (Exception ex) {
         }
         return status;
     }
+
+    //Activer ou bdesactiver un membre
+    @Override
+    public void ActiverOrDesactiver(int id) {
+        Session s=Session.getInstance();
+        User u = s.getLoggedInUser();
+        if(u.getRole() != Role.ADMIN)
+        {
+            System.out.println("You are not allowed to perform this action");
+            return;
+        }
+
+
+        String req = "UPDATE user SET etat =!etat  WHERE id = ?";
+        try {
+            pste = cnx.prepareStatement(req);
+            pste.setInt(1, id);
+            pste.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(ServiceUser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Override
+    public void update(User user) {
+        String req = "UPDATE user SET nom = ?, email = ?, password = ?, telephone = ? WHERE id = ?";
+        try {
+            pste = cnx.prepareStatement(req);
+            pste.setString(1, user.getName());
+            pste.setString(2, user.getEmail());
+            pste.setString(3, user.getPassword());
+            pste.setString(4, user.getTelephone());
+            pste.setInt(5, user.getId());
+            pste.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(ServiceUser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+
     public User findByEmail(String email) throws SQLException {
         User U = new User();
         String req = "SELECT * FROM user WHERE email = ?";

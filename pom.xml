@@ -59,11 +59,11 @@
                 <artifactId>jbcrypt</artifactId>
                 <version>0.4</version>
             </dependency>
-            <dependency>
-                <groupId>mysql</groupId>
-                <artifactId>mysql-connector-java</artifactId>
-                <version>8.0.28</version> <!-- Version la plus récente au moment de la rédaction -->
-            </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.33</version>
+        </dependency>
 
 
     </dependencies>

@@ -1,5 +1,7 @@
 package com.example.bty;
 
+import com.example.bty.Entities.Role;
+import com.example.bty.Entities.User;
 import com.example.bty.Services.IServiceUser;
 import com.example.bty.Services.ServiceUser;
 import com.example.bty.Utils.Session;
@@ -22,32 +24,42 @@ public class HelloApplication extends Application {
 
     public static void main(String[] args) {
         IServiceUser serviceUser = new ServiceUser();
+        Role userRole = Role.COACH;
 
-        //User u=new User("dali","dali.trabelsi@gmail.com","dali1234");
-        //serviceUser.register(u);
-        // User u=new User("dali","dali.trabelsi123@gmail.com","dali1234");
-        /*if(serviceUser.emailExists(u.getEmail()))
+        User u=new User("coach1","coach1@gmail.com","ibtihel1234","12345678",userRole);
+
+         //User u=new User("ibtihel","ibtihel.mnaja123@gmail.com","ibtihel1234");
+    /* if(serviceUser.emailExists(u.getEmail()))
         {
             System.out.println("User already exist");
         }
         else
-            serviceUser.register(u);
+            serviceUser.register(u);*/
 
-*/
-        if (serviceUser.Authentification("dali.trabelsi123@gmail.com", "dali1234"))
-        {
-            System.out.println("Authentification réussie");
+        int status = serviceUser.Authentification("coach1@gmail.com", "ibtihel1234");
+      switch (status) {
+            case 0:
+                System.out.println("Invalid user credentials");
+                break;
+            case 1:
+                System.out.println("Logged in successfully");
+                break;
+            case 2:
+                System.out.println("User is desactiver");
+                break;
         }
-        else
-            System.out.println("Email or Password are Invalid");
 
         Session s=Session.getInstance();
         System.out.println(s.getLoggedInUser());
-        // s.logout();
+         //s.logout();
         //System.out.println(s.getLoggedInUser());
-        //serviceUser.Authentification("dali.trabelsi123@gmail.com", "dali1234");
-        // System.out.println(s.getLoggedInUser());
+        //serviceUser.Authentification("ibtihel.mnaja123@gmail.com", "ibtihel1234");
+         //System.out.println(s.getLoggedInUser());
 
 
+
+        //tester la methode ActiverOrDesactiver
+
+        serviceUser.ActiverOrDesactiver(2);
     }
 }
