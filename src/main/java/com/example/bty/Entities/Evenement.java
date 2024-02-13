@@ -118,6 +118,10 @@ public class Evenement {
                 "id=" + id +
                 ", date=" + date +
                 ", nbre_place=" + nbre_place +
+<<<<<<< HEAD
+=======
+               // ", moderateur='" + moderateur + '\'' +
+>>>>>>> f7fb0c7bbbe079a56b169ffbe6c86a7f711aad24
                 ", categorie='" + categorie + '\'' +
                 ", objectif='" + objectif + '\'' +
                 ", coach=" + coach +
