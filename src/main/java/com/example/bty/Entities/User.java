@@ -29,10 +29,11 @@ public class User {
     public User() {
     }
 
-    public User(String name, String email, String password,Role role) {
+    public User(String name, String email, String password, String number, Role role) {
         this.name = name;
         this.email = email;
         this.password = password;
+        this.telephone=number;
         this.role=role;
     }
 

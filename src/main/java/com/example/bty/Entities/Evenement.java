@@ -1,38 +1,47 @@
 package com.example.bty.Entities;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class Evenement {
     int id;
     String nom;
-    Date date;
+    Timestamp date;
     int nbre_place;
-    String moderateur;
     String categorie;
     String objectif;
     User coach;
     boolean etat;
 
-    public Evenement() {
+    public Evenement(String nom, Timestamp date, int nbre_place, String categorie, String objectif,User coach,Boolean etat) {
+        this.nom = nom;
+        this.date = date;
+        this.nbre_place = nbre_place;
+        this.categorie = categorie;
+        this.objectif = objectif;
+        this.coach = coach;
+        this.etat=etat;
+
     }
 
-    public Evenement(int id, String nom,Date date, int nbre_place, String moderateur, String categorie, String objectif, User coach, boolean etat) {
+    public Evenement(int id, String nom, Timestamp date, int nbre_place,  String categorie, String objectif, User coach, boolean etat) {
         this.id = id;
         this.nom = nom;
         this.date = date;
         this.nbre_place = nbre_place;
-        this.moderateur = moderateur;
+
         this.categorie = categorie;
         this.objectif = objectif;
         this.coach = coach;
         this.etat = etat;
     }
 
-    public Evenement(String nom,Date date, int nbre_place, String moderateur, String categorie, String objectif, User coach, boolean etat) {
+    public Evenement( String nom,Timestamp date, int nbre_place,  String categorie, String objectif, User coach, boolean etat) {
+
         this.nom = nom;
         this.date = date;
         this.nbre_place = nbre_place;
-        this.moderateur = moderateur;
+
         this.categorie = categorie;
         this.objectif = objectif;
         this.coach = coach;
@@ -53,11 +62,11 @@ public class Evenement {
         this.nom = nom;
     }
 
-    public Date getDate() {
+    public Timestamp getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(Timestamp date) {
         this.date = date;
     }
 
@@ -69,13 +78,7 @@ public class Evenement {
         this.nbre_place = nbre_place;
     }
 
-    public String getModerateur() {
-        return moderateur;
-    }
 
-    public void setModerateur(String moderateur) {
-        this.moderateur = moderateur;
-    }
 
     public String getCategorie() {
         return categorie;
@@ -115,7 +118,6 @@ public class Evenement {
                 "id=" + id +
                 ", date=" + date +
                 ", nbre_place=" + nbre_place +
-                ", moderateur='" + moderateur + '\'' +
                 ", categorie='" + categorie + '\'' +
                 ", objectif='" + objectif + '\'' +
                 ", coach=" + coach +
