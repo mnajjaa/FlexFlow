@@ -121,6 +121,7 @@ public class HelloApplication extends Application {
                     ", categorie='" + event.getCategorie() +
                     "', objectif='" + event.getObjectif() +
                     "', coach=" + event.getCoach().getId() +
+                            "', nom coach=" + event.getCoach().getName()+
                     ", etat=" + event.isEtat() + "}");
         }
 

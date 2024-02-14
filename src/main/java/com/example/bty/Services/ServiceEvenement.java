@@ -68,16 +68,13 @@ Boolean etat=true;
     }
 
 
-    // Méthode pour consulter tous les événements
+
     public List<Evenement> consulterEvenements() {
         List<Evenement> evenements = new ArrayList<>();
-
         String query = "SELECT * FROM evenement";
-
         try (Connection connection = ConnexionDB.getInstance().getConnexion();
-             PreparedStatement preparedStatement = connection.prepareStatement(query);
-             ResultSet resultSet = preparedStatement.executeQuery()) {
-
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
             while (resultSet.next()) {
                 Evenement E = new Evenement();
                 E.setId(resultSet.getInt("id_evenement"));
@@ -86,19 +83,30 @@ Boolean etat=true;
                 E.setNbre_place(resultSet.getInt("nbrPlace"));
                 E.setCategorie(resultSet.getString("categorie"));
                 E.setObjectif(resultSet.getString("Objectif"));
+                int coachId = resultSet.getInt("id_user");
 
+                // Récupérer le nom du coach à partir de la base de données
+                String coachName = null;
+                try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT nom FROM user WHERE id = ?")) {
+                    preparedStatement.setInt(1, coachId);
+                    try (ResultSet coachResultSet = preparedStatement.executeQuery()) {
+                        if (coachResultSet.next()) {
+                            coachName = coachResultSet.getString("nom");
+                        }
+                    }
+                }
+
+                // Créer un objet User pour le coach
                 User coach = new User();
-                coach.setId(resultSet.getInt("id_user"));
+                coach.setId(coachId);
+                coach.setName(coachName);
                 E.setCoach(coach);
-
-                E.setEtat(resultSet.getBoolean("etat"));
 
                 evenements.add(E);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return evenements;
     }
 
