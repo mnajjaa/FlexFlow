@@ -5,6 +5,7 @@ public class Participation {
     User user;
     Cours cours;
 
+
     public Participation() {
     }
 
@@ -12,11 +13,13 @@ public class Participation {
         this.id = id;
         this.user = user;
         this.cours = cours;
+
     }
 
     public Participation(User user, Cours cours) {
         this.user = user;
         this.cours = cours;
+
     }
 
     public int getId() {
