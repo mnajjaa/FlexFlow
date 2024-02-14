@@ -24,7 +24,10 @@ public class Evenement {
 
     }
 
-    public Evenement(int id, String nom, Timestamp date, int nbre_place,  String categorie, String objectif, User coach, boolean etat) {
+    public Evenement() {
+    }
+
+    public Evenement(int id, String nom, Timestamp date, int nbre_place, String categorie, String objectif, User coach, boolean etat) {
         this.id = id;
         this.nom = nom;
         this.date = date;
@@ -118,10 +121,8 @@ public class Evenement {
                 "id=" + id +
                 ", date=" + date +
                 ", nbre_place=" + nbre_place +
-<<<<<<< HEAD
-=======
+
                // ", moderateur='" + moderateur + '\'' +
->>>>>>> f7fb0c7bbbe079a56b169ffbe6c86a7f711aad24
                 ", categorie='" + categorie + '\'' +
                 ", objectif='" + objectif + '\'' +
                 ", coach=" + coach +

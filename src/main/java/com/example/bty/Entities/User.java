@@ -34,21 +34,22 @@ public class User {
     public User() {
     }
 
-<<<<<<< HEAD
-    public User(String name, String email, String password, String number, Role role) {
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.telephone=number;
-=======
+
+//    public User(String name, String email, String password, String number, Role role) {
+//        this.name = name;
+//        this.email = email;
+//        this.password = password;
+//        this.telephone = number;
+//    }
     public User(String name, String email, String password,String telephone,Role role) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.telephone = telephone;
->>>>>>> f7fb0c7bbbe079a56b169ffbe6c86a7f711aad24
+
         this.role=role;
-        this.etat=etat;
+
+
     }
 
     public int getId() {
