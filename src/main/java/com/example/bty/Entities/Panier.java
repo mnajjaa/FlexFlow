@@ -30,7 +30,7 @@ public class Panier {
         }
     }
 
-    public void afficherPanier(boolean confirmerAchat, ServiceProduit produitDAO) {
+    public void afficherPanier(boolean confirmerAchat, ServiceProduit produitDAO,User user) {
         double montantTotal = 0.0;
         Scanner scanner = new Scanner(System.in);
 
@@ -56,12 +56,7 @@ public class Panier {
 
             if (confirmation) {
 
-              /*  Commande nouvelleCommande = new Commande();
-                nouvelleCommande.setDateCommande(new Date(System.currentTimeMillis()));
-                nouvelleCommande.setMontantTotal((float) montantTotal);
 
-                // Ajouter la commande à la base de données
-                commandeDAO.ajouterCommande(nouvelleCommande);*/
 
                 // Mettre à jour la base de données après confirmation d'achat
                 for (Map.Entry<Produit, Integer> entry : produitsDansPanier.entrySet()) {
@@ -69,10 +64,9 @@ public class Panier {
                     int quantiteAchete = entry.getValue();
                     produitDAO.mettreAJourQuantiteVendueEtTotale(produit, quantiteAchete);
                 }
-                ajouterCommande(produitDAO);
+                ajouterCommande(produitDAO,user);
 
-                // Afficher la quantité totale après l'achat
-                //System.out.println("Quantité totale après l'achat : " + produitDAO.obtenirQuantiteTotale());
+
                 System.out.println("Achat confirmé. Merci !");
             } else {
                 System.out.println("Achat annulé. Confirmez votre achat s'il vous plaît.");
@@ -90,19 +84,20 @@ public class Panier {
 
 
 
-    private void ajouterCommande(ServiceProduit produitDAO) {
+    private void ajouterCommande(ServiceProduit produitDAO,User user) {
         // Obtenez la date actuelle
 
 
         // Calculez le montant total
         double montantTotal = calculerMontantTotal();
-        Integer id_user = 1;
+
+
 
         java.util.Date dateCommande = new java.util.Date();
         Timestamp timestamp = new Timestamp(dateCommande.getTime());
 
         // Ajoutez la commande à la base de données en utilisant votre méthode appropriée
-        produitDAO.ajouterCommande(timestamp, montantTotal,id_user);
+        produitDAO.ajouterCommande(timestamp, user, produitsDansPanier);
     }
 
     // Ajouter une méthode pour calculer le montant total du panier

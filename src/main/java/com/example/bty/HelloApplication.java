@@ -34,17 +34,18 @@ public class HelloApplication extends Application {
 //Module Gestion de produits
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        Produit p1 = new Produit(3,"T-shirt", "T-shirt de sport", 20, "Vetement", 50,0);
-        Produit p2 = new Produit(4,"proteine", "protiene gym", 220, "proteine", 15,0);
-        Produit p3 = new Produit(7,"shaker", "shaker pour melange proteine", 15, "accessoires", 5,0);
-        Produit p4 = new Produit(8,"gons", "gons pour sport", 45, "accessoires", 4,0);
+        Produit p1 = new Produit(3,"T-shirt", "T-shirt de sport", 20, "Vetement", 50);
+        Produit p2 = new Produit(4,"proteine", "protiene gym", 220, "proteine", 15);
+        Produit p3 = new Produit(7,"shaker", "shaker pour melange proteine", 15, "accessoires", 5);
+        Produit p4 = new Produit(8,"gons", "gons pour sport", 45, "accessoires", 4);
+        Produit p5 = new Produit(18,"sneackers", "sneackers", 45, "Vetement", 40);
 
 
-
-
+         Role userRole = Role.MEMBRE;
+        User u=new User(2,"houssine","houssine@gmail.com","houssine1234","12345678",userRole);
 
         ServiceProduit ps = new ServiceProduit();
-
+       //ps.ajouterProduit(p5);
 
      /*   ps.ajouterProduit(p1);
         ps.ajouterProduit(p2);
@@ -76,7 +77,7 @@ public class HelloApplication extends Application {
 
 
 
-     /*   private static void afficherListeProduits(List<Produit> produits) {
+    /*    private static void afficherListeProduits(List<Produit> produits) {
             for (Produit produit : produits) {
                 System.out.println("ID: " + produit.getIdProduit() +
                         ", Nom: " + produit.getNom() +
@@ -102,14 +103,14 @@ public class HelloApplication extends Application {
         ps.afficherColonnesProduit();
 
         // Ajouter des produits au panier
-        Produit produit1 = produitsDisponibles.get(2);
-        panier.ajouterAuPanier(produit1, 3);
+        Produit produit1 = produitsDisponibles.get(4);
+        panier.ajouterAuPanier(produit1, 1);
 
-       /* Produit produit2 = produitsDisponibles.get(2);
-        panier.ajouterAuPanier(produit2, 4);*/
+        Produit produit2 = produitsDisponibles.get(1);
+        panier.ajouterAuPanier(produit2, 2);
 
         // Afficher le panier
-        panier.afficherPanier(true,ps);
+        panier.afficherPanier(true,ps,u);
 
 
 
@@ -130,7 +131,6 @@ public class HelloApplication extends Application {
 
 
 
-
       //  ps.afficherStatistiquesVentes();
 
 
@@ -143,7 +143,7 @@ public class HelloApplication extends Application {
         }*/
 
 
-
+/*
 
         // Afficher le meilleur vendeur
         Produit meilleurVendeur = ps.obtenirMeilleurVendeur();
@@ -155,7 +155,7 @@ public class HelloApplication extends Application {
         System.out.println("Chiffre d'affaires total : " + chiffreAffairesTotal + " DNT");
 
 
-
+*/
 
     }
 

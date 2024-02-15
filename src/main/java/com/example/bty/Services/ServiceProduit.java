@@ -1,10 +1,12 @@
 package com.example.bty.Services;
 import com.example.bty.Entities.Commande;
 import com.example.bty.Entities.Produit;
+import com.example.bty.Entities.User;
 import com.example.bty.Utils.ConnexionDB;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ServiceProduit {
     private Connection connexion;
@@ -16,9 +18,10 @@ public class ServiceProduit {
 
 
     public void ajouterProduit(Produit produit) {
+        Integer quantiteV = 0;
 
         //try (Connection connection = DataSource.obtenirConnexion())
-        String query = "INSERT INTO produit (idProduit,nom, description, prix, type, quantite, quantiteVendues) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO produit (idProduit,nom, description, prix, type, quantite,quantiteVendues) VALUES (?, ?, ?, ?, ?, ? ,?)";
         try (PreparedStatement statement = connexion.prepareStatement(query)) {
             statement.setInt(1, produit.getIdProduit());
             statement.setString(2, produit.getNom());
@@ -26,7 +29,8 @@ public class ServiceProduit {
             statement.setDouble(4, produit.getPrix());
             statement.setString(5, produit.getType());
             statement.setInt(6, produit.getQuantite());
-            statement.setInt(7, produit.getQuantiteVendues());
+            statement.setInt(7, quantiteV);
+
 
             statement.executeUpdate();
         }
@@ -254,20 +258,33 @@ public class ServiceProduit {
 
 
 
-    public void ajouterCommande(Timestamp dateCommande, double montantTotal,Integer id_user) {
-        String query = "INSERT INTO Commande (dateCommande, montantTotal,id_user) VALUES (?, ?, ?)";
+    public void ajouterCommande(Timestamp dateCommande, User user, Map<Produit, Integer> produitsDansPanier) {
+        String query = "INSERT INTO Commande (dateCommande, id_user, nom_client, idProduit, nom,montant) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement statement = connexion.prepareStatement(query)) {
-            statement.setTimestamp(1, dateCommande); // Convertit la date Java en java.sql.Date
-            statement.setDouble(2, montantTotal);
-            statement.setDouble(3, id_user);
+            statement.setTimestamp(1, dateCommande);
+
+            statement.setInt(2, user.getId());
+            statement.setString(3, user.getName());
 
 
-            statement.executeUpdate();
+            // Parcourir chaque produit dans le panier
+            for (Map.Entry<Produit, Integer> entry : produitsDansPanier.entrySet()) {
+                Produit produit = entry.getKey();
+                int quantiteAchete = entry.getValue();
+
+                // Ajouter des valeurs pour id_produit et nom_produit
+                statement.setInt(4, produit.getIdProduit());
+                statement.setString(5, produit.getNom());
+                statement.setDouble(6, produit.getPrix() * quantiteAchete);
+
+                statement.executeUpdate(); // Exécuter la requête pour chaque produit
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
 
 
 

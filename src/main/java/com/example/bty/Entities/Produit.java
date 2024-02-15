@@ -14,14 +14,14 @@ public class Produit {
     //private User user ;
 
     public Produit (){}
-    public Produit(int idProduit,String nom, String description, double prix, String type, int quantite , int quantiteVendues) {
+    public Produit(int idProduit,String nom, String description, double prix, String type, int quantite){ //, int quantiteVendues) {
         this.idProduit = idProduit ;
         this.nom = nom;
         Description = description;
         Prix = prix;
         Type = type;
         Quantite = quantite;
-        this.quantiteVendues = quantiteVendues;
+       // this.quantiteVendues = quantiteVendues;
     }
 
 
