@@ -1,6 +1,7 @@
 package com.example.bty.Services;
 
 import com.example.bty.Entities.Demande;
+import com.example.bty.Entities.Offre;
 import com.example.bty.Utils.ConnexionDB;
 
 import java.sql.Connection;
@@ -10,11 +11,13 @@ import java.sql.Statement;
 
 
 
-    public class ServiceDemande {
+
+    public class ServiceOffre {
         private Connection connexion;
         private Statement ste;
         private PreparedStatement pst;
-        public ServiceDemande() {
+        public ServiceOffre()
+        {
             connexion= ConnexionDB.getInstance().getConnexion();
         }
 
@@ -30,19 +33,15 @@ import java.sql.Statement;
 //}
         //  }
 
-        public void addDemande(Demande d) {
+        public void addOffre (Offre f) {
 
             //try (Connection connection = DataSource.obtenirConnexion())
-            String query = "INSERT INTO Demande (id_demande,Age,nombreHeure,MaladieChronique,But,NiveauPhysique,id_user,id_Offre) VALUES (?, ?, ?, ?, ?, ?, ?,?)";
+            String query = "INSERT INTO Offre (id,specialite,tarif_heure,id_coach) VALUES ( ?, ?, ?,?)";
             try (PreparedStatement statement = connexion.prepareStatement(query)) {
-                statement.setInt(1, d.getId_demande());
-                statement.setInt(2, d.getAge());
-                statement.setInt(3, d.getNbre_heure());
-                statement.setBoolean(4, d.getMaladie_chronique());
-                statement.setString(5, d.getBut());
-                statement.setString(6, d.getNiveau_physique());
-                statement.setInt(7, d.getMembre().getId());
-                statement.setInt(8, d.getOffre().getId());
+                statement.setInt(1, f.getId());
+                statement.setString(2, String.valueOf(f.getspecialite()));
+                statement.setFloat(3, f.getTarif_heure());
+                statement.setInt(4, f.getCoach().getId());
 
                 statement.executeUpdate();
             }
@@ -52,29 +51,25 @@ import java.sql.Statement;
 
         }
 
-        public void DeleteDemande (int id) {
-            String DELETE = "DELETE FROM Demande WHERE id_demande = ?";
+        public void DeleteOffre (int id) {
+            String DELETE = "DELETE FROM Offre WHERE id = ?";
             try {
                 pst = connexion.prepareStatement(DELETE);
                 pst.setInt(1, id);
                 pst.executeUpdate();
-                System.out.println("Demande supprimée avec succès !");
+                System.out.println("Offre supprimée avec succès !");
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }}
 
-        public void UpdateDemande(Demande d) throws SQLException {
-            String UPDATE = "UPDATE Demande SET id_demande = ?, Age = ?, nombreHeure = ?, MaladieChronique = ?, But = ?, NiveauPhysique = ?, id_user = ? WHERE id_offre = ?";
+        public void UpdateOffre(Offre f) throws SQLException {
+            String UPDATE = "UPDATE Offre SET id = ?, specialite = ?, trif_heure = ?, id_coach= ? WHERE id_coach = ?";
             try {
                 pst = connexion.prepareStatement(UPDATE);
-                pst.setInt(1, d.getAge());
-                pst.setInt(2, d.getNbre_heure());
-                pst.setBoolean(3, d.isMaladieCHronique);
-                pst.setString(4, d.getBut());
-                pst.setString(5, d.getNiveau_physique());
-                pst.setInt(6, d.getMembre().getId());
-                pst.setInt(7, d.getOffre().getId());
-                pst.setInt(8, d.getId());
+                pst.setInt(1, f.getId());
+                pst.setString(2, String.valueOf(f.getspecialite()));
+                pst.setFloat(3, f.getTarif_heure());
+                pst.setInt(4, f.getCoach().getId());
                 pst.executeUpdate();
                 System.out.println("Demande mise à jour avec succès !");
             } catch (SQLException e) {
@@ -84,5 +79,6 @@ import java.sql.Statement;
 
 
     }
+
 
 

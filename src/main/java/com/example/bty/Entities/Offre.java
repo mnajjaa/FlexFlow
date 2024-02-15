@@ -39,7 +39,7 @@ public class Offre {
     }
 
     public float getTarif_heure() {
-        return tarif_heure;
+        return  tarif_heure;
     }
 
     public void setTarif_heure(float tarif_heure) {

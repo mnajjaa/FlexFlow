@@ -1,6 +1,7 @@
 package com.example.bty.Entities;
 
 public class Demande {
+    public boolean isMaladieCHronique;
     int id;
     int age;
     int nbre_heure;
@@ -110,5 +111,12 @@ public class Demande {
                 ", membre=" + membre +
                 ", offre=" + offre +
                 '}';
+    }
+
+    public boolean getMaladie_chronique() {
+        return maladie_chronique;
+    }
+
+    public int getId_demande() {return id;
     }
 }
