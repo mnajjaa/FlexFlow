@@ -14,6 +14,8 @@ public class ServiceUser implements IServiceUser{
     private PreparedStatement pste;
 
     Connection cnx = ConnexionDB.getInstance().getConnexion();
+
+    //** Register a new user
     @Override
     public void register(User u) {
         String req = "INSERT INTO `user` (`nom`,`email`, `password`,`telephone`,`role`) VALUE (?,?,?,?,?)";
@@ -33,6 +35,8 @@ public class ServiceUser implements IServiceUser{
         }
 
     }
+
+    //** Check if an email already exists
     @Override
     public boolean emailExists(String email) {
         try {
@@ -50,6 +54,8 @@ public class ServiceUser implements IServiceUser{
         }
         return false;
     }
+
+    //** Authenticate a user
     @Override
     public int Authentification(String email,String password) {
         int status = 0;
@@ -69,13 +75,14 @@ public class ServiceUser implements IServiceUser{
 
                     return 2 ;
                 }
-                //explain : f session bch y7ott le vrai role du user connecté khater 9bal ken y7ott role.admin meme si
-                // user connecté est un coach ou un membre
+
 
 
                if( BCrypt.checkpw(password, rs.getString("password"))) {
                    //if logged in successfully yemchy yasnaalou session w y7ottou fiha les informations mte3ou
 
+                   //explain : f session bch y7ott le vrai role du user connecté khater 9bal ken y7ott role.ADMIN ou role.COACH meme si
+                   // user connecté est un coach ou un membre
                    Role userRole = Role.valueOf(rs.getString("role"));
                    User u =new User(rs.getInt("id"),rs.getString("nom"),rs.getString("email"),rs.getString("password"),rs.getString("telephone"),userRole);
 
@@ -91,9 +98,11 @@ public class ServiceUser implements IServiceUser{
         return status;
     }
 
-    //Activer ou bdesactiver un membre
+    //** Activer ou bdesactiver un membre
     @Override
     public void ActiverOrDesactiver(int id) {
+
+       //verifier si l'utilisateur connecté est un admin
         Session s=Session.getInstance();
         User u = s.getLoggedInUser();
         if(u.getRole() != Role.ADMIN)
@@ -113,23 +122,57 @@ public class ServiceUser implements IServiceUser{
         }
     }
 
+    //** Update user information
     @Override
-    public void update(User user) {
+    public void update(User u) {
         String req = "UPDATE user SET nom = ?, email = ?, password = ?, telephone = ? WHERE id = ?";
         try {
             pste = cnx.prepareStatement(req);
-            pste.setString(1, user.getName());
-            pste.setString(2, user.getEmail());
-            pste.setString(3, user.getPassword());
-            pste.setString(4, user.getTelephone());
-            pste.setInt(5, user.getId());
-            pste.executeUpdate();
+            pste.setString(1, u.getName());
+            pste.setString(2, u.getEmail());
+            pste.setString(3, BCrypt.hashpw(u.getPassword(), BCrypt.gensalt()));
+            pste.setString(4, u.getTelephone());
+            pste.setInt(5, u.getId());
+            int rowsUpdated = pste.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println("An existing user was updated successfully!");
+            } else {
+                System.out.println("No user found with this id!");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ServiceUser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    //** Delete a user
+    @Override
+    public void delete(int id) {
+        //verifier si l'utilisateur connecté est un admin
+        Session s=Session.getInstance();
+        User u = s.getLoggedInUser();
+        if(u.getRole() != Role.ADMIN)
+        {
+            System.out.println("You are not allowed to perform this action");
+            return;
+        }
+
+        String req = "DELETE FROM user WHERE id = ?";
+        try {
+            pste = cnx.prepareStatement(req);
+            pste.setInt(1, id);
+            int rowsDeleted = pste.executeUpdate();
+            if (rowsDeleted > 0) {
+                System.out.println("A user was deleted successfully!");
+            } else {
+                System.out.println("No user found with this id!");
+            }
         } catch (SQLException ex) {
             Logger.getLogger(ServiceUser.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
 
+    // Find a user by email
     public User findByEmail(String email) throws SQLException {
         User U = new User();
         String req = "SELECT * FROM user WHERE email = ?";
