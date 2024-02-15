@@ -18,7 +18,7 @@ import java.sql.Statement;
             connexion= ConnexionDB.getInstance().getConnexion();
         }
 
-
+//premiére methode
         //public void add(Demande d){
         //  String requete="insert into Demande (id,age,nbre_heure,maladie_chronique,but,niveau_physique, membre,offre) values ('"+d.getId()+"','"+d.getAge()+"' ,'"+d.getNbre_heure()+"' ,'"+d.getMaladie_chronique()+"' , '"+d.getBut()+"','"+d.getNiveau_physique()+"','"+d.getOffre()+"', '"+d.getMembre()+"')";
 
@@ -29,6 +29,7 @@ import java.sql.Statement;
         // throw new RuntimeException(e);
 //}
         //  }
+
 
         public void addDemande(Demande d) {
 
