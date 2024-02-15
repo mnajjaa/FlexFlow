@@ -11,6 +11,8 @@ public class Produit {
 
     private int quantiteVendues;
 
+    //private User user ;
+
     public Produit (){}
     public Produit(int idProduit,String nom, String description, double prix, String type, int quantite , int quantiteVendues) {
         this.idProduit = idProduit ;
@@ -21,6 +23,8 @@ public class Produit {
         Quantite = quantite;
         this.quantiteVendues = quantiteVendues;
     }
+
+
 
     public int getIdProduit() {
         return idProduit;
@@ -77,6 +81,10 @@ public class Produit {
     public void setQuantiteVendues(int quantiteVendues) {
         this.quantiteVendues = quantiteVendues;
     }
+
+
+
+
 
     @Override
     public String toString() {

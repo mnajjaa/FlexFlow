@@ -1,4 +1,5 @@
 package com.example.bty.Services;
+import com.example.bty.Entities.Commande;
 import com.example.bty.Entities.Produit;
 import com.example.bty.Utils.ConnexionDB;
 import java.sql.*;
@@ -219,7 +220,54 @@ public class ServiceProduit {
 
 
 
+    public void afficherColonnesProduit() {
+        String query = "SELECT idProduit,nom, description, prix, type, quantite FROM produit";
 
+        try (Statement statement = connexion.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+
+            ResultSetMetaData metaData = resultSet.getMetaData();
+            int columnCount = metaData.getColumnCount();
+
+            // Affichage des noms de colonnes
+            System.out.println("La liste des produits disponible :");
+            for (int i = 1; i <= columnCount; i++) {
+                System.out.print(metaData.getColumnName(i) + "\t");
+            }
+            System.out.println();
+
+            // Affichage des données
+            while (resultSet.next()) {
+                for (int i = 1; i <= columnCount; i++) {
+                    System.out.print(resultSet.getString(i) + "\t");
+                }
+                System.out.println();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+
+
+
+    public void ajouterCommande(Timestamp dateCommande, double montantTotal,Integer id_user) {
+        String query = "INSERT INTO Commande (dateCommande, montantTotal,id_user) VALUES (?, ?, ?)";
+
+        try (PreparedStatement statement = connexion.prepareStatement(query)) {
+            statement.setTimestamp(1, dateCommande); // Convertit la date Java en java.sql.Date
+            statement.setDouble(2, montantTotal);
+            statement.setDouble(3, id_user);
+
+
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
 
 

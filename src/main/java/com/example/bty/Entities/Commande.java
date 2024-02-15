@@ -6,15 +6,16 @@ public class Commande {
     private int idCommande;
     private Date dateCommande;
     private float MontantTotal;
-    private String statut;
-    private int id_user;
 
-    public Commande(int idCommande, Date dateCommande, float montantTotal, String statut, int id_user) {
+    User membre ;
+
+
+
+    public Commande(int idCommande, Date dateCommande, float montantTotal, User membre) {
         this.idCommande = idCommande;
         this.dateCommande = dateCommande;
         MontantTotal = montantTotal;
-        this.statut = statut;
-        this.id_user = id_user;
+        this.membre = membre;
     }
 
     public Commande(){}
@@ -43,20 +44,14 @@ public class Commande {
         MontantTotal = montantTotal;
     }
 
-    public String getStatut() {
-        return statut;
+
+
+    public User getMembre() {
+        return membre;
     }
 
-    public void setStatut(String statut) {
-        this.statut = statut;
-    }
-
-    public int getId_user() {
-        return id_user;
-    }
-
-    public void setId_user(int id_user) {
-        this.id_user = id_user;
+    public void setMembre(User membre) {
+        this.membre = membre;
     }
 
     @Override
@@ -65,8 +60,7 @@ public class Commande {
                 "idCommande=" + idCommande +
                 ", dateCommande=" + dateCommande +
                 ", MontantTotal=" + MontantTotal +
-                ", statut='" + statut + '\'' +
-                ", id_user=" + id_user +
+                ", id_user=" + membre +
                 '}';
     }
 }

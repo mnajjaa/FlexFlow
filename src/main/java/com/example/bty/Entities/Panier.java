@@ -1,13 +1,23 @@
 package com.example.bty.Entities;
 
-
+import com.example.bty.Entities.Produit;
 import com.example.bty.Services.ServiceProduit;
-import com.example.bty.Services.ServiceUser;
+import com.example.bty.Utils.ConnexionDB;
 
+import java.sql.*;
+import java.sql.Date;
 import java.util.*;
 
 public class Panier {
 
+
+
+    private Connection connexion;
+    private PreparedStatement pst;
+    private Statement ste ;
+    public Panier() {
+        connexion = ConnexionDB.getInstance().getConnexion();
+    }
 
     private Map<Produit, Integer> produitsDansPanier = new HashMap<>();
 
@@ -45,12 +55,21 @@ public class Panier {
             boolean confirmation = scanner.nextBoolean();
 
             if (confirmation) {
+
+              /*  Commande nouvelleCommande = new Commande();
+                nouvelleCommande.setDateCommande(new Date(System.currentTimeMillis()));
+                nouvelleCommande.setMontantTotal((float) montantTotal);
+
+                // Ajouter la commande à la base de données
+                commandeDAO.ajouterCommande(nouvelleCommande);*/
+
                 // Mettre à jour la base de données après confirmation d'achat
                 for (Map.Entry<Produit, Integer> entry : produitsDansPanier.entrySet()) {
                     Produit produit = entry.getKey();
                     int quantiteAchete = entry.getValue();
                     produitDAO.mettreAJourQuantiteVendueEtTotale(produit, quantiteAchete);
                 }
+                ajouterCommande(produitDAO);
 
                 // Afficher la quantité totale après l'achat
                 //System.out.println("Quantité totale après l'achat : " + produitDAO.obtenirQuantiteTotale());
@@ -66,6 +85,38 @@ public class Panier {
     public Map<Produit, Integer> getProduitsDansPanier() {
         return produitsDansPanier;
     }
+
+
+
+
+
+    private void ajouterCommande(ServiceProduit produitDAO) {
+        // Obtenez la date actuelle
+
+
+        // Calculez le montant total
+        double montantTotal = calculerMontantTotal();
+        Integer id_user = 1;
+
+        java.util.Date dateCommande = new java.util.Date();
+        Timestamp timestamp = new Timestamp(dateCommande.getTime());
+
+        // Ajoutez la commande à la base de données en utilisant votre méthode appropriée
+        produitDAO.ajouterCommande(timestamp, montantTotal,id_user);
+    }
+
+    // Ajouter une méthode pour calculer le montant total du panier
+    private double calculerMontantTotal() {
+        double montantTotal = 0.0;
+        for (Map.Entry<Produit, Integer> entry : produitsDansPanier.entrySet()) {
+            Produit produit = entry.getKey();
+            int quantiteAchete = entry.getValue();
+            montantTotal += produit.getPrix() * quantiteAchete;
+        }
+        return montantTotal;
+    }
+
+
 
 
 
