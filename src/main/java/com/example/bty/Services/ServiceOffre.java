@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 
-
+//farah
 
     public class ServiceOffre {
         private Connection connexion;
@@ -32,6 +32,9 @@ import java.sql.Statement;
         // throw new RuntimeException(e);
 //}
         //  }
+
+
+
 
         public void addOffre (Offre f) {
 
