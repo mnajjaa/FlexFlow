@@ -10,6 +10,7 @@ public class Demande {
     String niveau_physique;
     User membre;
     Offre offre;
+    Etat etat;
 
     public Demande() {
     }
@@ -78,6 +79,8 @@ public class Demande {
         this.offre = offre;
     }
 
+
+
     public Demande(int id, int age, int nbre_heure, boolean maladie_chronique, String but, String niveau_physique, User membre, Offre offre) {
         this.id = id;
         this.age = age;
@@ -87,6 +90,7 @@ public class Demande {
         this.niveau_physique = niveau_physique;
         this.membre = membre;
         this.offre = offre;
+        this.etat = Etat.REFUSER; // Par défaut, l'état est initialisé à refuse
     }
 
     public Demande(int age, int nbre_heure, boolean maladie_chronique, String but, String niveau_physique, User membre, Offre offre) {
@@ -118,5 +122,20 @@ public class Demande {
     }
 
     public int getId_demande() {return id;
+    }
+
+    public Etat getEtat() {
+        return etat;
+    }
+
+    // Méthode pour accepter la demande
+    public void accepterDemande() {
+        this.etat = Etat.ACCEPTER;
+    }
+
+    // Méthode pour refuser la demande
+    public void refuserDemande() {
+        this.etat = Etat.REFUSER;
+
     }
 }
