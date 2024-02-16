@@ -41,7 +41,7 @@ public class HelloApplication extends Application {
         Produit p5 = new Produit(18,"sneackers", "sneackers", 45, "Vetement", 40);
 
 
-         Role userRole = Role.MEMBRE;
+        Role userRole = Role.MEMBRE;
         User u=new User(2,"houssine","houssine@gmail.com","houssine1234","12345678",userRole);
 
         ServiceProduit ps = new ServiceProduit();
