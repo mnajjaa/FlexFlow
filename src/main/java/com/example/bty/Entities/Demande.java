@@ -12,7 +12,7 @@ public class Demande {
     Offre offre;
     Etat etat;
 
-    public Demande() {
+    public Demande(int id, int age, int nbre_heure, boolean maladie_chronique, String but, String niveau_physique, User m, Offre f, String etat) {
     }
 
     public int getId() {
@@ -81,7 +81,7 @@ public class Demande {
 
 
 
-    public Demande(int id, int age, int nbre_heure, boolean maladie_chronique, String but, String niveau_physique, User membre, Offre offre) {
+    public Demande(int id, int age, int nbre_heure, boolean maladie_chronique, String but, String niveau_physique, User membre, Offre offre,Etat etat) {
         this.id = id;
         this.age = age;
         this.nbre_heure = nbre_heure;

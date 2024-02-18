@@ -29,9 +29,8 @@ public class ServiceDemande {
 
 
         public void addDemande(Demande d) {
-
             //try (Connection connection = DataSource.obtenirConnexion())
-            String query = "INSERT INTO Demande (id_demande,Age,nombreHeure,MaladieChronique,But,NiveauPhysique,id_user,id_Offre) VALUES (?, ?, ?, ?, ?, ?, ?,?)";
+            String query = "INSERT INTO Demande (id_demande,Age,nombreHeure,MaladieChronique,But,NiveauPhysique,id_user,id_Offre,etat) VALUES (?, ?, ?, ?, ?, ?, ?,?,?)";
             try (PreparedStatement statement = connexion.prepareStatement(query)) {
                 statement.setInt(1, d.getId_demande());
                 statement.setInt(2, d.getAge());
@@ -117,7 +116,9 @@ public class ServiceDemande {
                 System.out.println("Impossible de refuser la demande pour le moment.");
             }
         }
-    }
+
+
+}
 
 
 

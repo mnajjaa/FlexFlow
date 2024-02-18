@@ -6,10 +6,8 @@ public class Offre {
     private float tarif_heure;
     private User coach;
 
-    public Offre() {
-    }
 
-    public Offre(Specialite specialite, float tarif_heure, User coach) {
+    public Offre() {
         this.specialite = specialite;
         this.tarif_heure = tarif_heure;
         this.coach = coach;

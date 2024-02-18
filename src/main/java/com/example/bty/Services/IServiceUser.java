@@ -7,7 +7,8 @@ public interface IServiceUser {
     public boolean emailExists(String email);
     public int Authentification(String email,String password);
     public void ActiverOrDesactiver(int id);
-public void update(User user);
+    public void update(User user);
+    public void delete(int id);
 
 
 }

@@ -1,6 +1,5 @@
 package com.example.bty.Services;
 
-import com.example.bty.Entities.Demande;
 import com.example.bty.Entities.Offre;
 import com.example.bty.Utils.ConnexionDB;
 
@@ -36,7 +35,7 @@ import java.sql.Statement;
 
 
 
-        public void addOffre (Offre f) {
+        public boolean addOffre (Offre f) {
 
             //try (Connection connection = DataSource.obtenirConnexion())
             String query = "INSERT INTO Offre (id,specialite,tarif_heure,id_coach) VALUES ( ?, ?, ?,?)";
@@ -47,10 +46,15 @@ import java.sql.Statement;
                 statement.setInt(4, f.getCoach().getId());
 
                 statement.executeUpdate();
+                return true;
             }
             catch (SQLException e) {
                 e.printStackTrace();
+
+                return false;
+
             }
+
 
         }
 
