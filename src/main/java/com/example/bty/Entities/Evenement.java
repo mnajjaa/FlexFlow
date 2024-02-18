@@ -115,7 +115,7 @@ public class Evenement {
                 "id=" + id +
                 ", date=" + date +
                 ", nbre_place=" + nbre_place +
-                ", moderateur='" + moderateur + '\'' +
+               // ", moderateur='" + moderateur + '\'' +
                 ", categorie='" + categorie + '\'' +
                 ", objectif='" + objectif + '\'' +
                 ", coach=" + coach +

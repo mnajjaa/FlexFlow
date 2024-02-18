@@ -1,0 +1,19 @@
+/* style.css */
+
+.root {
+    -fx-background-color: #f4f4f4;
+}
+
+.vbox {
+    -fx-spacing: 10;
+}
+
+.text-field {
+    -fx-font-size: 14px;
+}
+
+.button {
+    -fx-font-size: 14px;
+    -fx-background-color: #4CAF50; /* Couleur de fond verte */
+    -fx-text-fill: white; /* Couleur du texte blanc */
+}

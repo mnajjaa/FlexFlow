@@ -1,0 +1,83 @@
+/* style.css */
+
+.card-container {
+    -fx-background-image: url('com/example/bty/imagesModuleProduit/background.jpg');
+    -fx-background-size: cover;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center center;
+    -fx-border-radius: 10;
+    -fx-padding: 10;
+}
+
+
+.card-title {
+    -fx-font-size: 36px;
+    -fx-text-fill: white;
+    -fx-padding: 0 0 10 0; /* Ajout d'espace en bas du titre */
+}
+
+.fancy-label {
+
+    -fx-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Utilisez la police de caractères de votre choix */
+    -fx-font-weight: bold;
+    /* Ajout d'un soulignement */
+    -fx-text-fill: #3498db; /* Couleur du texte */
+}
+.grid-pane {
+    -fx-background-color: #ecf0f1;
+    -fx-padding: 10;
+    -fx-hgap: 15;
+    -fx-vgap: 15;
+}
+
+.label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #2c3e50;
+    -fx-padding: 5 0 0 0; /* Ajout de l'espace au-dessus du texte */
+}
+
+.text-field {
+    -fx-font-size: 13px;
+    -fx-padding: 5;
+    -fx-pref-width: 300; /* Largeur préférée pour les champs de texte */
+}
+
+.envoyer-button {
+    -fx-font-size: 14px;
+    -fx-padding: 10;
+    -fx-min-width: 120; /* Largeur minimale pour les boutons */
+    -fx-background-radius: 10; /* Ajout de la bordure circulaire */
+}
+
+.upload-button {
+    -fx-font-size: 12px;
+    -fx-padding: 10;
+    -fx-min-width: 120; /* Largeur minimale pour les boutons */
+    -fx-background-radius: 10; /* Ajout de la bordure circulaire */
+}
+
+.upload-button {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+}
+
+.upload-button:hover {
+    -fx-background-color: #2980b9;
+}
+
+.envoyer-button {
+    -fx-background-color: #27ae60;
+    -fx-text-fill: white;
+}
+
+.envoyer-button:hover {
+    -fx-background-color: #219a53;
+}
+
+.combo-box {
+    -fx-font-size: 14px;
+}
+
+.combo-box .list-cell {
+    -fx-font-size: 14px;
+}

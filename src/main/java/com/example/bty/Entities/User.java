@@ -10,30 +10,37 @@ public class User {
    private String password ;
    private String telephone ;
    private Role role;
+   private  boolean etat =false;    // 0 = desactiver , 1 = activer
 
+    public boolean isEtat() {
+        return etat;
+    }
 
+    public void setEtat(boolean etat) {
+        this.etat = etat;
+    }
 
-
-
-
-    public User(int id, String name, String email, String password,String telephone,Role role) {
+    public User(int id, String name, String email, String password, String telephone, Role role) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
         this.telephone=telephone;
         this.role=role;
+        this.etat=etat;
 
     }
 
     public User() {
     }
 
-    public User(String name, String email, String password,Role role) {
+    public User(String name, String email, String password,String telephone,Role role) {
         this.name = name;
         this.email = email;
         this.password = password;
+        this.telephone = telephone;
         this.role=role;
+        this.etat=etat;
     }
 
     public int getId() {

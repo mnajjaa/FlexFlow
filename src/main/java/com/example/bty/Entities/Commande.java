@@ -1,66 +1,31 @@
 package com.example.bty.Entities;
 
-import java.util.Date;
-
 public class Commande {
-    private int idCommande;
-    private Date dateCommande;
-    private float MontantTotal;
+    private int idProduit;
+    private String nomProduit;
+    private int quantite;
+    private double montantTotale;
 
-    User membre ;
-
-
-
-    public Commande(int idCommande, Date dateCommande, float montantTotal, User membre) {
-        this.idCommande = idCommande;
-        this.dateCommande = dateCommande;
-        MontantTotal = montantTotal;
-        this.membre = membre;
+    public Commande(int idProduit, String nomProduit, int quantite, double montantTotale) {
+        this.idProduit = idProduit;
+        this.nomProduit = nomProduit;
+        this.quantite = quantite;
+        this.montantTotale = montantTotale;
     }
 
-    public Commande(){}
-
-    public int getIdCommande() {
-        return idCommande;
+    public int getIdProduit() {
+        return idProduit;
     }
 
-    public void setIdCommande(int idCommande) {
-        this.idCommande = idCommande;
+    public String getNomProduit() {
+        return nomProduit;
     }
 
-    public Date getDateCommande() {
-        return dateCommande;
+    public int getQuantite() {
+        return quantite;
     }
 
-    public void setDateCommande(Date dateCommande) {
-        this.dateCommande = dateCommande;
-    }
-
-    public float getMontantTotal() {
-        return MontantTotal;
-    }
-
-    public void setMontantTotal(float montantTotal) {
-        MontantTotal = montantTotal;
-    }
-
-
-
-    public User getMembre() {
-        return membre;
-    }
-
-    public void setMembre(User membre) {
-        this.membre = membre;
-    }
-
-    @Override
-    public String toString() {
-        return "Commande{" +
-                "idCommande=" + idCommande +
-                ", dateCommande=" + dateCommande +
-                ", MontantTotal=" + MontantTotal +
-                ", id_user=" + membre +
-                '}';
+    public double getMontantTotale() {
+        return montantTotale;
     }
 }

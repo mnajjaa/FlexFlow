@@ -4,6 +4,8 @@ import com.example.bty.Entities.Panier;
 import com.example.bty.Entities.Produit;
 import com.example.bty.Entities.Role;
 import com.example.bty.Entities.User;
+import com.example.bty.Entities.Role;
+import com.example.bty.Entities.User;
 import com.example.bty.Services.IServiceUser;
 import com.example.bty.Services.ServiceProduit;
 import com.example.bty.Services.ServiceUser;
@@ -34,15 +36,20 @@ public class HelloApplication extends Application {
 //Module Gestion de produits
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        Produit p1 = new Produit(3,"T-shirt", "T-shirt de sport", 20, "Vetement", 50);
+       /* Produit p1 = new Produit(3,"T-shirt", "T-shirt de sport", 20, "Vetement", 50);
         Produit p2 = new Produit(4,"proteine", "protiene gym", 220, "proteine", 15);
         Produit p3 = new Produit(7,"shaker", "shaker pour melange proteine", 15, "accessoires", 5);
         Produit p4 = new Produit(8,"gons", "gons pour sport", 45, "accessoires", 4);
-        Produit p5 = new Produit(18,"sneackers", "sneackers", 45, "Vetement", 40);
+        Produit p5 = new Produit(18,"sneackers", "sneackers", 45, "Vetement", 40);*/
 
 
         Role userRole = Role.MEMBRE;
         User u=new User(2,"houssine","houssine@gmail.com","houssine1234","12345678",userRole);
+
+        IServiceUser serviceUser = new ServiceUser();
+
+        Role userRole1 = Role.ADMIN;
+        User u1=new User("farah","farah@gmail.com","ibtihel1234","12345678",userRole1);
 
         ServiceProduit ps = new ServiceProduit();
        //ps.ajouterProduit(p5);
@@ -96,7 +103,7 @@ public class HelloApplication extends Application {
 
 
 // ProduitDAO produitDAO = new ProduitDAO();
-        Panier panier = new Panier();
+     /*   Panier panier = new Panier();
 
         // Consulter les produits disponibles
         List<Produit> produitsDisponibles = ps.consulterProduits();
@@ -110,7 +117,7 @@ public class HelloApplication extends Application {
         panier.ajouterAuPanier(produit2, 2);
 
         // Afficher le panier
-        panier.afficherPanier(true,ps,u);
+        panier.afficherPanier(true,ps,u1);*/
 
 
 
@@ -120,10 +127,16 @@ public class HelloApplication extends Application {
 
         //panier.confirmerAchatEtMettreAJourQuantiteVendue(ps);
 
-        for (Map.Entry<Produit, Integer> entry : panier.getProduitsDansPanier().entrySet()) {
+     /*   for (Map.Entry<Produit, Integer> entry : panier.getProduitsDansPanier().entrySet()) {
             Produit produit = entry.getKey();
             int quantiteAchete = entry.getValue();
+*/
+         //User u=new User("ibtihel","ibtihel.mnaja123@gmail.com","ibtihel1234");
 
+        //**tester la methode register
+ /*  if(serviceUser.emailExists(u.getEmail()))
+        {
+            System.out.println("User already exist");
         }
 
 
@@ -154,17 +167,38 @@ public class HelloApplication extends Application {
         double chiffreAffairesTotal = ps.calculerChiffreAffairesTotal();
         System.out.println("Chiffre d'affaires total : " + chiffreAffairesTotal + " DNT");
 
+        else
+            serviceUser.register(u);*/
 
+
+
+ /*   }
+        //**tester la methode Authentification
+        int status = serviceUser.Authentification("mnajjaibtihel@gmail.com", "ibtihel1234");
+      switch (status) {
+            case 0:
+                System.out.println("Invalid user credentials");
+                break;
+            case 1:
+                System.out.println("Logged in successfully");
+                break;
+            case 2:
+                System.out.println("User is desactiver");
+                break;
+        }
 */
+    /*    Session s=Session.getInstance();
+        System.out.println(s.getLoggedInUser());*/
+//         s.logout();
+//        System.out.println(s.getLoggedInUser());
+//        serviceUser.Authentification("ibtihel.mnaja123@gmail.com", "ibtihel1234");
+//         System.out.println(s.getLoggedInUser());
 
-    }
 
 
 
 
-
-
-    private static void afficherListeProduits(List<Produit> produits) {
+ /*   private static void afficherListeProduits(List<Produit> produits) {
         System.out.println("Liste des produits disponibles : ");
         for (Produit produit : produits) {
 
@@ -174,7 +208,25 @@ public class HelloApplication extends Application {
                             ", Type: " + produit.getType());
 
         }
-        System.out.println();
+        System.out.println();*/
+
+        //**tester la methode ActiverOrDesactiver
+        //serviceUser.ActiverOrDesactiver(2);
+
+        //**tester la methode update
+        User userUpdate = new User();
+        userUpdate.setId(6);
+        userUpdate.setName("Admin1");
+        userUpdate.setEmail("Admin1@gmail.com");
+        userUpdate.setPassword("Admin1234");
+        userUpdate.setTelephone("12345678");
+        userUpdate.setRole(userRole);
+        //appel de la methode update
+        //serviceUser.update(userUpdate);
+
+        //**tester la methode delete
+        //serviceUser.delete(9);
+
     }
 
 
