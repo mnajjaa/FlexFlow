@@ -6,15 +6,23 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class FD extends Application {
+    private File selectedImage;
+    private ImageView imageView;
 
     private TextField ageField;
     private TextField butField;
@@ -76,6 +84,28 @@ public class FD extends Application {
         TextField etatField = new TextField("refuser"); // Set default value to "refuser"
         etatField.setEditable(false); // Make it non-editable
         grid.add(etatField, 1, 7);
+
+//        // Bouton pour charger une image
+//        Button uploadButton = new Button("Choisir une photo");
+//        imageView = new ImageView();
+//        imageView.setFitWidth(100);
+//        imageView.setFitHeight(100);
+//        grid.add(uploadButton, 0, 8);
+//        grid.add(imageView, 1, 8);
+//
+//        uploadButton.setOnAction(e -> {
+//            FileChooser fileChooser = new FileChooser();
+//            fileChooser.setTitle("Choisir une photo");
+//            selectedImage = fileChooser.showOpenDialog(primaryStage);
+//            if (selectedImage != null) {
+//                try {
+//                    Image image = new Image(new FileInputStream(selectedImage));
+//                    imageView.setImage(image);
+//                } catch (FileNotFoundException ex) {
+//                    ex.printStackTrace();
+//                }
+//            }
+//        });
 
         Button sendButton = new Button("Envoyer");
         GridPane.setConstraints(sendButton, 1, 8);

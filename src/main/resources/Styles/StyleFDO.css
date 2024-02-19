@@ -27,3 +27,10 @@
 .button:hover {
     -fx-background-color: #45a049; /* Couleur de fond du bouton lors du survol */
 }
+  //Création de limage
+Image image = new Image("/Styles/StylesFDO/.png");
+ImageView imageView = new ImageView(image);
+imageView.getStyleClass().add("image-view");
+
+// Ajout de l'image à la grille
+grid.add(imageView, colonne, ligne);

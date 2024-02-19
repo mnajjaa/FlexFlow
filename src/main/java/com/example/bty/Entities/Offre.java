@@ -5,6 +5,7 @@ public class Offre {
     private Specialite  specialite;
     private float tarif_heure;
     private User coach;
+    //private byte[] image;
 
 
     public Offre() {
@@ -18,11 +19,20 @@ public class Offre {
         this.specialite = specialite;
         this.tarif_heure = tarif_heure;
         this.coach = coach;
+        //this.image=image;
     }
 
     public int getId() {
         return id;
     }
+
+//    public byte[] getImage() {
+//        return image;
+//    }
+//
+//    public void setImage(byte[] image) {
+//        this.image = image;
+//    }
 
     public void setId(int id) {
         this.id = id;

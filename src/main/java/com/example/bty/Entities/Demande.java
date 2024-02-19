@@ -11,12 +11,20 @@ public class Demande {
     User membre;
     Offre offre;
     Etat etat;
-
-    public Demande(int id, int age, int nbre_heure, boolean maladie_chronique, String but, String niveau_physique, User m, Offre f, String etat) {
+    Byte image;
+    public Demande(int id, int age, int nbre_heure, boolean maladie_chronique, String but, String niveau_physique, User m, Offre f, String etat,byte image) {
     }
 
     public int getId() {
         return id;
+    }
+
+    public Byte getImage() {
+        return image;
+    }
+
+    public void setImage(Byte image) {
+        this.image = image;
     }
 
     public void setId(int id) {
@@ -81,7 +89,7 @@ public class Demande {
 
 
 
-    public Demande(int id, int age, int nbre_heure, boolean maladie_chronique, String but, String niveau_physique, User membre, Offre offre,Etat etat) {
+    public Demande(int id, int age, int nbre_heure, boolean maladie_chronique, String but, String niveau_physique, User membre, Offre offre,Etat etat,Byte image) {
         this.id = id;
         this.age = age;
         this.nbre_heure = nbre_heure;
@@ -91,6 +99,7 @@ public class Demande {
         this.membre = membre;
         this.offre = offre;
         this.etat = Etat.REFUSER; // Par défaut, l'état est initialisé à refuse
+        this.image=image;
     }
 
     public Demande(int age, int nbre_heure, boolean maladie_chronique, String but, String niveau_physique, User membre, Offre offre) {
