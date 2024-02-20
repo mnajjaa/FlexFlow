@@ -111,9 +111,19 @@ public class FD extends Application {
         GridPane.setConstraints(sendButton, 1, 8);
         sendButton.setOnAction(event -> insertDemande());
 
+        Button updateButton = new Button("Modifier");
+        GridPane.setConstraints(updateButton, 2, 8);
+        updateButton.setOnAction(event -> updateDemande());
+
+        Button deleteButton = new Button("Supprimer");
+        GridPane.setConstraints(deleteButton, 3, 8);
+        deleteButton.setOnAction(event -> deleteDemande());
+
+
+
         grid.getChildren().addAll(ageLabel, ageField, butLabel, butField, niveauPhysiqueLabel, niveauPhysiqueField,
                 maladieChroniqueLabel, maladieChroniqueField, nombreHeureLabel, nombreHeureField, idUserLabel,
-                idUserField, idOffreLabel, idOffreField, sendButton);
+                idUserField, idOffreLabel, idOffreField, sendButton,updateButton,deleteButton);
 
         Scene scene = new Scene(grid, 400, 300);
         primaryStage.setScene(scene);
@@ -144,6 +154,49 @@ public class FD extends Application {
             }
         } catch (SQLException e) {
             System.out.println("Erreur lors de l'insertion de la demande: " + e.getMessage());
+        }
+    }
+
+    private void updateDemande() {
+        String url = "jdbc:mysql://localhost:3306/pidevgym";
+        String username = "root";
+        String password = "";
+
+        try (Connection conn = DriverManager.getConnection(url, username, password)) {
+            String query = "UPDATE demande SET Age=?, But=?, NiveauPhysique=?, MaladieChronique=?, NombreHeure=? WHERE ID_user=?";
+            PreparedStatement statement = conn.prepareStatement(query);
+            statement.setInt(1, Integer.parseInt(ageField.getText()));
+            statement.setString(2, butField.getText());
+            statement.setString(3, niveauPhysiqueField.getText());
+            statement.setString(4, maladieChroniqueField.getText());
+            statement.setInt(5, Integer.parseInt(nombreHeureField.getText()));
+            statement.setInt(6, Integer.parseInt(idUserField.getText()));
+
+            int rowsUpdated = statement.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println("Demande mise à jour avec succès !");
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la mise à jour de la demande: " + e.getMessage());
+        }
+    }
+
+    private void deleteDemande() {
+        String url = "jdbc:mysql://localhost:3306/pidevgym";
+        String username = "root";
+        String password = "";
+
+        try (Connection conn = DriverManager.getConnection(url, username, password)) {
+            String query = "DELETE FROM demande WHERE ID_user=?";
+            PreparedStatement statement = conn.prepareStatement(query);
+            statement.setInt(1, Integer.parseInt(idUserField.getText()));
+
+            int rowsDeleted = statement.executeUpdate();
+            if (rowsDeleted > 0) {
+                System.out.println("Demande supprimée avec succès !");
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la suppression de la demande: " + e.getMessage());
         }
     }
 

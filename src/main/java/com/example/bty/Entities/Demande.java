@@ -89,8 +89,8 @@ public class Demande {
 
 
 
-    public Demande(int id, int age, int nbre_heure, boolean maladie_chronique, String but, String niveau_physique, User membre, Offre offre,Etat etat,Byte image) {
-        this.id = id;
+    public Demande(int id_demande, int age, int nbre_heure, boolean maladie_chronique, String but, String niveau_physique, User membre, Offre offre,Etat etat,Byte image) {
+        this.id = id_demande;
         this.age = age;
         this.nbre_heure = nbre_heure;
         this.maladie_chronique = maladie_chronique;

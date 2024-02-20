@@ -52,6 +52,7 @@ public class AccepterRefuserDemandes extends Application {
         root.getChildren().addAll(demandesListView, buttonsBox);
 
         Scene scene = new Scene(root, 300, 250);
+        scene.getStylesheets().add(getClass().getResource("/Styles/StyleFDO.css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.show();
         //liaison decoration avec code javafx

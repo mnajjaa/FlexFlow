@@ -4,15 +4,9 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
@@ -21,8 +15,8 @@ public class Formoffre extends Application {
     private static Connection connexion;
     private PreparedStatement pst;
 
-    private File selectedImage;
-    private ImageView imageView;
+//    private File selectedImage;
+//    private ImageView imageView;
 
     @Override
     public void start(Stage primaryStage) {
@@ -59,27 +53,11 @@ public class Formoffre extends Application {
         grid.add(coachLabel, 0, 3);
         grid.add(coachField, 1, 3);
 
-        // Bouton pour charger une image
-        Button uploadButton = new Button("Choisir une photo");
-        imageView = new ImageView();
-        imageView.setFitWidth(100);
-        imageView.setFitHeight(100);
-        grid.add(uploadButton, 0, 4);
-        grid.add(imageView, 1, 4);
 
-        uploadButton.setOnAction(e -> {
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Choisir une photo");
-            selectedImage = fileChooser.showOpenDialog(primaryStage);
-            if (selectedImage != null) {
-                try {
-                    Image image = new Image(new FileInputStream(selectedImage));
-                    imageView.setImage(image);
-                } catch (FileNotFoundException ex) {
-                    ex.printStackTrace();
-                }
-            }
-        });
+
+
+
+
 
         // Bouton d'ajout de l'offre
         Button addButton = new Button("Ajouter");
@@ -97,11 +75,11 @@ public class Formoffre extends Application {
             System.out.println("Spécialité: " + specialite);
             System.out.println("Tarif par heure: " + tarif);
             System.out.println("Coach: " + coach);
-            System.out.println("Image: " + selectedImage.getAbsolutePath()); // Chemin de l'image
+
         });
 
         Scene scene = new Scene(grid, 400, 300);
-        scene.getStylesheets().add(getClass().getResource("/Styles/StyleFDO.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/StyleFO.css").toExternalForm());
 
         primaryStage.setScene(scene);
         primaryStage.show();
