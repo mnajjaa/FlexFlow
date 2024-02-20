@@ -2,10 +2,12 @@
 
 /* TopBar styles */
 .top-bar {
-    -fx-background-color: #15569C;
+    -fx-background-color: #2c3e50;
     -fx-padding: 15;
     -fx-border-radius: 15px;
 }
+
+
 
 /* ComboBox styles */
 .combo-box {
@@ -15,20 +17,37 @@
 }
 
 /* TextField styles */
-.text-field {
-    -fx-font-size: 16px;
-    -fx-background-color: white;
-    -fx-border-color: #2980b9;
+.wide-search-text-field {
+    -fx-prompt-text-fill: derive(-fx-control-inner-background, -30%);
+    -fx-background-color: -fx-control-inner-background;
+    -fx-background-radius: 5;
+    -fx-border-color: -fx-box-border;
+    -fx-border-radius: 5;
+  /* Définissez la largeur minimale souhaitée */
 }
 
 /* Button styles */
 .search-button {
-    -fx-background-color: #FF544D;
+    -fx-background-color: #A62609;
     -fx-text-fill: white;
     -fx-font-size: 15px;
     -fx-padding: 8 16;
     -fx-background-radius: 12;
 }
+
+.search-text-field {
+    -fx-prompt-text-fill: derive(-fx-control-inner-background, -60%);
+    -fx-background-color: -fx-control-inner-background;
+    -fx-background-radius: 10;
+    -fx-border-color: -fx-box-border;
+    -fx-border-radius: 10;
+    -fx-min-width: 300px;
+    -fx-min-height: 35px;
+    -fx-font-size: 15px;
+}
+
+
+
 
 /* ScrollPane styles */
 .scroll-pane {
@@ -54,7 +73,7 @@
 
 /* Add to Cart button styles */
 .add-to-cart-button {
-    -fx-background-color: #0F7874;
+    -fx-background-color: #7AA95C;
     -fx-text-fill: white;
     -fx-font-size: 14px;
     -fx-padding: 5 10;
@@ -74,7 +93,7 @@
 .consulter-panier-button {
     -fx-background-color: #FF544D;
     -fx-text-fill: white;
-    -fx-font-size: 14px;
+    -fx-font-size: 13px;
     -fx-padding: 8 16;
     -fx-background-radius: 10;
 }

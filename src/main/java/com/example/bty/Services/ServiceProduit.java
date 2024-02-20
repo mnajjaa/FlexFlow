@@ -17,11 +17,9 @@ public class ServiceProduit {
     }
 
 
-    public void ajouterProduit(Produit produit) {
-        Integer quantiteV = 0;
+    public boolean ajouterProduit(Produit produit) {
+        String query = "INSERT INTO produit (idProduit, nom, Description, Prix, Type, Quantite, quantiteVendues, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-        //try (Connection connection = DataSource.obtenirConnexion())
-        String query = "INSERT INTO produit (idProduit,nom, description, prix, type, quantite,quantiteVendues) VALUES (?, ?, ?, ?, ?, ? ,?)";
         try (PreparedStatement statement = connexion.prepareStatement(query)) {
             statement.setInt(1, produit.getIdProduit());
             statement.setString(2, produit.getNom());
@@ -29,15 +27,17 @@ public class ServiceProduit {
             statement.setDouble(4, produit.getPrix());
             statement.setString(5, produit.getType());
             statement.setInt(6, produit.getQuantite());
-            statement.setInt(7, quantiteV);
-
+            statement.setInt(7, produit.getQuantiteVendues());
+            statement.setBytes(8, produit.getImage());
 
             statement.executeUpdate();
-        }
-        catch (SQLException e) {
+            return true;
+        } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
     }
+
 
     public List<Produit> consulterProduits() {
         List<Produit> produits = new ArrayList<>();

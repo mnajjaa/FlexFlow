@@ -1,0 +1,48 @@
+.container {
+    -fx-spacing: 10;
+    -fx-padding: 20;
+}
+
+.table-view {
+    -fx-background-color: #f5f5f5;
+}
+
+.table-row-cell {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #333333;
+}
+
+.button {
+    -fx-background-color: #2c3e50; /* Couleur du bouton */
+    -fx-text-fill: #ffffff; /* Couleur du texte du bouton */
+    -fx-font-weight: bold;
+}
+
+.button:hover {
+    -fx-background-color: #2c3e50; /* Couleur du bouton au survol */
+}
+
+.button:pressed {
+    -fx-background-color: #3d8e41; /* Couleur du bouton lorsqu'il est enfoncé */
+}
+
+.alert {
+    -fx-background-color: #ffffff;
+}
+
+.alert .header-panel {
+    -fx-background-color: #4caf50; /* Couleur de l'en-tête de l'alerte */
+    -fx-text-fill: #ffffff; /* Couleur du texte de l'en-tête de l'alerte */
+}
+
+.action-button {
+    -fx-background-color: white; /* Couleur du bouton */
+    -fx-text-fill: #ffffff; /* Couleur du texte du bouton */
+    -fx-font-weight: bold;
+}
+
+.action-button:hover{
+    -fx-background-color: white; /* Couleur du bouton */
+    -fx-text-fill: #ffffff; /* Couleur du texte du bouton */
+    -fx-font-weight: bold;
+}

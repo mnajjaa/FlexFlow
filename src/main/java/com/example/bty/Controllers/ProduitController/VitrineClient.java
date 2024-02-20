@@ -2,6 +2,11 @@ package com.example.bty.Controllers.ProduitController;
 
 import com.example.bty.Entities.Commande;
 import com.example.bty.Entities.Produit;
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfDocument;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,13 +23,14 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.ByteArrayInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 public class VitrineClient extends Application {
 
@@ -34,6 +40,8 @@ public class VitrineClient extends Application {
 
     private List<Produit> produits; // Liste des produits à afficher
     private Connection connection;
+
+    private Stage panierStage;
 
     private List<Commande> panier; // Panier du client
 
@@ -46,72 +54,40 @@ public class VitrineClient extends Application {
 
         VBox topBar = new VBox();
         topBar.setAlignment(Pos.CENTER_LEFT);
-        topBar.getStyleClass().add("top-bar");
+        //topBar.getStyleClass().add("top-bar");
+        topBar.setStyle(" -fx-background-color: #2c3e50;\n" +
+                "    -fx-padding: 15;\n" +
+                "    -fx-border-radius: 15px;");
         topBar.setSpacing(5);
 
-        Button consulterPanierButton = new Button("Consulter le Panier");
-        consulterPanierButton.getStyleClass().add("consulter-panier-button");
-        consulterPanierButton.setOnAction(e -> consulterPanier());
-        topBar.getChildren().add(consulterPanierButton);
-
-
-        HBox buttonContainer = new HBox();
-        buttonContainer.getChildren().add(consulterPanierButton);
-        buttonContainer.setAlignment(Pos.CENTER_RIGHT);  // Aligner le conteneur à droite
-
-        topBar.getChildren().add(buttonContainer);
-
-
-        ComboBox<String> choixRechercheComboBox = new ComboBox<>();
-        choixRechercheComboBox.getItems().addAll("Type");
-        choixRechercheComboBox.setValue("Rechercher par :");
+        Image panierImage = new Image(getClass().getResourceAsStream("/com/example/bty/imagesModuleProduit/panier.png"));
+        ImageView consulterPanierButton = new ImageView(panierImage);
+        consulterPanierButton.setOnMouseClicked(event -> consulterPanier());
+        consulterPanierButton.setFitWidth(40);  // Ajustez la largeur de l'icône selon vos besoins
+        consulterPanierButton.setFitHeight(40);
 
         TextField rechercheTextField = new TextField();
-        rechercheTextField.setPromptText("Rechercher par type");
-
-     /*   TextField prixMinField = new TextField();
-        prixMinField.setPromptText("Prix minimum");
-
-        TextField prixMaxField = new TextField();
-        prixMaxField.setPromptText("Prix maximum");*/
-
-        choixRechercheComboBox.setOnAction(e -> {
-            String choix = choixRechercheComboBox.getValue();
-
-            if ("Type".equals(choix)) {
-                rechercheTextField.setVisible(true);
-               // prixMinField.setVisible(false);
-              //  prixMaxField.setVisible(false);
-            }/* else if ("Plage de prix".equals(choix)) {
-                rechercheTextField.setVisible(false);
-                prixMinField.setVisible(true);
-                prixMaxField.setVisible(true);
-            }*/
-        });
-
-        rechercheTextField.setVisible(false);
-      //  prixMinField.setVisible(false);
-      //  prixMaxField.setVisible(false);
+        rechercheTextField.setPromptText("Rechercher par nom");
+        rechercheTextField.getStyleClass().add("search-text-field");
 
         Button rechercherButton = new Button("Rechercher");
         rechercherButton.getStyleClass().add("search-button");
         rechercherButton.setOnAction(e -> {
-            String choixRecherche = choixRechercheComboBox.getValue();
-
-            if ("Type".equals(choixRecherche)) {
-                String typeRecherche = rechercheTextField.getText();
-                List<Produit> produitsRecherches = rechercherProduits(typeRecherche);
-                afficherProduits(produitsRecherches, root);
-            } //else if ("Plage de prix".equals(choixRecherche)) {
-               // int prixMin = Integer.parseInt(prixMinField.getText());
-              //  int prixMax = Integer.parseInt(prixMaxField.getText());
-                //List<Produit> produits = filtrerProduitsParPlageDePrix(prixMin, prixMax);
-              //  afficherProduits(produits, root);
-          //  }
+            String typeRecherche = rechercheTextField.getText();
+            List<Produit> produitsRecherches = rechercherProduits(typeRecherche);
+            afficherProduits(produitsRecherches, root);
         });
 
-        topBar.getChildren().addAll(choixRechercheComboBox, rechercheTextField,  rechercherButton);
+        HBox searchBox = new HBox(rechercheTextField, rechercherButton);
+        searchBox.setAlignment(Pos.CENTER_LEFT);
+        searchBox.setSpacing(10);
+
+        HBox buttonContainer = new HBox(consulterPanierButton);
+        buttonContainer.setAlignment(Pos.CENTER_RIGHT);
+
+        topBar.getChildren().addAll(buttonContainer, searchBox);
         root.setTop(topBar);
+       // root.setTop(topBar);
 
         ScrollPane scrollPane = new ScrollPane();
         FlowPane produitsPane = new FlowPane();
@@ -163,51 +139,22 @@ public class VitrineClient extends Application {
                 produit.setQuantiteVendues(resultSet.getInt("quantiteVendues"));
                 produit.setQuantiteDisponible(resultSet.getInt("quantite") - resultSet.getInt("quantiteVendues"));
                 produit.setImage(resultSet.getBytes("image"));
-
                 produits.add(produit);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return produits;
     }
 
 
-    private List<Produit> filtrerProduitsParPlageDePrix(int prixMin, int prixMax) {
-        List<Produit> produits = new ArrayList<>();
 
-        String query = "SELECT * FROM produit WHERE prix BETWEEN ? AND ? AND quantite > 0";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, prixMin);
-            statement.setInt(2, prixMax);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                while (resultSet.next()) {
-                    Produit produit = new Produit();
-                    produit.setIdProduit(resultSet.getInt("idProduit"));
-                    produit.setNom(resultSet.getString("nom"));
-                    produit.setDescription(resultSet.getString("description"));
-                    produit.setPrix(resultSet.getInt("prix"));
-                    produit.setType(resultSet.getString("type"));
-                    produit.setQuantite(resultSet.getInt("quantite"));
-                    produit.setQuantiteVendues(resultSet.getInt("quantiteVendues"));
-                    produit.setQuantiteDisponible(resultSet.getInt("quantite") - resultSet.getInt("quantiteVendues"));
-                    produit.setImage(resultSet.getBytes("image"));
-                    produits.add(produit);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return produits;
-    }
 
 
     private List<Produit> rechercherProduits(String typeRecherche) {
         List<Produit> produitsRecherches = new ArrayList<>();
 
-        String query = "SELECT * FROM produit WHERE type LIKE ? AND quantite > 0";
+        String query = "SELECT * FROM produit WHERE nom LIKE ? AND quantite > 0";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, "%" + typeRecherche + "%");
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -253,21 +200,22 @@ public class VitrineClient extends Application {
         VBox card = new VBox();
         card.getStyleClass().add("product-card");
         card.setAlignment(Pos.TOP_CENTER);
-        card.setSpacing(10);
-        card.setPrefWidth(220); // Définir une largeur préférée fixe
-        card.setMinHeight(350); // Définir une hauteur minimale fixe
+        card.setSpacing(6);
+        card.setPrefWidth(200); // Définir une largeur préférée fixe
+        card.setMinHeight(330); // Définir une hauteur minimale fixe
 
         ImageView imageView = new ImageView(new Image(new ByteArrayInputStream(produit.getImage())));
         imageView.setFitWidth(200);
         imageView.setFitHeight(200);
 
         Label nomLabel = new Label("Nom: " + produit.getNom());
-        nomLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
-
+        nomLabel.setStyle("-fx-font-size: 17px; -fx-font-weight: bold;-fx-text-fill: #1E0F1C");
+        Label typeLabel = new Label("Type: " + produit.getNom());
+        typeLabel.setStyle("-fx-font-size: 15px; -fx-font-weight: bold;-fx-text-fill: #2c3e50;");
         Label prixLabel = new Label("Prix: " + produit.getPrix() + " Dt");
-        prixLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #e74c3c;");
+        prixLabel.setStyle("-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #A62609;");
 
-        card.getChildren().addAll(imageView, nomLabel, prixLabel);
+        card.getChildren().addAll(imageView, nomLabel,typeLabel, prixLabel);
 
         Button addToCartButton = new Button("Ajouter au panier");
         addToCartButton.getStyleClass().add("add-to-cart-button");
@@ -312,7 +260,7 @@ public class VitrineClient extends Application {
     }
 
     private void afficherPanier() {
-        Stage panierStage = new Stage();
+        panierStage = new Stage();
         panierStage.setTitle("Consulter le Panier");
 
         VBox panierLayout = new VBox();
@@ -322,7 +270,7 @@ public class VitrineClient extends Application {
         for (Commande commande : panier) {
             Label produitLabel = new Label("Produit: " + commande.getNomProduit());
             Label quantiteLabel = new Label("Quantité: " + commande.getQuantite());
-            Label montantLabel = new Label("Montant: " + commande.getMontantTotale() + " $");
+            Label montantLabel = new Label("Montant: " + commande.getMontantTotale() + " Dt");
             Separator separator = new Separator();
 
             panierLayout.getChildren().addAll(produitLabel, quantiteLabel, montantLabel, separator);
@@ -344,15 +292,126 @@ public class VitrineClient extends Application {
         panierStage.show();
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
     private void confirmerAchat() {
         // Enregistrer la commande dans la base de données
         for (Commande commande : panier) {
             enregistrerCommande(commande);
             mettreAJourQuantiteProduit(commande.getIdProduit(), commande.getQuantite());
         }
-        showAlert("Succès", "Achat confirmé !");
-        viderPanier();
+
+        // Demander si l'utilisateur veut imprimer la facture
+        Alert confirmDialog = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmDialog.setTitle("Impression de la facture");
+        confirmDialog.setHeaderText("Voulez-vous imprimer votre facture ?");
+        confirmDialog.setContentText("Choisissez votre option :");
+
+        ButtonType buttonTypeOui = new ButtonType("Oui");
+        ButtonType buttonTypeNon = new ButtonType("Non");
+
+        confirmDialog.getButtonTypes().setAll(buttonTypeOui, buttonTypeNon);
+
+        confirmDialog.showAndWait().ifPresent(buttonType -> {
+            if (buttonType == buttonTypeOui) {
+                // L'utilisateur a choisi d'imprimer la facture
+                imprimerFacture(panier);
+
+                // Afficher une alerte
+                showAlert("Succès", "Facture téléchargée avec succès !");
+
+                // Fermer la fenêtre du panier
+                if (panierStage != null) {
+                    panierStage.hide();
+                }
+
+                // Vider le panier
+                viderPanier();
+            } else {
+                // L'utilisateur a choisi de ne pas imprimer la facture
+                if (panierStage != null) {
+                    panierStage.hide();
+                }
+
+                // Vider le panier
+                viderPanier();
+            }
+        });
     }
+
+
+    private void imprimerFacture(List<Commande> panier) {
+        Document document = new Document();
+
+        try {
+            // Utiliser la date et l'heure actuelles comme identifiant unique
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+            String timestamp = dateFormat.format(new Date());
+            String codeAchat = generateUniqueCode();
+
+            String nomFichier = "facture_" + codeAchat + ".pdf";
+
+            PdfWriter.getInstance(document, new FileOutputStream(nomFichier));
+            document.open();
+
+            // Ajouter en-tête
+            Font fontEnTete = new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD);
+            Paragraph enTete = new Paragraph("Facture d'achat - " + timestamp + " (Code: " + codeAchat + ")", fontEnTete);
+            enTete.setAlignment(Paragraph.ALIGN_CENTER);
+            document.add(enTete);
+
+            // Ajouter table des détails de la commande
+            PdfPTable table = new PdfPTable(3); // 3 colonnes pour Produit, Quantité et Montant
+            table.setWidthPercentage(100);
+            table.setSpacingBefore(20f);
+
+            Font fontDetails = new Font(Font.FontFamily.HELVETICA, 12);
+
+            PdfPCell cellProduit = new PdfPCell(new Phrase("Produit", fontDetails));
+            PdfPCell cellQuantite = new PdfPCell(new Phrase("Quantité", fontDetails));
+            PdfPCell cellMontant = new PdfPCell(new Phrase("Montant (Dt)", fontDetails));
+
+            table.addCell(cellProduit);
+            table.addCell(cellQuantite);
+            table.addCell(cellMontant);
+
+            for (Commande commande : panier) {
+                table.addCell(commande.getNomProduit());
+                table.addCell(String.valueOf(commande.getQuantite()));
+                table.addCell(String.valueOf(commande.getMontantTotale()));
+            }
+
+            document.add(table);
+
+            document.close();
+        } catch (DocumentException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String generateUniqueCode() {
+        // Générer un code unique en utilisant la date et un identifiant aléatoire
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+        String datePart = dateFormat.format(new Date());
+
+        // Ajouter un identifiant aléatoire (par exemple, 4 chiffres)
+        String randomPart = String.format("%04d", new Random().nextInt(10000));
+
+        return datePart + randomPart;
+    }
+
+
+
 
     private void mettreAJourQuantiteProduit(int idProduit, int quantiteAchete) {
         try {
@@ -367,6 +426,11 @@ public class VitrineClient extends Application {
             e.printStackTrace();
         }
     }
+
+
+
+
+
 
 
     private void enregistrerCommande(Commande commande) {
@@ -389,20 +453,20 @@ public class VitrineClient extends Application {
     }
 
 
-
-
-
-
-
-
-
     private void annulerAchat() {
         showAlert("Info", "Achat annulé.");
-        viderPanier();
+
+        if (panierStage != null) {
+            viderPanier();
+            panierStage.hide();
+        }
     }
 
     private void viderPanier() {
+        System.out.println("Vidage du panier...");
         panier.clear();
+        //afficherPanier();
+        System.out.println("Panier vidé.");
     }
 
     private void showAlert(String title, String content) {
