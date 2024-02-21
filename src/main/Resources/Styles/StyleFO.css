@@ -5,7 +5,7 @@
 
 /* Style du conteneur principal du formulaire */
 .grid-pane {
-    -fx-background-color: rgb(19, 1, 1); /* Couleur de fond de la grille avec transparence */
+    -fx-background-color: rgba(114, 15, 15, 0.51); /* Couleur de fond de la grille avec transparence */
     -fx-background-radius: 20px; /* Rayon des coins de la grille */
     -fx-padding: 25px; /* Espacement intérieur de la grille */
     -fx-alignment: center; /* Centrer les éléments horizontalement */

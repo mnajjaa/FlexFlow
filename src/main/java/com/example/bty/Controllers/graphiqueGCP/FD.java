@@ -8,8 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
-import javafx.stage.FileChooser;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -34,12 +33,17 @@ public class FD extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+
+
         primaryStage.setTitle("Formulaire de demande");
 
         GridPane grid = new GridPane();
         grid.setPadding(new Insets(20, 20, 20, 20));
         grid.setVgap(10);
         grid.setHgap(10);
+
+
+
 
         // Labels
         Label ageLabel = new Label("Age:");
@@ -126,8 +130,12 @@ public class FD extends Application {
                 idUserField, idOffreLabel, idOffreField, sendButton,updateButton,deleteButton);
 
         Scene scene = new Scene(grid, 400, 300);
+        scene.getStylesheets().add(getClass().getResource("/Styles/StyleFDO.css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.show();
+
+
+
     }
 
     private void insertDemande() {

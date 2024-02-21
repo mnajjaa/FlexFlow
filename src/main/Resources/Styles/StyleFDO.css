@@ -1,9 +1,16 @@
 /* Style du fond de la fenêtre */
 .root {
-    -fx-background-color: rgb(15, 7, 89); /* Couleur de fond de la fenêtre */
-    -fx-background-image: url("/imagees/farah.png"); /* Image de fond de la grille */
 
+    /*-fx-border-color: red;*/
+    /*-fx-border-width: 2px;*/
+
+    -fx-background-color: rgb(7, 33, 89);
+    -fx-background-image: url('/images/ouss.jpg');
+    -fx-background-repeat: stretch;
+    -fx-background-size: 100% 100%;
+    -fx-background-position: center center;
 }
+
 
 /* Style du conteneur principal du formulaire */
 .grid-pane {
@@ -45,4 +52,11 @@
 /* Style des boutons lorsqu'ils sont enfoncés */
 .button:pressed {
     -fx-background-color: #367c39; /* Couleur de fond du bouton lorsqu'il est enfoncé */
+
+}
+
+.title-label {
+    -fx-font-size: 24px; /* Taille de police */
+    -fx-font-weight: bold; /* Poids de la police */
+    -fx-text-fill: #333333; /* Couleur du texte */
 }
