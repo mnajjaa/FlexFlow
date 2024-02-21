@@ -4,7 +4,10 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 import java.sql.Connection;
@@ -21,10 +24,22 @@ public class Formoffre extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setTitle("Formulaire d'ajout d'offre");
+        Image image = null;
+        try {
+            image = new Image(getClass().getResourceAsStream("/images/ouss0.jpg"));
+        } catch (NullPointerException e) {
+            throw new RuntimeException("Le fichier image n'a pas été trouvé : " + e.getMessage());
+        }
+
+        ImageView backgroundImage = new ImageView(image);
+        backgroundImage.setFitHeight(650);
+        backgroundImage.setFitWidth(700);
+
+        StackPane root = new StackPane();
+        root.getChildren().add(backgroundImage);
 
         GridPane grid = new GridPane();
-        grid.setPadding(new Insets(20));
+        grid.setPadding(new Insets(20, 20, 20, 20));
         grid.setVgap(10);
         grid.setHgap(10);
 
@@ -71,8 +86,10 @@ public class Formoffre extends Application {
         grid.add(deleteButton, 3, 5);
         deleteButton.setOnAction(event -> deleteOffre());
 
-        Scene scene = new Scene(grid, 400, 300);
+        root.getChildren().add(grid);
+        Scene scene = new Scene(root, 700, 650);
         scene.getStylesheets().add(getClass().getResource("/Styles/StyleFO.css").toExternalForm());
+        primaryStage.setTitle("Formulaire de demande");
         primaryStage.setScene(scene);
         primaryStage.show();
     }

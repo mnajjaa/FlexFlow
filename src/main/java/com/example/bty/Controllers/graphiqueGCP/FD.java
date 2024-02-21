@@ -8,21 +8,16 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class FD extends Application {
-    private File selectedImage;
-    private ImageView imageView;
-
     private TextField ageField;
     private TextField butField;
     private TextField niveauPhysiqueField;
@@ -34,16 +29,24 @@ public class FD extends Application {
     @Override
     public void start(Stage primaryStage) {
 
+        Image image = null;
+        try {
+            image = new Image(getClass().getResourceAsStream("/images/ouss13.jpg"));
+        } catch (NullPointerException e) {
+            throw new RuntimeException("Le fichier image n'a pas été trouvé : " + e.getMessage());
+        }
 
-        primaryStage.setTitle("Formulaire de demande");
+        ImageView backgroundImage = new ImageView(image);
+        backgroundImage.setFitHeight(650);
+        backgroundImage.setFitWidth(700);
+
+        StackPane root = new StackPane();
+        root.getChildren().add(backgroundImage);
 
         GridPane grid = new GridPane();
         grid.setPadding(new Insets(20, 20, 20, 20));
         grid.setVgap(10);
         grid.setHgap(10);
-
-
-
 
         // Labels
         Label ageLabel = new Label("Age:");
@@ -84,32 +87,10 @@ public class FD extends Application {
         Label etatLabel = new Label("Etat:");
         grid.add(etatLabel, 0, 7);
 
-// Champ de texte pour l'état (désactivé pour l'utilisateur)
+        // Champ de texte pour l'état (désactivé pour l'utilisateur)
         TextField etatField = new TextField("refuser"); // Set default value to "refuser"
         etatField.setEditable(false); // Make it non-editable
         grid.add(etatField, 1, 7);
-
-//        // Bouton pour charger une image
-//        Button uploadButton = new Button("Choisir une photo");
-//        imageView = new ImageView();
-//        imageView.setFitWidth(100);
-//        imageView.setFitHeight(100);
-//        grid.add(uploadButton, 0, 8);
-//        grid.add(imageView, 1, 8);
-//
-//        uploadButton.setOnAction(e -> {
-//            FileChooser fileChooser = new FileChooser();
-//            fileChooser.setTitle("Choisir une photo");
-//            selectedImage = fileChooser.showOpenDialog(primaryStage);
-//            if (selectedImage != null) {
-//                try {
-//                    Image image = new Image(new FileInputStream(selectedImage));
-//                    imageView.setImage(image);
-//                } catch (FileNotFoundException ex) {
-//                    ex.printStackTrace();
-//                }
-//            }
-//        });
 
         Button sendButton = new Button("Envoyer");
         GridPane.setConstraints(sendButton, 1, 8);
@@ -123,19 +104,18 @@ public class FD extends Application {
         GridPane.setConstraints(deleteButton, 3, 8);
         deleteButton.setOnAction(event -> deleteDemande());
 
-
-
         grid.getChildren().addAll(ageLabel, ageField, butLabel, butField, niveauPhysiqueLabel, niveauPhysiqueField,
                 maladieChroniqueLabel, maladieChroniqueField, nombreHeureLabel, nombreHeureField, idUserLabel,
                 idUserField, idOffreLabel, idOffreField, sendButton,updateButton,deleteButton);
 
-        Scene scene = new Scene(grid, 400, 300);
-        scene.getStylesheets().add(getClass().getResource("/Styles/StyleFDO.css").toExternalForm());
+        // Ajout de la grille à la racine de la scène
+        root.getChildren().add(grid);
+
+        Scene scene = new Scene(root, 700, 650);
+        scene.getStylesheets().add(getClass().getResource("/Styles/StyleFO.css").toExternalForm());
+        primaryStage.setTitle("Formulaire de demande");
         primaryStage.setScene(scene);
         primaryStage.show();
-
-
-
     }
 
     private void insertDemande() {
