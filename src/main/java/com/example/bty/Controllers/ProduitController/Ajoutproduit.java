@@ -63,7 +63,7 @@ public class Ajoutproduit extends Application {
 
 
         // Labels and TextFields
-        Label idLabel = new Label("ID :");
+        Label idLabel = new Label("Code produit :");
         idField = new TextField();
         idField.getStyleClass().add("text-field");
         gridPane.addRow(0, idLabel, idField);
@@ -137,41 +137,55 @@ public class Ajoutproduit extends Application {
     }
 
     private void ajouterProduit() {
-        int id = Integer.parseInt(idField.getText());
-        String nom = nomField.getText();
-        String description = descriptionField.getText();
-        double prix = Double.parseDouble(prixField.getText());
-        String type = typeComboBox.getValue();
-        int quantite = Integer.parseInt(quantiteField.getText());
-        int quantiteVendues = Integer.parseInt(quantiteVenduesField.getText());
-
-        byte[] imageBytes = null;
-        if (selectedImage != null) {
-            try (FileInputStream fis = new FileInputStream(selectedImage)) {
-                imageBytes = new byte[(int) selectedImage.length()];
-                fis.read(imageBytes);
-            } catch (IOException e) {
-                e.printStackTrace();
+        try {
+            // Vérifier si tous les champs sont remplis
+            if (idField.getText().isEmpty() || nomField.getText().isEmpty() || descriptionField.getText().isEmpty()
+                    || prixField.getText().isEmpty() || typeComboBox.getValue() == null
+                    || quantiteField.getText().isEmpty() || quantiteVenduesField.getText().isEmpty()) {
+                afficherMessage("Erreur de saisie", "Veuillez remplir tous les champs.");
+                return;
             }
-        }
 
-        Produit produit = new Produit(id, nom, description, prix, type, quantite, quantiteVendues, imageBytes);
-        ServiceProduit serviceProduit = new ServiceProduit();
-        if (serviceProduit.ajouterProduit(produit)) {
-            afficherMessage("Succès", "Le produit a été ajouté avec succès.");
-        } else {
-            afficherMessage("Échec", "L'ajout du produit a échoué.");
-        }
-        idField.clear();
-        nomField.clear();
-        descriptionField.clear();
-        prixField.clear();
-        typeComboBox.getSelectionModel().clearSelection();
-        quantiteField.clear();
-        quantiteVenduesField.clear();
-        uploadedImageView.setImage(null); // Efface l'image affichée dans l'ImageView
+            int id = Integer.parseInt(idField.getText());
+            String nom = nomField.getText();
+            String description = descriptionField.getText();
+            double prix = Double.parseDouble(prixField.getText());
+            String type = typeComboBox.getValue();
+            int quantite = Integer.parseInt(quantiteField.getText());
+            int quantiteVendues = Integer.parseInt(quantiteVenduesField.getText());
 
-        selectedImage = null;
+
+            byte[] imageBytes = null;
+            if (selectedImage != null) {
+                try (FileInputStream fis = new FileInputStream(selectedImage)) {
+                    imageBytes = new byte[(int) selectedImage.length()];
+                    fis.read(imageBytes);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            Produit produit = new Produit(id, nom, description, prix, type, quantite, quantiteVendues, imageBytes);
+            ServiceProduit serviceProduit = new ServiceProduit();
+            if (serviceProduit.ajouterProduit(produit)) {
+                afficherMessage("Succès", "Le produit a été ajouté avec succès.");
+            } else {
+                afficherMessage("Échec", "L'ajout du produit a échoué.");
+            }
+            // Réinitialiser les champs après l'ajout
+            idField.clear();
+            nomField.clear();
+            descriptionField.clear();
+            prixField.clear();
+            typeComboBox.getSelectionModel().clearSelection();
+            quantiteField.clear();
+            quantiteVenduesField.clear();
+            uploadedImageView.setImage(null);
+            selectedImage = null;
+
+        } catch (NumberFormatException e) {
+            afficherMessage("Erreur de saisie", "Veuillez saisir des valeurs numériques valides pour les champs numériques (ID, Prix, Quantité).");
+        }
     }
 
     private void afficherMessage(String titre, String contenu) {
@@ -180,5 +194,10 @@ public class Ajoutproduit extends Application {
         alert.setHeaderText(null);
         alert.setContentText(contenu);
         alert.showAndWait();
+    }
+
+    private boolean estChaineValide(String chaine) {
+        // Vérifie si la chaîne ne contient pas de chiffres
+        return chaine.matches("\\D*");
     }
 }

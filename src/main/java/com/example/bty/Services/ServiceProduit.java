@@ -1,5 +1,6 @@
 package com.example.bty.Services;
 import com.example.bty.Entities.Commande;
+import com.example.bty.Entities.Commmande;
 import com.example.bty.Entities.Produit;
 import com.example.bty.Entities.User;
 import com.example.bty.Utils.ConnexionDB;
@@ -65,6 +66,31 @@ public class ServiceProduit {
         return produits;
     }
 
+    public List<Commmande> consulterCommandes() {
+        List<Commmande> commandes = new ArrayList<>();
+        String query = "SELECT * FROM commande"; // Assurez-vous que le nom de la table est correct
+
+        try (Statement statement = connexion.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+
+            while (resultSet.next()) {
+                Commmande commande = new Commmande();
+
+                commande.setIdCommande(resultSet.getInt("idCommande"));
+                commande.setDateCommande(resultSet.getTimestamp("dateCommande"));
+                commande.setIdProduit(resultSet.getInt("idProduit"));
+                commande.setNom(resultSet.getString("nom"));
+                commande.setMontant(resultSet.getDouble("montant"));
+
+                commandes.add(commande);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return commandes;
+    }
+
+
     public void modifierPrixProduit(int idProduit, double nouveauPrix) {
         // try (Connection connection = ConnexionDB.obtenirConnexion()) {
         String query = "UPDATE produit SET Prix = ? WHERE idProduit = ?";
@@ -78,15 +104,43 @@ public class ServiceProduit {
         }
     }
 
-    public void supprimerProduit(int idProduit) {
+
+    public void modifierProduit(Produit produit) {
+        try {
+            // Créer la requête SQL pour la mise à jour du produit
+            String query = "UPDATE produit SET nom=?, description=?, prix=?, type=?, quantite=?, quantiteVendues=? WHERE idProduit=?";
+            PreparedStatement preparedStatement = connexion.prepareStatement(query);
+
+            preparedStatement.setString(1, produit.getNom());
+            preparedStatement.setString(2, produit.getDescription());
+            preparedStatement.setDouble(3, produit.getPrix());
+            preparedStatement.setString(4, produit.getType());
+            preparedStatement.setInt(5, produit.getQuantite());
+            preparedStatement.setInt(6, produit.getQuantiteVendues());
+            preparedStatement.setInt(7, produit.getIdProduit());
+
+            // Exécuter la mise à jour
+            preparedStatement.executeUpdate();
+
+            // Fermer la déclaration
+            preparedStatement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Gérer les erreurs de mise à jour
+        }
+    }
+
+    public boolean supprimerProduit(int idProduit) {
         //try (Connection connection = ConnexionDB.obtenirConnexion()) {
         String query = "DELETE FROM produit WHERE idProduit = ?";
         try (PreparedStatement statement = connexion.prepareStatement(query)) {
             statement.setInt(1, idProduit);
             statement.executeUpdate();
+            return true;
         }
         catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
     }
 

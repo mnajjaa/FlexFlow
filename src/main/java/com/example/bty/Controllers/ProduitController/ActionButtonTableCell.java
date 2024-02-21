@@ -9,15 +9,34 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 
+import java.util.function.Consumer;
+
 public class ActionButtonTableCell<S> extends TableCell<S, Void> {
     private final Button deleteButton = createButton("/com/example/bty/imagesModuleProduit/delete.png");
     private final Button editButton = createButton("/com/example/bty/imagesModuleProduit/edit.png");
 
-    public ActionButtonTableCell() {
+    public ActionButtonTableCell(Consumer<S> deleteAction, Consumer<S> editAction) {
+        deleteButton.setOnAction(event -> {
+            S rowData = getTableRow().getItem();
+            if (rowData != null) {
+                deleteAction.accept(rowData);
+            }
+        });
+
+        editButton.setOnAction(event -> {
+            S rowData = getTableRow().getItem();
+            if (rowData != null) {
+                editAction.accept(rowData);
+            }
+        });
+
         setGraphic(createButtonBar());
         setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         setAlignment(Pos.CENTER);
     }
+
+
+
 
     private Button createButton(String iconPath) {
         Image image = new Image(getClass().getResourceAsStream(iconPath));
@@ -33,6 +52,8 @@ public class ActionButtonTableCell<S> extends TableCell<S, Void> {
         buttonBar.getChildren().addAll(deleteButton, editButton);
         return buttonBar;
     }
+
+
 
     @Override
     protected void updateItem(Void item, boolean empty) {

@@ -341,6 +341,7 @@ public class VitrineClient extends Application {
                 // L'utilisateur a choisi de ne pas imprimer la facture
                 if (panierStage != null) {
                     panierStage.hide();
+                    showAlert("Succès", "Achat confirmé");
                 }
 
                 // Vider le panier
@@ -357,7 +358,10 @@ public class VitrineClient extends Application {
             // Utiliser la date et l'heure actuelles comme identifiant unique
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
             String timestamp = dateFormat.format(new Date());
+            String codeAchat1 = generateUniqueCode1();
             String codeAchat = generateUniqueCode();
+
+
 
             String nomFichier = "facture_" + codeAchat + ".pdf";
 
@@ -366,7 +370,7 @@ public class VitrineClient extends Application {
 
             // Ajouter en-tête
             Font fontEnTete = new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD);
-            Paragraph enTete = new Paragraph("Facture d'achat - " + timestamp + " (Code: " + codeAchat + ")", fontEnTete);
+            Paragraph enTete = new Paragraph("Facture d'achat - " + timestamp + " (Code d'achat: " + codeAchat1 + ")", fontEnTete);
             enTete.setAlignment(Paragraph.ALIGN_CENTER);
             document.add(enTete);
 
@@ -405,9 +409,20 @@ public class VitrineClient extends Application {
         String datePart = dateFormat.format(new Date());
 
         // Ajouter un identifiant aléatoire (par exemple, 4 chiffres)
-        String randomPart = String.format("%04d", new Random().nextInt(10000));
+        String randomPart = String.format("%05d", new Random().nextInt(10000));
 
         return datePart + randomPart;
+    }
+
+    private String generateUniqueCode1() {
+        // Générer un code unique en utilisant la date et un identifiant aléatoire
+       // SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+       // String datePart = dateFormat.format(new Date());
+
+        // Ajouter un identifiant aléatoire (par exemple, 4 chiffres)
+        String randomPart = String.format("%05d", new Random().nextInt(10000));
+
+        return  randomPart;
     }
 
 
