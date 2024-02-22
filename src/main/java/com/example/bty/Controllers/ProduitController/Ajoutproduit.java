@@ -59,7 +59,7 @@ public class Ajoutproduit extends Application {
         GridPane gridPane = new GridPane();
         gridPane.setVgap(15);
         gridPane.setHgap(15);
-        gridPane.setStyle("-fx-background-color: #DDE2C6; -fx-padding: 25; -fx-border-radius: 10; -fx-background-radius: 10; -fx-alignment: center;");
+        gridPane.setStyle("-fx-background-color: #FFFAFA; -fx-padding: 25; -fx-border-radius: 10; -fx-background-radius: 10; -fx-alignment: center;");
 
 
         // Labels and TextFields
@@ -128,7 +128,7 @@ public class Ajoutproduit extends Application {
 
         // Adding elements to the VBox (Card Container)
         cardContainer.getChildren().addAll(cardTitle, gridPane);
-
+       // VBox.setMargin(cardContainer, new Insets(50, 0, 50, 20));
         Scene scene = new Scene(cardContainer, 800, 620);
         scene.getStylesheets().add(getClass().getResource("/com/example/bty/CSSmoduleProduit/Ajoutproduit.css").toExternalForm());
         primaryStage.setScene(scene);

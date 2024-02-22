@@ -53,6 +53,7 @@
 
 
 
+
 /* Lignes de séparation horizontales du tableau */
 .table-view .column-header-background {
     -fx-border-width: 0 0 1 0; /* Épaisseur de la bordure seulement en bas */
@@ -66,7 +67,6 @@
     -fx-text-fill: #1E0F1C;
     -fx-font-size: 13px;
     -fx-font-family: 'Segoe UI', Tahoma, Geneva, Verdana;
-
     -fx-pref-width: 40px; /* Largeur préférée de la colonne ID */
 }
 
@@ -74,7 +74,6 @@
     -fx-text-fill: #1E0F1C;
     -fx-font-size: 13px;
     -fx-font-family: 'Segoe UI', Tahoma, Geneva, Verdana;
-
     -fx-pref-width: 120px; /* Largeur préférée de la colonne Nom */
 }
 
@@ -82,7 +81,6 @@
     -fx-text-fill: #1E0F1C;
     -fx-font-size: 13px;
     -fx-font-family: 'Segoe UI', Tahoma, Geneva, Verdana;
-
     -fx-pref-width: 187px; /* Largeur préférée de la colonne Description */
 }
 
@@ -90,7 +88,7 @@
     -fx-text-fill: #1E0F1C;
     -fx-font-size: 13px;
     -fx-font-family: 'Segoe UI', Tahoma, Geneva, Verdana;
-   ;
+
     -fx-pref-width: 80px; /* Largeur préférée de la colonne Prix */
 }
 
@@ -135,4 +133,9 @@
     -fx-font-size: 14px;
     -fx-padding: 10px 20px;
 }
+
+
+
+
+
 

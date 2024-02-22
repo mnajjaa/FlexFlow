@@ -82,8 +82,8 @@ public class ConsulterProduit extends Application {
         tableView.getColumns().addAll(idCol, nomCol, descriptionCol, prixCol, typeCol, quantiteCol, quantiteVenduesCol, actionColumn);
 
         // Bouton pour actualiser la table
-     /*   Button actualiserBtn = new Button("Actualiser");
-        actualiserBtn.setOnAction(e -> actualiserTable());*/
+        Button actualiserBtn = new Button("Actualiser");
+        actualiserBtn.setOnAction(e -> actualiserTable());
 
         VBox vbox = new VBox();
         vbox.getStyleClass().add("container");
@@ -114,32 +114,39 @@ public class ConsulterProduit extends Application {
         nomField.setStyle(" -fx-font-size: 14px;\n" +
                 "    -fx-padding: 5px;\n" +
                 "    -fx-pref-width: 250px;\n" +
-                "    -fx-background-radius: 10;");
+                "    -fx-background-radius: 10;" +
+                " -fx-font-family: 'Segoe UI', Tahoma, Geneva, Verdana;");
 
         descriptionField.setStyle(" -fx-font-size: 14px;\n" +
                 "    -fx-padding: 5px;\n" +
                 "    -fx-pref-width: 250px;\n" +
-                "    -fx-background-radius: 10;");
+                "    -fx-background-radius: 10;" +
+                " -fx-font-family: 'Segoe UI', Tahoma, Geneva, Verdana;");
 
         prixField.setStyle(" -fx-font-size: 14px;\n" +
                 "    -fx-padding: 5px;\n" +
                 "    -fx-pref-width: 250px;\n" +
-                "    -fx-background-radius: 10;");
+                "    -fx-background-radius: 10;" +
+                " -fx-font-family: 'Segoe UI', Tahoma, Geneva, Verdana;");
 
         typeField.setStyle(" -fx-font-size: 14px;\n" +
                 "    -fx-padding: 5px;\n" +
                 "    -fx-pref-width: 250px;\n" +
-                "    -fx-background-radius: 10;");
+                "    -fx-background-radius: 10;" +
+                " -fx-font-family: 'Segoe UI', Tahoma, Geneva, Verdana;");
 
         quantiteField.setStyle(" -fx-font-size: 14px;\n" +
                 "    -fx-padding: 5px;\n" +
                 "    -fx-pref-width: 250px;\n" +
-                "    -fx-background-radius: 10;");
+                "    -fx-background-radius: 10;" +
+                " -fx-font-family: 'Segoe UI', Tahoma, Geneva, Verdana;");
 
         quantiteVenduesField.setStyle(" -fx-font-size: 14px;\n" +
                 "    -fx-padding: 5px;\n" +
                 "    -fx-pref-width: 250px;\n" +
-                "    -fx-background-radius: 10;");
+                "    -fx-background-radius: 10;" +
+                " -fx-font-family: 'Segoe UI', Tahoma, Geneva, Verdana;"
+        );
 
 
 

@@ -147,10 +147,6 @@ public class VitrineClient extends Application {
         return produits;
     }
 
-
-
-
-
     private List<Produit> rechercherProduits(String typeRecherche) {
         List<Produit> produitsRecherches = new ArrayList<>();
 
@@ -243,9 +239,6 @@ public class VitrineClient extends Application {
         return card;
     }
 
-
-
-
     private void ajouterAuPanier(Produit produit, int quantite) {
         Commande commande = new Commande(produit.getIdProduit(), produit.getNom(), quantite, produit.getPrix() * quantite);
         panier.add(commande);
@@ -291,17 +284,6 @@ public class VitrineClient extends Application {
         panierStage.setScene(panierScene);
         panierStage.show();
     }
-
-
-
-
-
-
-
-
-
-
-
 
 
     private void confirmerAchat() {
