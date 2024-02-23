@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bty.Controllers.DashboardVitrine" >
+    <AnchorPane fx:id="main_form" prefHeight="200.0" prefWidth="200.0">
+        <BorderPane layoutX="146.0" layoutY="29.0" prefHeight="600.0" prefWidth="1100.0" styleClass="border-pane" stylesheets="dashboardDesign.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+
+
+            <left>
+                <AnchorPane prefHeight="555.0" prefWidth="220.0" BorderPane.alignment="CENTER">
+                    <AnchorPane prefHeight="600.0" prefWidth="220.0" stylesheets="dashboardDesign.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <styleClass>
+                            <String fx:value="nav" />
+                            <String fx:value="nav-border" />
+                            <String fx:value="shadow" />
+                        </styleClass>
+                        <FontAwesomeIconView fill="WHITE" glyphName="USER" layoutX="82.0" layoutY="91.0" size="6em" />
+                        <Label layoutX="78.0" layoutY="101.0" text="Welcome," textFill="WHITE">
+                            <font>
+                                <Font name="Tahoma" size="15.0" />
+                            </font>
+                        </Label>
+                        <Label fx:id="username" alignment="CENTER" layoutX="11.0" layoutY="120.0" prefHeight="23.0" prefWidth="201.0" text="MarcoMan" textFill="WHITE">
+                            <font>
+                                <Font name="Arial Bold" size="20.0" />
+                            </font>
+                        </Label>
+                        <Line endX="100.0" layoutX="111.0" layoutY="152.0" startX="-100.0" stroke="WHITE" />
+
+                        <Button fx:id="dashboard_btn" layoutX="21.0" layoutY="170.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="dashboardDesign.css" text="Dashboard" />
+
+                        <Button fx:id="user_btn" layoutX="21.0" layoutY="220.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="dashboardDesign.css" text="Utilisateurs" />
+
+                        <Button fx:id="cours_btn" layoutX="21.0" layoutY="270.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="dashboardDesign.css" text="Cours" />
+
+                        <Button fx:id="evenement_btn" layoutX="21.0" layoutY="320.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="dashboardDesign.css" text="Evenement" />
+
+                        <Button fx:id="produit_btn" layoutX="21.0" layoutY="370.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="dashboardDesign.css" text="Produits" />
+
+                        <Button fx:id="coach_btn" layoutX="21.0" layoutY="420.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="dashboardDesign.css" text="Coaching privé" />
+
+                        <Button fx:id="reclamation_btn" layoutX="21.0" layoutY="470.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="dashboardDesign.css" text="Réclamation" />
+
+                        <Button fx:id="logout" layoutX="14.0" layoutY="545.0" mnemonicParsing="false" stylesheets="dashboardDesign.css">
+                            <graphic>
+                                <FontAwesomeIconView fill="WHITE" glyphName="SIGN_OUT" size="2em" />
+                            </graphic>
+                            <styleClass>
+                                <String fx:value="logout" />
+                                <String fx:value="shadow" />
+                            </styleClass>
+                        </Button>
+                        <Label layoutX="58.0" layoutY="551.0" text="Logout" textFill="WHITE">
+                            <font>
+                                <Font size="15.0" />
+                            </font>
+                        </Label>
+
+                    </AnchorPane>
+                </AnchorPane>
+            </left>
+
+
+
+
+        </BorderPane>
+    </AnchorPane>
+</StackPane>

@@ -340,17 +340,47 @@ public class ServiceProduit {
     }
 
 
+    public static double calculerChiffreAffaires() {
+        double chiffreAffaires = 0.0;
+
+        try (Connection connection =  ConnexionDB.getInstance().getConnexion()) {
+            String query = "SELECT SUM(Montant) FROM commande";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query);
+                 ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    chiffreAffaires = resultSet.getDouble(1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return chiffreAffaires;
+    }
 
 
 
+    public static String obtenirProduitPlusAchete() {
+        String produitPlusAchete = null;
 
+        // Utilisez try-with-resources pour vous assurer que la connexion est fermée correctement
+        try (Connection connection = ConnexionDB.getInstance().getConnexion()) {
+            // Votre requête SQL
+            String query = "SELECT nom FROM produit ORDER BY Prix * Quantite DESC LIMIT 1";
 
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query);
+                 ResultSet resultSet = preparedStatement.executeQuery()) {
 
+                if (resultSet.next()) {
+                    produitPlusAchete = resultSet.getString("nom");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-
-
-
-
+        return produitPlusAchete;
+    }
 
 
 

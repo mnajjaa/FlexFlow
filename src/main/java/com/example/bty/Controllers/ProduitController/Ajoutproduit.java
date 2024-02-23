@@ -109,8 +109,8 @@ public class Ajoutproduit extends Application {
                     FileInputStream input = new FileInputStream(selectedImage);
                     Image image = new Image(input);
                     uploadedImageView.setImage(image);  // Mettez à jour l'ImageView
-                    uploadedImageView.setFitWidth(60);
-                    uploadedImageView.setFitHeight(60);
+                    uploadedImageView.setFitWidth(55);
+                    uploadedImageView.setFitHeight(55);
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
@@ -129,7 +129,7 @@ public class Ajoutproduit extends Application {
         // Adding elements to the VBox (Card Container)
         cardContainer.getChildren().addAll(cardTitle, gridPane);
        // VBox.setMargin(cardContainer, new Insets(50, 0, 50, 20));
-        Scene scene = new Scene(cardContainer, 800, 620);
+        Scene scene = new Scene(cardContainer, 700, 570);
         scene.getStylesheets().add(getClass().getResource("/com/example/bty/CSSmoduleProduit/Ajoutproduit.css").toExternalForm());
         primaryStage.setScene(scene);
 

@@ -21,5 +21,7 @@ module com.example.bty {
     opens com.example.bty.Controllers.ProduitController to javafx.fxml;
 
 
+    exports com.example.bty.Views;
+    opens com.example.bty.Views to javafx.fxml;
 
 }
