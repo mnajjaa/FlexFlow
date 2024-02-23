@@ -26,14 +26,14 @@ public class Formoffre extends Application {
     public void start(Stage primaryStage) {
         Image image = null;
         try {
-            image = new Image(getClass().getResourceAsStream("/images/ouss0.jpg"));
+            image = new Image(getClass().getResourceAsStream("/images/farah3.jpg"));
         } catch (NullPointerException e) {
             throw new RuntimeException("Le fichier image n'a pas été trouvé : " + e.getMessage());
         }
 
         ImageView backgroundImage = new ImageView(image);
-        backgroundImage.setFitHeight(650);
-        backgroundImage.setFitWidth(700);
+        backgroundImage.setFitHeight(1650);
+        backgroundImage.setFitWidth(1800);
 
         StackPane root = new StackPane();
         root.getChildren().add(backgroundImage);

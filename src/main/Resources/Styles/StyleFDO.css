@@ -4,7 +4,7 @@
     /*-fx-border-color: red;*/
     /*-fx-border-width: 2px;*/
 
-    -fx-background-color: rgb(7, 33, 89);
+    -fx-background-color: rgba(99, 227, 154, 0.06);
     -fx-background-image: url('/images/ouss.jpg');
     -fx-background-repeat: stretch;
     -fx-background-size: 100% 100%;
@@ -25,7 +25,7 @@
 /* Style des étiquettes */
 .label {
     -fx-font-size: 14px; /* Taille de police des étiquettes */
-    -fx-text-fill: white; /* Couleur du texte des étiquettes */
+    -fx-text-fill: rgb(2, 32, 126); /* Couleur du texte des étiquettes */
 }
 
 /* Style des champs de texte */
@@ -36,7 +36,7 @@
 
 /* Style des boutons */
 .button {
-    -fx-background-color: rgba(100, 210, 146, 0.06); /* Couleur de fond du bouton */
+    -fx-background-color: rgba(141, 3, 28, 0.33); /* Couleur de fond du bouton */
     -fx-text-fill: white; /* Couleur du texte du bouton */
     -fx-font-size: 14px; /* Taille de police du bouton */
     -fx-pref-width: 100px; /* Largeur préférée du bouton */

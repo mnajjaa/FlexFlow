@@ -2,6 +2,7 @@ package com.example.bty.Controllers.graphiqueGCP;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -12,10 +13,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class FD extends Application {
     private TextField ageField;
@@ -25,20 +23,25 @@ public class FD extends Application {
     private TextField nombreHeureField;
     private TextField idUserField;
     private TextField idOffreField;
+    private TextField lesjoursFiled;
+    private TextField horaireFiled;
+
+
+
 
     @Override
     public void start(Stage primaryStage) {
 
         Image image = null;
         try {
-            image = new Image(getClass().getResourceAsStream("/images/ouss13.jpg"));
+            image = new Image(getClass().getResourceAsStream("/images/farah1.jpg"));
         } catch (NullPointerException e) {
             throw new RuntimeException("Le fichier image n'a pas été trouvé : " + e.getMessage());
         }
 
         ImageView backgroundImage = new ImageView(image);
-        backgroundImage.setFitHeight(650);
-        backgroundImage.setFitWidth(700);
+        backgroundImage.setFitHeight(1050);
+        backgroundImage.setFitWidth(1800);
 
         StackPane root = new StackPane();
         root.getChildren().add(backgroundImage);
@@ -88,25 +91,37 @@ public class FD extends Application {
         grid.add(etatLabel, 0, 7);
 
         // Champ de texte pour l'état (désactivé pour l'utilisateur)
-        TextField etatField = new TextField("refuser"); // Set default value to "refuser"
+        TextField etatField = new TextField("En Attente"); // Set default value to "refuser"
         etatField.setEditable(false); // Make it non-editable
         grid.add(etatField, 1, 7);
 
+
+
+        Label horaireLabel = new Label("Horaire:");
+        GridPane.setConstraints(horaireLabel, 0, 8);
+        horaireFiled= new TextField();
+        GridPane.setConstraints(horaireFiled, 1, 8);
+
+        Label lesjoursLabel = new Label("Lesjours:");
+        GridPane.setConstraints(lesjoursLabel, 0, 9);
+        lesjoursFiled= new TextField();
+        GridPane.setConstraints(lesjoursFiled, 1, 9);
+
         Button sendButton = new Button("Envoyer");
-        GridPane.setConstraints(sendButton, 1, 8);
+        GridPane.setConstraints(sendButton, 1, 10);
         sendButton.setOnAction(event -> insertDemande());
 
         Button updateButton = new Button("Modifier");
-        GridPane.setConstraints(updateButton, 2, 8);
+        GridPane.setConstraints(updateButton, 2, 10);
         updateButton.setOnAction(event -> updateDemande());
 
         Button deleteButton = new Button("Supprimer");
-        GridPane.setConstraints(deleteButton, 3, 8);
+        GridPane.setConstraints(deleteButton, 3, 10);
         deleteButton.setOnAction(event -> deleteDemande());
 
         grid.getChildren().addAll(ageLabel, ageField, butLabel, butField, niveauPhysiqueLabel, niveauPhysiqueField,
                 maladieChroniqueLabel, maladieChroniqueField, nombreHeureLabel, nombreHeureField, idUserLabel,
-                idUserField, idOffreLabel, idOffreField, sendButton,updateButton,deleteButton);
+                idUserField, idOffreLabel, idOffreField,lesjoursLabel,lesjoursFiled,horaireLabel,horaireFiled, sendButton,updateButton,deleteButton);
 
         // Ajout de la grille à la racine de la scène
         root.getChildren().add(grid);
@@ -124,8 +139,9 @@ public class FD extends Application {
         String password = "";
 
         try (Connection conn = DriverManager.getConnection(url, username, password)) {
-            String query = "INSERT INTO demande (Age, But, NiveauPhysique, MaladieChronique, NombreHeure, ID_User, ID_Offre, Etat) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-            String r="refuser";
+            String query = "INSERT INTO demande (Age, But, NiveauPhysique, MaladieChronique, NombreHeure, ID_User, ID_Offre, Etat, Horaire, lesjours) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String etat = "En Attente";
+            java.sql.Time horaire = java.sql.Time.valueOf("08:00:00"); // Exemple de valeur pour le champ horaire
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setInt(1, Integer.parseInt(ageField.getText()));
             statement.setString(2, butField.getText());
@@ -134,7 +150,9 @@ public class FD extends Application {
             statement.setInt(5, Integer.parseInt(nombreHeureField.getText()));
             statement.setInt(6, Integer.parseInt(idUserField.getText()));
             statement.setInt(7, Integer.parseInt(idOffreField.getText()));
-            statement.setString(8, r);
+            statement.setString(8, etat);
+            statement.setTime(9, horaire); // Utilisation de setTime pour le champ horaire
+            statement.setString(10, lesjoursFiled.getText());
 
             int rowsInserted = statement.executeUpdate();
             if (rowsInserted > 0) {
@@ -145,13 +163,14 @@ public class FD extends Application {
         }
     }
 
+
     private void updateDemande() {
         String url = "jdbc:mysql://localhost:3306/pidevgym";
         String username = "root";
         String password = "";
 
         try (Connection conn = DriverManager.getConnection(url, username, password)) {
-            String query = "UPDATE demande SET Age=?, But=?, NiveauPhysique=?, MaladieChronique=?, NombreHeure=? WHERE ID_user=?";
+            String query = "UPDATE demande SET Age=?, But=?, NiveauPhysique=?, MaladieChronique=?, NombreHeure=? ,lesjours=? WHERE ID_user=?";
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setInt(1, Integer.parseInt(ageField.getText()));
             statement.setString(2, butField.getText());
@@ -159,6 +178,7 @@ public class FD extends Application {
             statement.setString(4, maladieChroniqueField.getText());
             statement.setInt(5, Integer.parseInt(nombreHeureField.getText()));
             statement.setInt(6, Integer.parseInt(idUserField.getText()));
+            statement.setString(7, lesjoursFiled.getText());
 
             int rowsUpdated = statement.executeUpdate();
             if (rowsUpdated > 0) {

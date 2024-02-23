@@ -5,7 +5,7 @@
 
 /* Style du conteneur principal du formulaire */
 .grid-pane {
-    -fx-background-color: rgb(143, 2, 2); /* Couleur de fond de la grille avec transparence */
+    -fx-background-color: rgb(3, 21, 89); /* Couleur de fond de la grille avec transparence */
     -fx-background-radius: 20px; /* Rayon des coins de la grille */
     -fx-padding: 25px; /* Espacement intérieur de la grille */
     -fx-alignment: center; /* Centrer les éléments horizontalement */
@@ -14,7 +14,7 @@
 /* Style des étiquettes */
 .label {
     -fx-font-size: 14px; /* Taille de police des étiquettes */
-    -fx-text-fill: rgb(196, 108, 108); /* Couleur du texte des étiquettes */
+    -fx-text-fill: rgb(124, 4, 25); /* Couleur du texte des étiquettes */
     -fx-font-weight: bold; /* Mettre la police en gras */
 }
 
@@ -26,7 +26,7 @@
 
 /* Style des boutons */
 .button {
-    -fx-background-color: #b69090; /* Couleur de fond du bouton */
+    -fx-background-color: #031559; /* Couleur de fond du bouton */
     -fx-text-fill: white; /* Couleur du texte du bouton */
     -fx-font-size: 14px; /* Taille de police du bouton */
     -fx-pref-width: 100px; /* Largeur préférée du bouton */
@@ -36,7 +36,7 @@
 
 /* Style des boutons lorsqu'ils sont survolés */
 .button:hover {
-    -fx-background-color: rgba(168, 3, 3, 0.91); /* Couleur de fond du bouton lorsqu'il est survolé */
+    -fx-background-color: rgb(5, 0, 1); /* Couleur de fond du bouton lorsqu'il est survolé */
 }
 
 /* Style des boutons lorsqu'ils sont enfoncés */
