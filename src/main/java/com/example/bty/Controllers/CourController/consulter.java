@@ -210,8 +210,7 @@ public class consulter extends Application {
         Button saveButton = new Button("Enregistrer");
         saveButton.setOnAction(event -> {
             // Code pour sauvegarder les modifications dans la base de données
-            try (Connection connection = ConnexionDB.getInstance().getConnexion();
-                 PreparedStatement statement = connection.prepareStatement(
+            try (PreparedStatement statement = connection.prepareStatement(
                          "UPDATE cours SET nomCour = ?, Duree = ?, Intensite = ?, Cible = ?, Categorie = ?, Objectif = ?, etat = ?, capacite = ?, id_user = ? WHERE id_cour = ?")) {
 
                 statement.setString(1, nomField.getText());
