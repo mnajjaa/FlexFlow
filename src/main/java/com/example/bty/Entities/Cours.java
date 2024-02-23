@@ -4,6 +4,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
 public class Cours {
+
     int id;
     String nom;
     String duree;
@@ -125,6 +126,19 @@ public class Cours {
         this.capacite = capacite;
         this.coach = coach;
         this.image.set(image);
+    }
+
+    public Cours(int id, String nom, String duree, String intensite, String cible, String categorie, String objectif, boolean etat, int capacite, User coach) {
+        this.id = id;
+        this.nom = nom;
+        this.duree = duree;
+        this.intensite = intensite;
+        this.cible = cible;
+        this.categorie = categorie;
+        this.objectif = objectif;
+        this.etat = etat;
+        this.capacite = capacite;
+        this.coach = coach;
     }
 
     public byte[] getImage() {

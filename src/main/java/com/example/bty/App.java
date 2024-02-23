@@ -5,6 +5,11 @@ import com.example.bty.Entities.Role;
 import com.example.bty.Entities.User;
 import com.example.bty.Services.ServiceCours;
 import com.example.bty.Services.ServiceParticipation;
+import com.example.bty.Models.Model;
+import com.example.bty.Services.IServiceUser;
+import com.example.bty.Services.ServiceUser;
+import com.example.bty.Utils.Session;
+import com.example.bty.Views.ViewFactory;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -13,20 +18,27 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.sql.SQLException;
 
-public class HelloApplication extends Application {
+public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
-        stage.setTitle("Hello!");
-        stage.setScene(scene);
-        stage.show();
+//        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/FXML/Login.fxml"));
+//        Scene scene = new Scene(fxmlLoader.load());
+//        stage.setScene(scene);
+//        stage.show();
+
+//        ViewFactory viewFactory = new ViewFactory();
+//        viewFactory.showLoginWindow();
+
+        Model.getInstance().getViewFactory().showLoginWindow();
     }
 
     public static void main(String[] args) throws SQLException {
 
 
+
       /*  IServiceUser serviceUser = new ServiceUser();
+
+        IServiceUser serviceUser = new ServiceUser();
         Role userRole = Role.ADMIN;
 
         User u=new User("farah","farah@gmail.com","ibtihel1234","12345678",userRole); */
@@ -51,17 +63,13 @@ public class HelloApplication extends Application {
         User u7 = new User( 6,"ahmed", "ahmed@gmail.com", "0000", "123456", Role.MEMBRE);
         User u8 = new User( 7,"test", "test@gmail.com", "555", "2020", Role.MEMBRE);
         //ADD new cour
-        Cours c1 = new Cours("Yoga","10","Fort","Enfant","Cardio","perdre poid",true,20,u1);
-        Cours c2 = new Cours("BodyAttack","20","Fort","Adulte","RPM","gagner de la force",true,30,u2);
-        Cours c3 = new Cours("BodyAttack","20","Fort","Adulte","RPM","gagner de la force",true,2,u3);
-        Cours c4 = new Cours("zumba","20","Fort","Adulte","RPM","gagner de la force",true,4,u4);
-        Cours c5 = new Cours("test","20","Faible","Adulte","crdio","gagner de la force",true,5,u4);
+
         //Cours c5 = new Cours("BodyAttack","20","Fort","Adulte","RPM","gagner de la force",true,2,u5);
         ServiceCours CS = new ServiceCours();
 
         ServiceParticipation serviceParticipation = new ServiceParticipation();
         // Appel de la méthode pour participer au cours
-        serviceParticipation.participerAuCours(u1, c3);
+       // serviceParticipation.participerAuCours(u1, c3);
 
         // Message de confirmation
         System.out.println("L'utilisateur a participé au cours avec succès.");
@@ -126,6 +134,8 @@ public class HelloApplication extends Application {
 
         //Session s=Session.getInstance();
        // System.out.println(s.getLoggedInUser());
+        Session s= Session.getInstance();
+        System.out.println(s.getLoggedInUser());
 //         s.logout();
 //        System.out.println(s.getLoggedInUser());
 //        serviceUser.Authentification("ibtihel.mnaja123@gmail.com", "ibtihel1234");
@@ -141,7 +151,7 @@ public class HelloApplication extends Application {
        // }
 
         //**tester la methode ActiverOrDesactiver
-        //serviceUser.ActiverOrDesactiver(2);
+
 
         //**tester la methode update
        /* User userUpdate = new User();
@@ -165,4 +175,13 @@ public class HelloApplication extends Application {
 
 }}
 //nasna3 user 9bal
+
+
+     //tester la methode getAllMembers
+       // System.out.println(serviceUser.getAllMembers());
+
+        //tester la methode getAllCoaches
+        //System.out.println(serviceUser.getAllCoaches());
+
+    //launch();
 

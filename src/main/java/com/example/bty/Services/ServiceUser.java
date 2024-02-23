@@ -4,16 +4,35 @@ import com.example.bty.Entities.Role;
 import com.example.bty.Entities.User;
 import com.example.bty.Utils.ConnexionDB;
 import com.example.bty.Utils.Session;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import javafx.application.Application;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.mindrot.jbcrypt.BCrypt;
 
+import java.net.URL;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ServiceUser implements IServiceUser{
-    private PreparedStatement pste;
 
+
+    private PreparedStatement pste;
     Connection cnx = ConnexionDB.getInstance().getConnexion();
+
+
+
 
     //** Register a new user
     @Override
@@ -64,9 +83,7 @@ public class ServiceUser implements IServiceUser{
 
             pste = cnx.prepareStatement(req);
             pste.setString(1, email);
-
             ResultSet rs = pste.executeQuery();
-
             while (rs.next()) //l9a une ligne fi wosset lbase de donnee
             {
                 //User u = this.findByEmail(email);
@@ -76,9 +93,8 @@ public class ServiceUser implements IServiceUser{
                     return 2 ;
                 }
 
-
-
                if( BCrypt.checkpw(password, rs.getString("password"))) {
+                   System.out.println("Im here");
                    //if logged in successfully yemchy yasnaalou session w y7ottou fiha les informations mte3ou
 
                    //explain : f session bch y7ott le vrai role du user connecté khater 9bal ken y7ott role.ADMIN ou role.COACH meme si
@@ -91,7 +107,7 @@ public class ServiceUser implements IServiceUser{
                    System.out.println("The connected is "+s.getLoggedInUser().getRole());
                    return 1;
                }
-
+                System.out.println("Invalid user credentials");
             }
         } catch (Exception ex) {
         }
@@ -171,6 +187,53 @@ public class ServiceUser implements IServiceUser{
         }
     }
 
+    @Override
+    public List<User> getAllMembers() {
+        List<User> users = new ArrayList<>();
+        String req = "SELECT * FROM user WHERE role = 'MEMBRE'";
+        try {
+            pste = cnx.prepareStatement(req);
+            ResultSet rs = pste.executeQuery();
+            while (rs.next()) {
+                User user = new User();
+                user.setId(rs.getInt("id"));
+                user.setName(rs.getString("nom"));
+                user.setEmail(rs.getString("email"));
+                user.setPassword(rs.getString("password"));
+                user.setTelephone(rs.getString("telephone"));
+                user.setRole(Role.valueOf(rs.getString("role")));
+                users.add(user);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ServiceUser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return users;
+
+    }
+
+    @Override
+    public List<User> getAllCoaches() {
+        List<User> coaches = new ArrayList<>();
+        String req = "SELECT * FROM user WHERE role = 'COACH'";
+        try {
+            pste = cnx.prepareStatement(req);
+            ResultSet rs = pste.executeQuery();
+            while (rs.next()) {
+                User coach = new User();
+                coach.setId(rs.getInt("id"));
+                coach.setName(rs.getString("nom"));
+                coach.setEmail(rs.getString("email"));
+                coach.setPassword(rs.getString("password"));
+                coach.setTelephone(rs.getString("telephone"));
+                coach.setRole(Role.valueOf(rs.getString("role")));
+                coaches.add(coach);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ServiceUser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return coaches;
+    }
+
 
     // Find a user by email
     public User findByEmail(String email) throws SQLException {
@@ -196,4 +259,6 @@ public class ServiceUser implements IServiceUser{
         }
         return U;
     }
+
+
 }
