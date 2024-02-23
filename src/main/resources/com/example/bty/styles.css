@@ -1,0 +1,33 @@
+.root {
+    -fx-background-color: #f0f0f0; /* Couleur de fond */
+}
+
+.text-field {
+    -fx-prompt-text-fill: rgb(128, 128, 128); /* Couleur du texte d'invite */
+    -fx-font-size: 14px; /* Taille de police */
+    -fx-padding: 5px; /* Remplissage */
+}
+
+.button {
+    -fx-font-size: 14px; /* Taille de police */
+    -fx-background-color: #4CAF50; /* Couleur de fond */
+    -fx-text-fill: white; /* Couleur du texte */
+    -fx-padding: 8px 16px; /* Remplissage */
+}
+
+.button:hover {
+    -fx-background-color: #45a049; /* Couleur de fond au survol */
+}
+
+.vbox {
+    -fx-padding: 20px; /* Remplissage */
+    -fx-spacing: 10px; /* Espacement entre les enfants */
+}
+
+.vbox .button {
+    -fx-alignment: CENTER; /* Alignement au centre */
+}
+
+.vbox .text-field {
+    -fx-max-width: 200px; /* Largeur maximale */
+}

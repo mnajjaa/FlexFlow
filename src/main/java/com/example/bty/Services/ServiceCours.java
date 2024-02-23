@@ -4,9 +4,9 @@ import com.example.bty.Entities.Cours;
 import com.example.bty.Entities.User;
 import com.example.bty.Utils.ConnexionDB;
 
+import java.io.*;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 
 import java.sql.*;
@@ -17,16 +17,18 @@ import java.util.List;
 
 public class ServiceCours {
     private static Connection connexion;
-    private Statement ste;
+    //private Statement ste;
     private PreparedStatement pst;
+    private PreparedStatement statement;
     public ServiceCours() {
         connexion= ConnexionDB.getInstance().getConnexion();
     }
 
-    public void addPst(Cours c){
-        String requete="insert into cours (nomCour,Duree,Intensite,Cible,Categorie,Objectif,etat,capacite,id_user) values(?,?,?,?,?,?,?,?,?)";
+    public void addPst(Cours c, File imageFile){
+        String requete="insert into cours (nomCour,Duree,Intensite,Cible,Categorie,Objectif,etat,capacite,id_user,image) values(?,?,?,?,?,?,?,?,?,?)";
 
         try {
+            FileInputStream fis = new FileInputStream(imageFile);
             pst=connexion.prepareStatement(requete);
             pst.setString(1,c.getNom());
             pst.setString(2,c.getDuree());
@@ -37,10 +39,29 @@ public class ServiceCours {
             pst.setBoolean(7,c.isEtat());
             pst.setInt(8,c.getCapacite());
             pst.setInt(9,c.getCoach().getId());
+            pst.setBinaryStream(9, fis, (int) imageFile.length());
             pst.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        }}
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private byte[] readImageFile(File file) {
+        try (FileInputStream fis = new FileInputStream(file);
+             ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+            byte[] buffer = new byte[1024];
+            int len;
+            while ((len = fis.read(buffer)) != -1) {
+                bos.write(buffer, 0, len);
+            }
+            return bos.toByteArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     public void DeleteCours (int id) {
         String DELETE = "DELETE FROM cours WHERE id_cour = ?";
@@ -185,6 +206,9 @@ public class ServiceCours {
         }
         return coursList;
     }
+
+
+
 
 
 

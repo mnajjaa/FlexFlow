@@ -1,5 +1,8 @@
 package com.example.bty.Entities;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+
 public class Cours {
     int id;
     String nom;
@@ -11,6 +14,7 @@ public class Cours {
     boolean etat;
     int capacite;
 
+    private final ObjectProperty<byte[]> image = new SimpleObjectProperty<>();
     User coach;
 
     public Cours() {
@@ -96,7 +100,7 @@ public class Cours {
         this.coach = coach;
     }
 
-    public Cours(int id, String nom, String duree, String intensite, String cible, String categorie, String objectif, boolean etat, int capacite, User coach) {
+    public Cours(int id, String nom, String duree, String intensite, String cible, String categorie, String objectif, boolean etat, int capacite, User coach, byte[] image) {
         this.id = id;
         this.nom = nom;
         this.duree = duree;
@@ -107,9 +111,10 @@ public class Cours {
         this.etat = etat;
         this.capacite = capacite;
         this.coach = coach;
+        this.image.set(image);
     }
 
-    public Cours(String nom, String duree, String intensite, String cible, String categorie, String objectif, boolean etat, int capacite, User coach) {
+    public Cours(String nom, String duree, String intensite, String cible, String categorie, String objectif, boolean etat, int capacite, User coach, byte[] image) {
         this.nom = nom;
         this.duree = duree;
         this.intensite = intensite;
@@ -119,6 +124,19 @@ public class Cours {
         this.etat = etat;
         this.capacite = capacite;
         this.coach = coach;
+        this.image.set(image);
+    }
+
+    public byte[] getImage() {
+        return image.get();
+    }
+
+    public ObjectProperty<byte[]> imageProperty() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image.set(image);
     }
 
     @Override

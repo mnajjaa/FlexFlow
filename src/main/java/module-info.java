@@ -10,4 +10,6 @@ module com.example.bty {
     exports com.example.bty;
     exports com.example.bty.Controllers;
     opens com.example.bty.Controllers to javafx.fxml;
+    exports com.example.bty.Controllers.cours;
+    opens com.example.bty.Controllers.cours to javafx.fxml;
 }
