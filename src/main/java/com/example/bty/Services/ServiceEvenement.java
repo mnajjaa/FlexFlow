@@ -19,16 +19,18 @@ Boolean etat=true;
 
     //Methode pour ajouter un evenement
     public void ajouterEvenement(Evenement e){
-        String req="INSERT INTO evenement (nomEvenement,Date,nbrplace,categorie,objectif,id_user,etat) VALUES (?,?,?,?,?,?,?)";
+        String req="INSERT INTO evenement (nomEvenement,categorie,objectif,nbrplace,Date,Time,id_user,etat) VALUES (?,?,?,?,?,?,?,?)";
         try {
             pde=connexion.prepareStatement(req);
             pde.setString(1,e.getNom());
-            pde.setTimestamp(2,e.getDate());
-            pde.setInt(3,e.getNbre_place());
-            pde.setString(4,e.getCategorie());
-            pde.setString(5,e.getObjectif());
-            pde.setInt(6,e.getCoach().getId());
-            pde.setBoolean(7, e.isEtat());
+            pde.setString(2,e.getCategorie());
+            pde.setString(3,e.getObjectif());
+            pde.setInt(4,e.getNbre_place());
+            pde.setDate(5,e.getDate());
+            pde.setTime(6,e.getTime());
+            pde.setInt(7,e.getCoach().getId());
+            pde.setBoolean(8, e.isEtat());
+
             pde.executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -37,17 +39,17 @@ Boolean etat=true;
     }
     //methode pour modifier un evenement
     public void modifierEvenement(Evenement e){
-        String req="UPDATE evenement SET nomEvenement=?,Date=?,nbrPlace=?,categorie=?,Objectif=?,id_user=?,etat=? WHERE id_evenement=?";
+        String req="UPDATE evenement SET nomEvenement=?,categorie=?,Objectif=?,nbrPlace=?,Date=?,Time=?,id_user=?,etat=? WHERE id_evenement=?";
         try {
             pde=connexion.prepareStatement(req);
             pde.setString(1,e.getNom());
-            pde.setTimestamp(2,e.getDate());
-            pde.setInt(3,e.getNbre_place());
-            pde.setString(4,e.getCategorie());
-            pde.setString(5,e.getObjectif());
-            pde.setInt(6,e.getCoach().getId());
-            pde.setBoolean(7,e.isEtat());
-            pde.setInt(8,e.getId());
+            pde.setString(2,e.getCategorie());
+            pde.setString(3,e.getObjectif());
+            pde.setInt(4,e.getNbre_place());
+            pde.setDate(5,e.getDate());
+            pde.setTime(6,e.getTime());
+            pde.setInt(7,e.getCoach().getId());
+            pde.setBoolean(8, e.isEtat());
             pde.executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -79,10 +81,11 @@ Boolean etat=true;
                 Evenement E = new Evenement();
                 E.setId(resultSet.getInt("id_evenement"));
                 E.setNom(resultSet.getString("nomEvenement"));
-                E.setDate(resultSet.getTimestamp("Date"));
-                E.setNbre_place(resultSet.getInt("nbrPlace"));
                 E.setCategorie(resultSet.getString("categorie"));
                 E.setObjectif(resultSet.getString("Objectif"));
+                E.setNbre_place(resultSet.getInt("nbrPlace"));
+                E.setDate(resultSet.getDate("Date"));
+                E.setTime(resultSet.getTime("Time"));
                 int coachId = resultSet.getInt("id_user");
 
                 // Récupérer le nom du coach à partir de la base de données

@@ -1,55 +1,79 @@
 package com.example.bty.Entities;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+
+import java.sql.Date;
+import java.sql.Time;
 import java.sql.Timestamp;
-import java.util.Date;
 
 public class Evenement {
     int id;
     String nom;
-    Timestamp date;
-    int nbre_place;
     String categorie;
     String objectif;
+    int nbre_place;
+    Date date;
+
+    Time Time;
+
+
     User coach;
     boolean etat;
 
-    public Evenement(String nom, Timestamp date, int nbre_place, String categorie, String objectif,User coach,Boolean etat) {
+    private final ObjectProperty<byte[]> image = new SimpleObjectProperty<>();
+
+    public Evenement(int id, String nom, byte[] image) {
+        this.id = id;
         this.nom = nom;
-        this.date = date;
-        this.nbre_place = nbre_place;
+        this.image.set(image);
+    }
+
+
+
+    public Evenement(String nom, String categorie, String objectif, int nbre_place, Date date, Time time, User coach, boolean etat, byte[] image) {
+        this.nom = nom;
         this.categorie = categorie;
         this.objectif = objectif;
+        this.nbre_place = nbre_place;
+        this.date = date;
+        this.Time = time;
         this.coach = coach;
-        this.etat=etat;
+        this.etat = etat;
+        this.image.set(image);
+
+    }
+
+    public byte[] getImage() {
+        return image.get();
+    }
+
+    public ObjectProperty<byte[]> imageProperty() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image.set(image);
+    }
+
+    public Evenement(int id, String nom, String categorie, String objectif, int nbre_place, Date date, Time time, User coach, boolean etat, byte[] image) {
+        this.id = id;
+        this.nom = nom;
+        this.categorie = categorie;
+        this.objectif = objectif;
+        this.nbre_place = nbre_place;
+        this.date = date;
+        Time = time;
+        this.coach = coach;
+        this.etat = etat;
+        this.image.set(image);
 
     }
 
     public Evenement() {
     }
 
-    public Evenement(int id, String nom, Timestamp date, int nbre_place, String categorie, String objectif, User coach, boolean etat) {
-        this.id = id;
-        this.nom = nom;
-        this.date = date;
-        this.nbre_place = nbre_place;
 
-        this.categorie = categorie;
-        this.objectif = objectif;
-        this.coach = coach;
-        this.etat = etat;
-    }
-
-    public Evenement( String nom,Timestamp date, int nbre_place,  String categorie, String objectif, User coach, boolean etat) {
-
-        this.nom = nom;
-        this.date = date;
-        this.nbre_place = nbre_place;
-
-        this.categorie = categorie;
-        this.objectif = objectif;
-        this.coach = coach;
-        this.etat = etat;
-    }
 
     public int getId() {
         return id;
@@ -65,11 +89,11 @@ public class Evenement {
         this.nom = nom;
     }
 
-    public Timestamp getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(Timestamp date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 
@@ -115,18 +139,26 @@ public class Evenement {
         this.etat = etat;
     }
 
+    public Time getTime() {
+        return Time;
+    }
+
+    public void setTime(Time time) {
+        Time = time;
+    }
+
     @Override
     public String toString() {
         return "Evenement{" +
                 "id=" + id +
+                ", nom='" + nom + '\'' +
                 ", date=" + date +
                 ", nbre_place=" + nbre_place +
-
-               // ", moderateur='" + moderateur + '\'' +
                 ", categorie='" + categorie + '\'' +
                 ", objectif='" + objectif + '\'' +
                 ", coach=" + coach +
                 ", etat=" + etat +
+                ", Time='" + Time + '\'' +
                 '}';
     }
 }

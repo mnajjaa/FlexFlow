@@ -15,10 +15,9 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.sql.Timestamp;
+import java.sql.Date;
+import java.sql.Time;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class HelloApplication extends Application {
@@ -95,35 +94,44 @@ public class HelloApplication extends Application {
 
         //test ajout
         User u1 = new User(6, "hela", "hela@gmail.com", "salma1234", "12345678", Role.COACH);
-        Evenement e = new Evenement("yoga", Timestamp.valueOf("2021-05-20 15:20:45"), 10, "sport", "bien etre", u1, false);
+        Date sqlDate = Date.valueOf("2022-12-03");
+        Time sqlTime = Time.valueOf("15:45:00");
+
+      ///  Evenement e = new Evenement("BodyAttack", "hit " , "bruler Graisse", 30, sqlDate,sqlTime,u1,false);
+
         ServiceEvenement se = new ServiceEvenement();
 //        se.ajouterEvenement(e);
 //       System.out.println("evenement added succesfully ");
         //test modifier
-//        Evenement EventToUpdate = new Evenement("salsa", Timestamp.valueOf("2021-05-20 10:10:10"), 15, "sport", "bien etre", u1, false);
-//         EventToUpdate.setId(4);
+//        Evenement EventToUpdate = new Evenement("salsa", Timestamp.valueOf("2021-05-20 10:10:10"), 15, "sport", "bien etre", u1, false,"20:00:00");
+//         EventToUpdate.setId(29);
 //         se.modifierEvenement(EventToUpdate);
 //        System.out.println("evenement updated succesfully ");
 
-//        //test suppresion
-//        se.supprimerEvenement(24);
+        //test suppresion
+//        se.supprimerEvenement(25);
 //        System.out.println("evenement deleted succesfully ");
 
-        //test affichage lists des evenements
-        //  se.consulterEvenement().forEach(System.out::println);
+       // test affichage lists des evenements
+       //   se.consulterEvenement().forEach(System.out::println);
         List<Evenement> events = se.consulterEvenements();
 
         for (Evenement event : events) {
             System.out.println("Evenement{id=" + event.getId() +
                     ", name=" + event.getNom() +
-                    ", date=" + event.getDate() +
-                    ", nbre_place=" + event.getNbre_place() +
                     ", categorie='" + event.getCategorie() +
                     "', objectif='" + event.getObjectif() +
+                    ", nbre_place=" + event.getNbre_place() +
+                    ", date=" + event.getDate() +
+                    ", Time="+event.getTime()+
                     "', coach=" + event.getCoach().getId() +
-                            "', nom coach=" + event.getCoach().getName()+
-                    ", etat=" + event.isEtat() + "}");
+                    "', nom coach=" + event.getCoach().getName()+
+                    ", etat=" + event.isEtat() +
+                    "}");
         }
+
+
+
 
 
     }
