@@ -2,9 +2,11 @@ package com.example.bty;
 
 import com.example.bty.Entities.Role;
 import com.example.bty.Entities.User;
+import com.example.bty.Models.Model;
 import com.example.bty.Services.IServiceUser;
 import com.example.bty.Services.ServiceUser;
 import com.example.bty.Utils.Session;
+import com.example.bty.Views.ViewFactory;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -12,17 +14,22 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class HelloApplication extends Application {
+public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
-        stage.setTitle("Hello!");
-        stage.setScene(scene);
-        stage.show();
+//        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/FXML/Login.fxml"));
+//        Scene scene = new Scene(fxmlLoader.load());
+//        stage.setScene(scene);
+//        stage.show();
+
+//        ViewFactory viewFactory = new ViewFactory();
+//        viewFactory.showLoginWindow();
+
+        Model.getInstance().getViewFactory().showLoginWindow();
     }
 
-    public static void main(String[] args) {
+ public static void main(String[] args) {
+
 
         IServiceUser serviceUser = new ServiceUser();
         Role userRole = Role.ADMIN;
@@ -53,7 +60,7 @@ public class HelloApplication extends Application {
                 break;
         }
 
-        Session s=Session.getInstance();
+        Session s= Session.getInstance();
         System.out.println(s.getLoggedInUser());
 //         s.logout();
 //        System.out.println(s.getLoggedInUser());
@@ -63,7 +70,7 @@ public class HelloApplication extends Application {
 
 
         //**tester la methode ActiverOrDesactiver
-        //serviceUser.ActiverOrDesactiver(2);
+        serviceUser.ActiverOrDesactiver(15);
 
         //**tester la methode update
         User userUpdate = new User();
@@ -79,5 +86,14 @@ public class HelloApplication extends Application {
         //**tester la methode delete
         //serviceUser.delete(9);
 
+     //tester la methode getAllMembers
+       // System.out.println(serviceUser.getAllMembers());
+
+        //tester la methode getAllCoaches
+        //System.out.println(serviceUser.getAllCoaches());
+
+    //launch();
+
     }
+
 }
