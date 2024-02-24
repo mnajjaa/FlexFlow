@@ -2,18 +2,19 @@ package com.example.bty.Controllers.graphiqueGCP;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Labeled;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 public class FD extends Application {
     private TextField ageField;
@@ -25,33 +26,30 @@ public class FD extends Application {
     private TextField idOffreField;
     private TextField lesjoursFiled;
     private TextField horaireFiled;
-
-
-
+    private TextField textField;
 
     @Override
     public void start(Stage primaryStage) {
 
-        Image image = null;
-        try {
-            image = new Image(getClass().getResourceAsStream("/images/farah1.jpg"));
-        } catch (NullPointerException e) {
-            throw new RuntimeException("Le fichier image n'a pas été trouvé : " + e.getMessage());
-        }
+        primaryStage.setTitle("Formulaire d'ajout d'une demande ");
+        // Card Container
+        VBox cardContainer = new VBox();
+        cardContainer.getStyleClass().add("card-container");
+        cardContainer.setPadding(new Insets(20));
+        cardContainer.setSpacing(10);
 
-        ImageView backgroundImage = new ImageView(image);
-        backgroundImage.setFitHeight(1050);
-        backgroundImage.setFitWidth(1800);
 
-        StackPane root = new StackPane();
-        root.getChildren().add(backgroundImage);
+        // Card Title
+        Label cardTitle = new Label("Ajouter une demande ");
+        cardTitle.setStyle("-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #d8c6e5; -fx-font-family: 'Arial', sans-serif;");
 
+        // Form Grid
         GridPane grid = new GridPane();
-        grid.setPadding(new Insets(20, 20, 20, 20));
-        grid.setVgap(10);
-        grid.setHgap(10);
+        grid.setVgap(15);
+        grid.setHgap(15);
+        grid.setStyle("-fx-background-color: #d5bce7; -fx-padding: 25; -fx-border-radius: 10; -fx-background-radius: 10; -fx-alignment: center;");
 
-        // Labels
+        //..............
         Label ageLabel = new Label("Age:");
         GridPane.setConstraints(ageLabel, 0, 0);
         ageField = new TextField();
@@ -90,12 +88,9 @@ public class FD extends Application {
         Label etatLabel = new Label("Etat:");
         grid.add(etatLabel, 0, 7);
 
-        // Champ de texte pour l'état (désactivé pour l'utilisateur)
-        TextField etatField = new TextField("En Attente"); // Set default value to "refuser"
-        etatField.setEditable(false); // Make it non-editable
+        TextField etatField = new TextField("En Attente");
+        etatField.setEditable(false);
         grid.add(etatField, 1, 7);
-
-
 
         Label horaireLabel = new Label("Horaire:");
         GridPane.setConstraints(horaireLabel, 0, 8);
@@ -121,19 +116,98 @@ public class FD extends Application {
 
         grid.getChildren().addAll(ageLabel, ageField, butLabel, butField, niveauPhysiqueLabel, niveauPhysiqueField,
                 maladieChroniqueLabel, maladieChroniqueField, nombreHeureLabel, nombreHeureField, idUserLabel,
-                idUserField, idOffreLabel, idOffreField,lesjoursLabel,lesjoursFiled,horaireLabel,horaireFiled, sendButton,updateButton,deleteButton);
+                idUserField, idOffreLabel, idOffreField, lesjoursLabel, lesjoursFiled, horaireLabel, horaireFiled,
+                sendButton, updateButton, deleteButton);
 
-        // Ajout de la grille à la racine de la scène
-        root.getChildren().add(grid);
 
-        Scene scene = new Scene(root, 700, 650);
-        scene.getStylesheets().add(getClass().getResource("/Styles/StyleFO.css").toExternalForm());
+
+        ageField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) { // Vérifie si la nouvelle valeur ne contient que des chiffres
+                ageField.setStyle("-fx-text-inner-color: red;");
+            } else {
+                ageField.setStyle("-fx-text-inner-color: black;");
+            }
+        });
+
+        nombreHeureField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                nombreHeureField.setStyle("-fx-text-inner-color: red;");
+            } else {
+                nombreHeureField.setStyle("-fx-text-inner-color: black;");
+            }
+        });
+
+        idUserField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                idUserField.setStyle("-fx-text-inner-color: red;");
+            } else {
+                idUserField.setStyle("-fx-text-inner-color: black;");
+            }
+        });
+
+        idOffreField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) { // Vérifie si la nouvelle valeur ne contient que des chiffres
+                idOffreField.setStyle("-fx-text-inner-color: red;");
+            } else {
+                idOffreField.setStyle("-fx-text-inner-color: black;");
+            }
+        });
+
+
+
+// Appel de la méthode pour configurer la validation du champ horaireFiled
+        setupTimeValidation(horaireFiled);
+
+        setupStringValidation(maladieChroniqueField);
+        setupStringValidation(butField);
+        setupStringValidation(niveauPhysiqueField);
+        setupStringValidation(lesjoursFiled);
+
+        Scene scene = new Scene(grid, 700, 650);
+
+        scene.getStylesheets().add(getClass().getResource("/Styles/StyleAR.css").toExternalForm());
         primaryStage.setTitle("Formulaire de demande");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
+    private boolean validateFields() {
+        if (ageField.getText().isEmpty() || butField.getText().isEmpty() || niveauPhysiqueField.getText().isEmpty() ||
+                maladieChroniqueField.getText().isEmpty() || nombreHeureField.getText().isEmpty() ||
+                idUserField.getText().isEmpty() || idOffreField.getText().isEmpty() ||
+                lesjoursFiled.getText().isEmpty() || horaireFiled.getText().isEmpty()) {
+            System.out.println("Veuillez remplir tous les champs.");
+            return false;
+        }
+        return true;
+    }
+
+    private void setupTimeValidation(TextField timeField) {
+        timeField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("([01]?[0-9]|2[0-3]):[0-5][0-9]")) {
+                // Vérifie si la nouvelle valeur ne correspond pas au format de temps HH:mm
+                timeField.setStyle("-fx-text-inner-color: red;");
+            } else {
+                timeField.setStyle("-fx-text-inner-color: black;");
+            }
+        });
+    }
+
+    private void setupStringValidation(TextField textField) {
+        textField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null && !newValue.isEmpty() && newValue.matches(".*\\d.*")) {
+                // Vérifie si la nouvelle valeur n'est pas vide et contient des chiffres
+                textField.setStyle("-fx-text-inner-color: red;"); // Change la couleur du texte en rouge
+            } else {
+                textField.setStyle("-fx-text-inner-color: black;"); // Remet la couleur du texte en noir si aucun chiffre n'est présent
+            }
+        });
+    }
+
     private void insertDemande() {
+        if (!validateFields()) {
+            return;
+        }
         String url = "jdbc:mysql://localhost:3306/pidevgym";
         String username = "root";
         String password = "";
@@ -141,7 +215,7 @@ public class FD extends Application {
         try (Connection conn = DriverManager.getConnection(url, username, password)) {
             String query = "INSERT INTO demande (Age, But, NiveauPhysique, MaladieChronique, NombreHeure, ID_User, ID_Offre, Etat, Horaire, lesjours) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             String etat = "En Attente";
-            java.sql.Time horaire = java.sql.Time.valueOf("08:00:00"); // Exemple de valeur pour le champ horaire
+            java.sql.Time horaire = java.sql.Time.valueOf("08:00:00");
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setInt(1, Integer.parseInt(ageField.getText()));
             statement.setString(2, butField.getText());
@@ -151,7 +225,7 @@ public class FD extends Application {
             statement.setInt(6, Integer.parseInt(idUserField.getText()));
             statement.setInt(7, Integer.parseInt(idOffreField.getText()));
             statement.setString(8, etat);
-            statement.setTime(9, horaire); // Utilisation de setTime pour le champ horaire
+            statement.setTime(9, horaire);
             statement.setString(10, lesjoursFiled.getText());
 
             int rowsInserted = statement.executeUpdate();
@@ -160,11 +234,15 @@ public class FD extends Application {
             }
         } catch (SQLException e) {
             System.out.println("Erreur lors de l'insertion de la demande: " + e.getMessage());
+            setInvalidStyle();
         }
     }
 
 
     private void updateDemande() {
+        if (!validateFields()) {
+            return;
+        }
         String url = "jdbc:mysql://localhost:3306/pidevgym";
         String username = "root";
         String password = "";
@@ -186,10 +264,15 @@ public class FD extends Application {
             }
         } catch (SQLException e) {
             System.out.println("Erreur lors de la mise à jour de la demande: " + e.getMessage());
+            setInvalidStyle();
         }
     }
 
     private void deleteDemande() {
+        if (idUserField.getText().isEmpty()) {
+            System.out.println("Veuillez saisir un ID utilisateur.");
+            return;
+        }
         String url = "jdbc:mysql://localhost:3306/pidevgym";
         String username = "root";
         String password = "";
@@ -205,7 +288,30 @@ public class FD extends Application {
             }
         } catch (SQLException e) {
             System.out.println("Erreur lors de la suppression de la demande: " + e.getMessage());
+            setInvalidStyle();
         }
+    }
+
+    private void setInvalidStyle() {
+        ageField.setStyle("-fx-border-color: initial;");
+        butField.setStyle("-fx-border-color: initial;");
+        niveauPhysiqueField.setStyle("-fx-border-color: initial;");
+        maladieChroniqueField.setStyle("-fx-border-color: initial;");
+        nombreHeureField.setStyle("-fx-border-color: initial;");
+        idUserField.setStyle("-fx-border-color: initial;");
+        idOffreField.setStyle("-fx-border-color: initial;");
+        lesjoursFiled.setStyle("-fx-border-color: initial;");
+        horaireFiled.setStyle("-fx-border-color: initial;");
+
+        ageField.setStyle("-fx-border-color: red;");
+        butField.setStyle("-fx-border-color: red;");
+        niveauPhysiqueField.setStyle("-fx-border-color: red;");
+        maladieChroniqueField.setStyle("-fx-border-color: red;");
+        nombreHeureField.setStyle("-fx-border-color: red;");
+        idUserField.setStyle("-fx-border-color: red;");
+        idOffreField.setStyle("-fx-border-color: red;");
+        lesjoursFiled.setStyle("-fx-border-color: red;");
+        horaireFiled.setStyle("-fx-border-color: red;");
     }
 
     public static void main(String[] args) {

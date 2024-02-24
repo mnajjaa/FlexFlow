@@ -8,6 +8,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.sql.Connection;
@@ -24,24 +25,23 @@ public class Formoffre extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        Image image = null;
-        try {
-            image = new Image(getClass().getResourceAsStream("/images/farah3.jpg"));
-        } catch (NullPointerException e) {
-            throw new RuntimeException("Le fichier image n'a pas été trouvé : " + e.getMessage());
-        }
+        primaryStage.setTitle("Formulaire d'ajout d'une offre ");
+        // Card Container
+        VBox cardContainer = new VBox();
+        cardContainer.getStyleClass().add("card-container");
+        cardContainer.setPadding(new Insets(20));
+        cardContainer.setSpacing(10);
 
-        ImageView backgroundImage = new ImageView(image);
-        backgroundImage.setFitHeight(1650);
-        backgroundImage.setFitWidth(1800);
+        // Card Title
+        Label cardTitle = new Label("Ajouter une demande ");
+        cardTitle.setStyle("-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #dac8ee; -fx-font-family: 'Arial', sans-serif;");
 
-        StackPane root = new StackPane();
-        root.getChildren().add(backgroundImage);
-
+        // Form Grid
         GridPane grid = new GridPane();
-        grid.setPadding(new Insets(20, 20, 20, 20));
-        grid.setVgap(10);
-        grid.setHgap(10);
+        grid.setVgap(15);
+        grid.setHgap(15);
+        grid.setStyle("-fx-background-color: #e1c7f1; -fx-padding: 25; -fx-border-radius: 10; -fx-background-radius: 10; -fx-alignment: center;");
+
 
         // Label et champ de texte pour l'ID
         Label idLabel = new Label("ID:");
@@ -86,9 +86,34 @@ public class Formoffre extends Application {
         grid.add(deleteButton, 3, 5);
         deleteButton.setOnAction(event -> deleteOffre());
 
-        root.getChildren().add(grid);
-        Scene scene = new Scene(root, 700, 650);
-        scene.getStylesheets().add(getClass().getResource("/Styles/StyleFO.css").toExternalForm());
+        idField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) { // Vérifie si la nouvelle valeur ne contient que des chiffres
+                idField.setStyle("-fx-text-inner-color: red;");
+            } else {
+                idField.setStyle("-fx-text-inner-color: black;");
+            }
+        });
+
+        tarifField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                tarifField.setStyle("-fx-text-inner-color: red;");
+            } else {
+                tarifField.setStyle("-fx-text-inner-color: black;");
+            }
+        });
+
+        coachField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                coachField.setStyle("-fx-text-inner-color: red;");
+            } else {
+                coachField.setStyle("-fx-text-inner-color: black;");
+            }
+        });
+
+
+
+        Scene scene = new Scene(grid, 700, 650);
+        scene.getStylesheets().add(getClass().getResource("/Styles/StyleAR.css").toExternalForm());
         primaryStage.setTitle("Formulaire de demande");
         primaryStage.setScene(scene);
         primaryStage.show();

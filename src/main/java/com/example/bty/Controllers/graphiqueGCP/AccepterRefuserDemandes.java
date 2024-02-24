@@ -18,6 +18,7 @@ public class AccepterRefuserDemandes extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Accepter ou Refuser Demandes");
 
+
         // Connexion à la base de données
         connectToDatabase();
 
