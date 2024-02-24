@@ -11,10 +11,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class Formoffre extends Application {
 
@@ -56,6 +53,7 @@ public class Formoffre extends Application {
         specialiteChoice.setValue("Musculation"); // Spécialité par défaut
         grid.add(specialiteLabel, 0, 1);
         grid.add(specialiteChoice, 1, 1);
+
 
         // Label et champ de texte pour le tarif par heure
         Label tarifLabel = new Label("Tarif par heure:");
@@ -120,6 +118,8 @@ public class Formoffre extends Application {
     }
 
     private void insertOffre() {
+
+
         String url = "jdbc:mysql://localhost:3306/pidevgym";
         String username = "root";
         String password = "";
@@ -185,6 +185,9 @@ public class Formoffre extends Application {
             System.out.println("Erreur lors de la suppression de l'offre: " + e.getMessage());
         }
     }
+
+
+
 
 
     public static void main(String[] args) {

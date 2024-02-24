@@ -3,20 +3,18 @@ package com.example.bty.Controllers.graphiqueGCP;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Labeled;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class FD extends Application {
+
     private TextField ageField;
     private TextField butField;
     private TextField niveauPhysiqueField;
@@ -26,30 +24,23 @@ public class FD extends Application {
     private TextField idOffreField;
     private TextField lesjoursFiled;
     private TextField horaireFiled;
-    private TextField textField;
 
     @Override
     public void start(Stage primaryStage) {
-
         primaryStage.setTitle("Formulaire d'ajout d'une demande ");
-        // Card Container
         VBox cardContainer = new VBox();
         cardContainer.getStyleClass().add("card-container");
         cardContainer.setPadding(new Insets(20));
         cardContainer.setSpacing(10);
 
-
-        // Card Title
         Label cardTitle = new Label("Ajouter une demande ");
         cardTitle.setStyle("-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #d8c6e5; -fx-font-family: 'Arial', sans-serif;");
 
-        // Form Grid
         GridPane grid = new GridPane();
         grid.setVgap(15);
         grid.setHgap(15);
         grid.setStyle("-fx-background-color: #d5bce7; -fx-padding: 25; -fx-border-radius: 10; -fx-background-radius: 10; -fx-alignment: center;");
 
-        //..............
         Label ageLabel = new Label("Age:");
         GridPane.setConstraints(ageLabel, 0, 0);
         ageField = new TextField();
@@ -94,35 +85,25 @@ public class FD extends Application {
 
         Label horaireLabel = new Label("Horaire:");
         GridPane.setConstraints(horaireLabel, 0, 8);
-        horaireFiled= new TextField();
+        horaireFiled = new TextField();
         GridPane.setConstraints(horaireFiled, 1, 8);
 
         Label lesjoursLabel = new Label("Lesjours:");
         GridPane.setConstraints(lesjoursLabel, 0, 9);
-        lesjoursFiled= new TextField();
+        lesjoursFiled = new TextField();
         GridPane.setConstraints(lesjoursFiled, 1, 9);
 
         Button sendButton = new Button("Envoyer");
         GridPane.setConstraints(sendButton, 1, 10);
         sendButton.setOnAction(event -> insertDemande());
 
-        Button updateButton = new Button("Modifier");
-        GridPane.setConstraints(updateButton, 2, 10);
-        updateButton.setOnAction(event -> updateDemande());
-
-        Button deleteButton = new Button("Supprimer");
-        GridPane.setConstraints(deleteButton, 3, 10);
-        deleteButton.setOnAction(event -> deleteDemande());
-
         grid.getChildren().addAll(ageLabel, ageField, butLabel, butField, niveauPhysiqueLabel, niveauPhysiqueField,
                 maladieChroniqueLabel, maladieChroniqueField, nombreHeureLabel, nombreHeureField, idUserLabel,
                 idUserField, idOffreLabel, idOffreField, lesjoursLabel, lesjoursFiled, horaireLabel, horaireFiled,
-                sendButton, updateButton, deleteButton);
-
-
+                sendButton);
 
         ageField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*")) { // Vérifie si la nouvelle valeur ne contient que des chiffres
+            if (!newValue.matches("\\d*")) {
                 ageField.setStyle("-fx-text-inner-color: red;");
             } else {
                 ageField.setStyle("-fx-text-inner-color: black;");
@@ -146,16 +127,14 @@ public class FD extends Application {
         });
 
         idOffreField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*")) { // Vérifie si la nouvelle valeur ne contient que des chiffres
+            if (!newValue.matches("\\d*")) {
                 idOffreField.setStyle("-fx-text-inner-color: red;");
             } else {
                 idOffreField.setStyle("-fx-text-inner-color: black;");
             }
         });
 
-
-
-// Appel de la méthode pour configurer la validation du champ horaireFiled
+        // Appel de la méthode pour configurer la validation du champ horaireFiled
         setupTimeValidation(horaireFiled);
 
         setupStringValidation(maladieChroniqueField);
@@ -172,10 +151,10 @@ public class FD extends Application {
     }
 
     private boolean validateFields() {
-        if (ageField.getText().isEmpty() || butField.getText().isEmpty() || niveauPhysiqueField.getText().isEmpty() ||
-                maladieChroniqueField.getText().isEmpty() || nombreHeureField.getText().isEmpty() ||
-                idUserField.getText().isEmpty() || idOffreField.getText().isEmpty() ||
-                lesjoursFiled.getText().isEmpty() || horaireFiled.getText().isEmpty()) {
+        if (ageField.getText().isEmpty() || butField.getText().isEmpty() || niveauPhysiqueField.getText().isEmpty()
+                || maladieChroniqueField.getText().isEmpty() || nombreHeureField.getText().isEmpty()
+                || idUserField.getText().isEmpty() || idOffreField.getText().isEmpty() || lesjoursFiled.getText().isEmpty()
+                || horaireFiled.getText().isEmpty()) {
             System.out.println("Veuillez remplir tous les champs.");
             return false;
         }
@@ -208,6 +187,14 @@ public class FD extends Application {
         if (!validateFields()) {
             return;
         }
+
+        String specialite = getSpecialiteFromOffreId(Integer.parseInt(idOffreField.getText()));
+
+        if (!isMaladieAllowed(specialite, maladieChroniqueField.getText())) {
+            showAlert("Impossible de participer", "Vous ne pouvez pas participer en raison de votre maladie.");
+            return;
+        }
+
         String url = "jdbc:mysql://localhost:3306/pidevgym";
         String username = "root";
         String password = "";
@@ -238,57 +225,70 @@ public class FD extends Application {
         }
     }
 
-
-    private void updateDemande() {
-        if (!validateFields()) {
-            return;
-        }
+    private String getSpecialiteFromOffreId(int idOffre) {
         String url = "jdbc:mysql://localhost:3306/pidevgym";
         String username = "root";
         String password = "";
 
         try (Connection conn = DriverManager.getConnection(url, username, password)) {
-            String query = "UPDATE demande SET Age=?, But=?, NiveauPhysique=?, MaladieChronique=?, NombreHeure=? ,lesjours=? WHERE ID_user=?";
+            String query = "SELECT specialite FROM offre WHERE id = ?";
             PreparedStatement statement = conn.prepareStatement(query);
-            statement.setInt(1, Integer.parseInt(ageField.getText()));
-            statement.setString(2, butField.getText());
-            statement.setString(3, niveauPhysiqueField.getText());
-            statement.setString(4, maladieChroniqueField.getText());
-            statement.setInt(5, Integer.parseInt(nombreHeureField.getText()));
-            statement.setInt(6, Integer.parseInt(idUserField.getText()));
-            statement.setString(7, lesjoursFiled.getText());
+            statement.setInt(1, idOffre);
 
-            int rowsUpdated = statement.executeUpdate();
-            if (rowsUpdated > 0) {
-                System.out.println("Demande mise à jour avec succès !");
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getString("specialite");
             }
         } catch (SQLException e) {
-            System.out.println("Erreur lors de la mise à jour de la demande: " + e.getMessage());
-            setInvalidStyle();
+            System.out.println("Erreur lors de la récupération de la spécialité depuis la base de données: " + e.getMessage());
         }
+
+        return null;  // Retourne null si la spécialité n'est pas trouvée ou en cas d'erreur
     }
 
-    private void deleteDemande() {
-        if (idUserField.getText().isEmpty()) {
-            System.out.println("Veuillez saisir un ID utilisateur.");
-            return;
+    private boolean isMaladieAllowed(String specialite, String maladie) {
+        if (specialite == null || maladie == null) {
+            return false;  // Si la spécialité ou la maladie est nulle, la participation n'est pas autorisée
         }
-        String url = "jdbc:mysql://localhost:3306/pidevgym";
-        String username = "root";
-        String password = "";
 
-        try (Connection conn = DriverManager.getConnection(url, username, password)) {
-            String query = "DELETE FROM demande WHERE ID_user=?";
-            PreparedStatement statement = conn.prepareStatement(query);
-            statement.setInt(1, Integer.parseInt(idUserField.getText()));
+        switch (specialite) {
+            case "Yoga":
+                return !maladie.equals("Maladies infectieuses contagieuses")
+                        && !maladie.equals("Maladies oculaires graves")
+                        && !maladie.equals("Troubles musculo-squelettiques graves")
+                        && !maladie.equals("Problèmes neurologiques")
+                        && !maladie.equals("Hypertension artérielle non contrôlée")
+                        && !maladie.equals("Problèmes cardiaques graves");
 
-            int rowsDeleted = statement.executeUpdate();
-            if (rowsDeleted > 0) {
-                System.out.println("Demande supprimée avec succès !");
-            }
-        } catch (SQLException e) {
-            System.out.println("Erreur lors de la suppression de la demande: " + e.getMessage());
-            setInvalidStyle();
+            case "Boxe":
+                return !maladie.equals("Problèmes cardiaques graves")
+                        && !maladie.equals("Hypertension artérielle non contrôlée")
+                        && !maladie.equals("Problèmes musculo-squelettiques graves")
+                        && !maladie.equals("Maladies inflammatoires")
+                        && !maladie.equals("Maladies infectieuses")
+                        && !maladie.equals("Problèmes respiratoires graves")
+                        && !maladie.equals("Troubles de l'alimentation");
+
+            case "Musculation":
+                return !maladie.equals("Maladies cardiaques graves")
+                        && !maladie.equals("Hypertension artérielle non contrôlée")
+                        && !maladie.equals("Problèmes respiratoires sévères")
+                        && !maladie.equals("Maladies vasculaires périphériques")
+                        && !maladie.equals("Problèmes neurologiques graves")
+                        && !maladie.equals("Diabète non contrôlé")
+                        && !maladie.equals("Infections actives");
+
+            case "Cardio":
+                return !maladie.equals("Maladies cardiaques graves")
+                        && !maladie.equals("Hypertension artérielle non contrôlée")
+                        && !maladie.equals("Problèmes respiratoires sévères")
+                        && !maladie.equals("Maladies vasculaires périphériques")
+                        && !maladie.equals("Problèmes neurologiques graves")
+                        && !maladie.equals("Diabète non contrôlé")
+                        && !maladie.equals("Infections actives");
+
+            default:
+                return true;  // Si la spécialité n'est pas reconnue, autorise la participation par défaut
         }
     }
 
@@ -313,6 +313,15 @@ public class FD extends Application {
         lesjoursFiled.setStyle("-fx-border-color: red;");
         horaireFiled.setStyle("-fx-border-color: red;");
     }
+    private void showAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
+
 
     public static void main(String[] args) {
         launch(args);
