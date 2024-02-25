@@ -56,6 +56,11 @@ public class Ajouter extends Application {
         cardContainer.setPadding(new Insets(20));
         cardContainer.setSpacing(10);
 
+        // Ajout du ScrollPane
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setContent(cardContainer);
+        scrollPane.setFitToWidth(true); // Ajuster la largeur du ScrollPane
+
         // Card Title
         Label cardTitle = new Label("Ajouter un cours");
         cardTitle.setStyle("-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #DDE2C6; -fx-font-family: 'Arial', sans-serif;");
@@ -79,7 +84,7 @@ public class Ajouter extends Application {
         ComboBox<String> cibleComboBox = new ComboBox<>();
         cibleComboBox.getItems().addAll("Enfant", "Adulte");
         ComboBox<String> intensiteComboBox = new ComboBox<>();
-        intensiteComboBox.getItems().addAll("Fort", "Moyen", "Faible");
+        intensiteComboBox.getItems().addAll("Forte", "Moyenne", "Faible");
         TextField categorieField = new TextField();
         TextField objectifField = new TextField();
         CheckBox etatCheckBox = new CheckBox("Actif");
@@ -251,7 +256,7 @@ public class Ajouter extends Application {
 
 
 
-        Scene scene = new Scene(cardContainer, 800, 620);
+        Scene scene = new Scene(scrollPane,  800, 620);
         scene.getStylesheets().add(getClass().getResource("/com/example/bty/CSSmoduleCours/ajout.css").toExternalForm());
         primaryStage.setScene(scene);
 
@@ -326,4 +331,7 @@ public class Ajouter extends Application {
         }
         return coachId;
     }
+
+
+
 }
