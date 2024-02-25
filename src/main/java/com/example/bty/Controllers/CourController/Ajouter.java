@@ -36,6 +36,8 @@ public class Ajouter extends Application {
     private static Connection connexion;
     private PreparedStatement pst;
 
+    private Cours cours;
+
     private Button uploadButton;
     private ImageView uploadedImageView;
     private File selectedImage;
@@ -94,6 +96,7 @@ public class Ajouter extends Application {
         Button addButton = new Button("Ajouter");
         addButton.getStyleClass().add("envoyer-button");
         addButton.setOnAction(event -> {
+            cours = new Cours();
             // Récupérer les données du formulaire
             String nom = nomField.getText();
             String duree = dureeField.getText();
@@ -105,6 +108,51 @@ public class Ajouter extends Application {
             int capacite = Integer.parseInt(capaciteField.getText());
             String nomCoach = nomCoachField.getText(); // Récupérer le nom du coach depuis le champ
             int idCoach = getCoachIdByName(nomCoach); // Récupérer l'ID du coach
+
+
+            String nomText = nomField.getText();
+
+            // Vérifier si le nom du cours est unique
+            if (!isNomCoursUnique(nomText, cours.getId())) {
+                afficherMessage("Erreur", "Ce cour existe déjà !");
+                return; // Sortir de la méthode si le nom n'est pas unique
+            }
+
+            String dureeText = dureeField.getText();
+            String capaciteText = capaciteField.getText();
+            String idCoachText = nomCoachField.getText();
+            // Vérification si les champs sont vides
+            if (nomText.isEmpty() || dureeText.isEmpty() || capaciteText.isEmpty() || idCoachText.isEmpty()) {
+                afficherMessage("Erreur", "Veuillez remplir tous les champs avant de sauvegarder.");
+
+                // Mettre en rouge les bordures des champs vides
+                if (nomText.isEmpty()) {
+                    nomField.setStyle("-fx-border-color: red;");
+                } else {
+                    nomField.setStyle(""); // Remettre le style par défaut si le champ n'est pas vide
+                }
+
+                if (dureeText.isEmpty()) {
+                    dureeField.setStyle("-fx-border-color: red;");
+                } else {
+                    dureeField.setStyle(""); // Remettre le style par défaut si le champ n'est pas vide
+                }
+
+                if (capaciteText.isEmpty()) {
+                    capaciteField.setStyle("-fx-border-color: red;");
+                } else {
+                    capaciteField.setStyle(""); // Remettre le style par défaut si le champ n'est pas vide
+                }
+
+                if (idCoachText.isEmpty()) {
+                    nomCoachField.setStyle("-fx-border-color: red;");
+                } else {
+                    nomCoachField.setStyle(""); // Remettre le style par défaut si le champ n'est pas vide
+                }
+
+                return; // Sortie de la méthode si un champ est vide
+            }
+
 
 
             // Ajout de la validation pour la durée
@@ -160,7 +208,7 @@ public class Ajouter extends Application {
                 nomCoachField.clear();
 
             } else {
-                afficherMessage("Échec", "L'ajout du produit a échoué.");
+                afficherMessage("Échec", "L'ajout du cour a échoué.");
             }
         });
 
@@ -263,7 +311,25 @@ public class Ajouter extends Application {
         primaryStage.show();
     }
 
+    private boolean isNomCoursUnique(String nomCours, int courseId) {
+        try {
+            // Préparez votre requête SQL pour vérifier l'unicité du nom du cours
+            String query = "SELECT COUNT(*) AS count FROM cours WHERE nomCour = ? AND id_cour <> ?";
+            PreparedStatement statement = connexion.prepareStatement(query);
+            statement.setString(1, nomCours);
+            statement.setInt(2, courseId); // Exclure le cours actuel de la vérification
+            ResultSet resultSet = statement.executeQuery();
 
+            // Récupérer le résultat de la requête
+            if (resultSet.next()) {
+                int count = resultSet.getInt("count");
+                return count == 0; // Retourne vrai si le nombre de cours avec ce nom est 0 (donc unique)
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false; // En cas d'erreur, retournez faux par défaut
+    }
 
     public boolean addPst(Cours c, File imageFile){
         String requete="insert into cours (nomCour,Duree,Intensite,Cible,Categorie,Objectif,etat,capacite,id_user,image) values(?,?,?,?,?,?,?,?,?,?)";

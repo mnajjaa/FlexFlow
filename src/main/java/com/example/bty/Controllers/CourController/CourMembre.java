@@ -162,7 +162,7 @@ public class CourMembre extends Application {
         AnchorPane leftAnchorPane = new AnchorPane();
         //leftAnchorPane.setTranslateY(-80);
         leftAnchorPane.setTranslateX(-10);
-       // leftAnchorPane.setPrefSize(270, 700);
+        // leftAnchorPane.setPrefSize(270, 700);
         AnchorPane.setTopAnchor(leftAnchorPane, 0.0);
         AnchorPane.setLeftAnchor(leftAnchorPane, 0.0);
         leftAnchorPane.setTranslateY(-70);
@@ -329,7 +329,7 @@ public class CourMembre extends Application {
 
     private void participerAuCours(Cours cours, Button participerButton) {
         try {
-            String username = "baha"; // Remplacez par le nom d'utilisateur de l'utilisateur connecté
+            String username = "dridi"; // Remplacez par le nom d'utilisateur de l'utilisateur connecté
             User utilisateurConnecte = getUtilisateurConnecte(username);
 
             if (utilisateurConnecte != null) {
@@ -397,7 +397,7 @@ public class CourMembre extends Application {
         gridPane.setHgap(20);
         gridPane.setVgap(20);
 
-       int columnIndex = 0;
+        int columnIndex = 0;
         int rowIndex = 0;
         for (Cours cours : coursList) {
             VBox card = createCourseCard(cours);
@@ -419,7 +419,7 @@ public class CourMembre extends Application {
     private void afficherCours() {
         coursList.clear();
         try {
-            String query = "SELECT * FROM cours";
+            String query = "SELECT * FROM cours WHERE etat = 1 ";
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
@@ -459,27 +459,22 @@ public class CourMembre extends Application {
     private void filtrerCours(String categorie, String cible, String objectif) {
         coursList.clear();
         try {
-            StringBuilder queryBuilder = new StringBuilder("SELECT * FROM cours WHERE ");
+            StringBuilder queryBuilder = new StringBuilder("SELECT * FROM cours WHERE etat = 1 "); // Ajoutez cette condition pour filtrer les cours avec un état de 1
+
             boolean hasFilter = false;
 
             if (categorie != null && !categorie.isEmpty()) {
-                queryBuilder.append("Categorie = ? ");
+                queryBuilder.append("AND Categorie = ? ");
                 hasFilter = true;
             }
 
             if (cible != null && !cible.isEmpty()) {
-                if (hasFilter) {
-                    queryBuilder.append("AND ");
-                }
-                queryBuilder.append("Cible = ? ");
+                queryBuilder.append("AND Cible = ? ");
                 hasFilter = true;
             }
 
             if (objectif != null && !objectif.isEmpty()) {
-                if (hasFilter) {
-                    queryBuilder.append("AND ");
-                }
-                queryBuilder.append("Objectif = ? ");
+                queryBuilder.append("AND Objectif = ? ");
                 hasFilter = true;
             }
 
@@ -490,6 +485,7 @@ public class CourMembre extends Application {
 
             PreparedStatement statement = connection.prepareStatement(queryBuilder.toString());
             int parameterIndex = 1;
+
             if (categorie != null && !categorie.isEmpty()) {
                 statement.setString(parameterIndex++, categorie);
             }
@@ -538,6 +534,7 @@ public class CourMembre extends Application {
             e.printStackTrace();
         }
     }
+
 
     private void afficherAucunProduitMessage() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);

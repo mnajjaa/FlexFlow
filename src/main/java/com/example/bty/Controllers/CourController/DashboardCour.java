@@ -86,6 +86,8 @@ public class DashboardCour {
     private Connection connexion;
     private PreparedStatement pst;
     private Statement ste ;
+
+
     public DashboardCour() {
         connexion = ConnexionDB.getInstance().getConnexion();
         coursList = FXCollections.observableArrayList();
@@ -350,6 +352,52 @@ public class DashboardCour {
         saveButton.setOnAction(event -> {
 
             // Vérification des conditions avant de sauvegarder les modifications
+            String nomText = nomField.getText();
+
+            // Vérifier si le nom du cours est unique
+            if (!isNomCoursUnique(nomText, cours.getId())) {
+                afficherMessage("Erreur", "Ce cours existe déjà!");
+                return; // Sortir de la méthode si le nom n'est pas unique
+            }
+
+            String dureeText = dureeField.getText();
+            String capaciteText = capaciteField.getText();
+            String idCoachText = idCoachField.getText();
+
+            // Vérification si les champs sont vides
+            if (nomText.isEmpty() || dureeText.isEmpty() || capaciteText.isEmpty() || idCoachText.isEmpty()) {
+                afficherMessage("Erreur", "Veuillez remplir tous les champs avant de sauvegarder.");
+
+                // Mettre en rouge les bordures des champs vides
+                if (nomText.isEmpty()) {
+                    nomField.setStyle("-fx-border-color: red;");
+                } else {
+                    nomField.setStyle(""); // Remettre le style par défaut si le champ n'est pas vide
+                }
+
+                if (dureeText.isEmpty()) {
+                    dureeField.setStyle("-fx-border-color: red;");
+                } else {
+                    dureeField.setStyle(""); // Remettre le style par défaut si le champ n'est pas vide
+                }
+
+                if (capaciteText.isEmpty()) {
+                    capaciteField.setStyle("-fx-border-color: red;");
+                } else {
+                    capaciteField.setStyle(""); // Remettre le style par défaut si le champ n'est pas vide
+                }
+
+                if (idCoachText.isEmpty()) {
+                    idCoachField.setStyle("-fx-border-color: red;");
+                } else {
+                    idCoachField.setStyle(""); // Remettre le style par défaut si le champ n'est pas vide
+                }
+
+                return; // Sortie de la méthode si un champ est vide
+            }
+
+
+
             String nom = nomField.getText();
             String duree = dureeField.getText();
             int capacite = Integer.parseInt(capaciteField.getText());
@@ -508,6 +556,41 @@ public class DashboardCour {
     }
 
 
+    private String getCoachNameById(int coachId) {
+        String coachName = null;
+        try (PreparedStatement statement = connexion.prepareStatement(
+                "SELECT nom FROM user WHERE id = ?")) {
+            statement.setInt(1, coachId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                coachName = resultSet.getString("nom");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return coachName;
+    }
+
+
+    private boolean isNomCoursUnique(String nomCours, int courseId) {
+        try {
+            // Préparez votre requête SQL pour vérifier l'unicité du nom du cours
+            String query = "SELECT COUNT(*) AS count FROM cours WHERE nomCour = ? AND id_cour <> ?";
+            PreparedStatement statement = connexion.prepareStatement(query);
+            statement.setString(1, nomCours);
+            statement.setInt(2, courseId); // Exclure le cours actuel de la vérification
+            ResultSet resultSet = statement.executeQuery();
+
+            // Récupérer le résultat de la requête
+            if (resultSet.next()) {
+                int count = resultSet.getInt("count");
+                return count == 0; // Retourne vrai si le nombre de cours avec ce nom est 0 (donc unique)
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false; // En cas d'erreur, retournez faux par défaut
+    }
 
     private void afficherMessage(String titre, String contenu) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
