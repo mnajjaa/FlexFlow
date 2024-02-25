@@ -28,6 +28,7 @@ public class FD extends Application {
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Formulaire d'ajout d'une demande ");
+
         VBox cardContainer = new VBox();
         cardContainer.getStyleClass().add("card-container");
         cardContainer.setPadding(new Insets(20));
@@ -97,10 +98,20 @@ public class FD extends Application {
         GridPane.setConstraints(sendButton, 1, 10);
         sendButton.setOnAction(event -> insertDemande());
 
+        Button consulterButton = new Button("Consulter liste de demande");
+        GridPane.setConstraints(consulterButton, 2, 10);
+        consulterButton.setOnAction(event -> consulterDemandes());
+        grid.getChildren().add(consulterButton);
+
+
+
         grid.getChildren().addAll(ageLabel, ageField, butLabel, butField, niveauPhysiqueLabel, niveauPhysiqueField,
                 maladieChroniqueLabel, maladieChroniqueField, nombreHeureLabel, nombreHeureField, idUserLabel,
                 idUserField, idOffreLabel, idOffreField, lesjoursLabel, lesjoursFiled, horaireLabel, horaireFiled,
                 sendButton);
+
+
+
 
         ageField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.matches("\\d*")) {
@@ -225,6 +236,13 @@ public class FD extends Application {
         }
     }
 
+
+    // Méthode pour gérer l'événement du bouton "Consulter"
+    private void consulterDemandes() {
+        ConsultationDemandes consultationDemandes = new ConsultationDemandes();
+        consultationDemandes.start(new Stage());
+    }
+
     private String getSpecialiteFromOffreId(int idOffre) {
         String url = "jdbc:mysql://localhost:3306/pidevgym";
         String username = "root";
@@ -313,6 +331,8 @@ public class FD extends Application {
         lesjoursFiled.setStyle("-fx-border-color: red;");
         horaireFiled.setStyle("-fx-border-color: red;");
     }
+
+
     private void showAlert(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
