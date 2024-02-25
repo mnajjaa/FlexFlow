@@ -17,7 +17,6 @@ public class LoginView extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-     //   FXMLLoader fxmlLoader = new FXMLLoader(LoginView.class.getResource("/LoginGym.fxml"));
            FXMLLoader fxmlLoader = new FXMLLoader(LoginView.class.getResource("/LoginGym.fxml"));
 
         Parent root = fxmlLoader.load();

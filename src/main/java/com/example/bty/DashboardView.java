@@ -15,7 +15,7 @@ public class DashboardView extends Application {
         Scene scene = new Scene(root);
         stage.setTitle("FitHub Pro");
         stage.setScene(scene);
-        stage.setResizable(false);
+        stage.setResizable(true);
         stage.show();
     }
 }
