@@ -3,6 +3,8 @@ package com.example.bty.Controllers.ProduitController;
 import com.example.bty.Entities.Produit;
 import com.example.bty.Services.ServiceProduit;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -68,6 +70,19 @@ public class Ajoutproduit extends Application {
         idField.getStyleClass().add("text-field");
         gridPane.addRow(0, idLabel, idField);
 
+
+        idField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    idField.setStyle("-fx-border-color: #c0392b; -fx-border-width: 2px; -fx-border-radius: 15;");
+                } else {
+                    idField.setStyle(""); // Réinitialise le style par défaut
+                }
+            }
+        });
+
+
         Label nomLabel = new Label("Nom :");
         nomField = new TextField();
         gridPane.addRow(1, nomLabel, nomField);
@@ -80,6 +95,20 @@ public class Ajoutproduit extends Application {
         prixField = new TextField();
         gridPane.addRow(3, prixLabel, prixField);
 
+
+
+        prixField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    prixField.setStyle("-fx-border-color: #c0392b; -fx-border-width: 2px; -fx-border-radius: 15;");
+                } else {
+                    prixField.setStyle(""); // Réinitialise le style par défaut
+                }
+            }
+        });
+
+
         Label typeLabel = new Label("Type :");
         typeComboBox = new ComboBox<>();
         typeComboBox.getItems().addAll("Vitamine", "Accessoires", "Protéine","Vetement");
@@ -90,10 +119,36 @@ public class Ajoutproduit extends Application {
         quantiteField = new TextField();
         gridPane.addRow(5, quantiteLabel, quantiteField);
 
+        quantiteField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    quantiteField.setStyle("-fx-border-color: #c0392b; -fx-border-width: 2px; -fx-border-radius: 15;");
+                } else {
+                    quantiteField.setStyle(""); // Réinitialise le style par défaut
+                }
+            }
+        });
+
+
+
+
         Label quantiteVenduesLabel = new Label("Quantité Vendues :");
         quantiteVenduesField = new TextField("0"); // Initialisation avec la valeur par défaut
         gridPane.addRow(6, quantiteVenduesLabel, quantiteVenduesField);
 
+
+
+        quantiteVenduesField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    quantiteVenduesField.setStyle("-fx-border-color: #c0392b; -fx-border-width: 2px; -fx-border-radius: 15;");
+                } else {
+                    quantiteVenduesField.setStyle(""); // Réinitialise le style par défaut
+                }
+            }
+        });
 
         uploadedImageView = new ImageView(); // ImageView pour afficher l'image chargée
 
@@ -109,8 +164,8 @@ public class Ajoutproduit extends Application {
                     FileInputStream input = new FileInputStream(selectedImage);
                     Image image = new Image(input);
                     uploadedImageView.setImage(image);  // Mettez à jour l'ImageView
-                    uploadedImageView.setFitWidth(55);
-                    uploadedImageView.setFitHeight(55);
+                    uploadedImageView.setFitWidth(52);
+                    uploadedImageView.setFitHeight(52);
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
@@ -129,7 +184,7 @@ public class Ajoutproduit extends Application {
         // Adding elements to the VBox (Card Container)
         cardContainer.getChildren().addAll(cardTitle, gridPane);
        // VBox.setMargin(cardContainer, new Insets(50, 0, 50, 20));
-        Scene scene = new Scene(cardContainer, 700, 570);
+        Scene scene = new Scene(cardContainer, 700, 590);
         scene.getStylesheets().add(getClass().getResource("/com/example/bty/CSSmoduleProduit/Ajoutproduit.css").toExternalForm());
         primaryStage.setScene(scene);
 
@@ -146,6 +201,21 @@ public class Ajoutproduit extends Application {
                 return;
             }
 
+            // Vérification si le nom de cours contient uniquement des chiffres
+            // Vérification si les champs ID, Prix, Quantité, Quantité Vendues contiennent uniquement des chiffres
+            if (!idField.getText().matches("\\d+") || !prixField.getText().matches("\\d+(\\.\\d+)?") ||
+                    !quantiteField.getText().matches("\\d+") || !quantiteVenduesField.getText().matches("\\d+")) {
+                afficherMessage("Erreur de saisie", "Veuillez saisir des valeurs numériques valides pour les champs numériques (ID, Prix, Quantité, Quantité Vendues).");
+
+                return;
+            } else {
+                idField.setStyle("-fx-text-inner-color: black;");
+                prixField.setStyle("-fx-text-inner-color: black;");
+                quantiteField.setStyle("-fx-text-inner-color: black;");
+                quantiteVenduesField.setStyle("-fx-text-inner-color: black;");
+            }
+
+
             int id = Integer.parseInt(idField.getText());
             String nom = nomField.getText();
             String description = descriptionField.getText();
@@ -153,6 +223,10 @@ public class Ajoutproduit extends Application {
             String type = typeComboBox.getValue();
             int quantite = Integer.parseInt(quantiteField.getText());
             int quantiteVendues = Integer.parseInt(quantiteVenduesField.getText());
+
+
+
+
 
 
             byte[] imageBytes = null;
@@ -188,6 +262,9 @@ public class Ajoutproduit extends Application {
         }
     }
 
+
+
+
     private void afficherMessage(String titre, String contenu) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(titre);
@@ -196,7 +273,21 @@ public class Ajoutproduit extends Application {
         alert.showAndWait();
     }
 
-    private boolean estChaineValide(String chaine) {
+
+
+
+    private void setupValidationListener(TextField textField) {
+        textField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("[0-9]*")) {
+                textField.getStyleClass().add("invalid");
+            } else {
+                textField.getStyleClass().remove("invalid");
+            }
+        });
+
+    }
+
+        private boolean estChaineValide(String chaine) {
         // Vérifie si la chaîne ne contient pas de chiffres
         return chaine.matches("\\D*");
     }

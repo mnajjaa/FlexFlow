@@ -107,7 +107,7 @@ public class DashboardProduit {
         // Chargement initial des données dans la table
         actualiserTable();
 
-       // Button ajoutProduitButton = new Button("Ajout");
+        // Button ajoutProduitButton = new Button("Ajout");
         ajout_produit.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -154,6 +154,16 @@ public class DashboardProduit {
 
 
     }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -343,10 +353,12 @@ public class DashboardProduit {
         });
     }
 
+
     private void modifierProduit(Produit produit) {
         // Mettre à jour le produit dans la base de données en utilisant votre service
         produitServices.modifierProduit(produit);
     }
+
 
     private void showAlert(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);

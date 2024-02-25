@@ -5,6 +5,7 @@ import com.example.bty.Entities.Produit;
 import com.example.bty.Entities.User;
 import com.example.bty.Utils.ConnexionDB;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -18,53 +19,56 @@ public class ServiceProduit {
     }
 
 
-    public boolean ajouterProduit(Produit produit) {
-        String query = "INSERT INTO produit (idProduit, nom, Description, Prix, Type, Quantite, quantiteVendues, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+  public boolean ajouterProduit(Produit produit) {
+      String query = "INSERT INTO produit (idProduit, nom, Description, Prix, Type, Quantite, quantiteVendues, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-        try (PreparedStatement statement = connexion.prepareStatement(query)) {
-            statement.setInt(1, produit.getIdProduit());
-            statement.setString(2, produit.getNom());
-            statement.setString(3, produit.getDescription());
-            statement.setDouble(4, produit.getPrix());
-            statement.setString(5, produit.getType());
-            statement.setInt(6, produit.getQuantite());
-            statement.setInt(7, produit.getQuantiteVendues());
-            statement.setBytes(8, produit.getImage());
+      try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgym", "root", "");
+           PreparedStatement statement = connection.prepareStatement(query)) {
+          statement.setInt(1, produit.getIdProduit());
+          statement.setString(2, produit.getNom());
+          statement.setString(3, produit.getDescription());
+          statement.setDouble(4, produit.getPrix());
+          statement.setString(5, produit.getType());
+          statement.setInt(6, produit.getQuantite());
+          statement.setInt(7, produit.getQuantiteVendues());
+          statement.setBytes(8, produit.getImage());
 
-            statement.executeUpdate();
-            return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
+          statement.executeUpdate();
+          return true;
+      } catch (SQLException e) {
+          e.printStackTrace();
+          return false;
+      }
+  }
 
 
     public List<Produit> consulterProduits() {
         List<Produit> produits = new ArrayList<>();
-        // try (Connection connection = ConnexionDB.obtenirConnexion())
-        String query = "SELECT * FROM produit";
-        try (Statement statement = connexion.createStatement();
-             ResultSet resultSet = statement.executeQuery(query)) {
-            while (resultSet.next()) {
-                Produit produit = new Produit();
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgym", "root", "")) {
+            String query = "SELECT * FROM produit";
+            try (Statement statement = connection.createStatement();
+                 ResultSet resultSet = statement.executeQuery(query)) {
+                while (resultSet.next()) {
+                    Produit produit = new Produit();
 
-                produit.setIdProduit(resultSet.getInt("idProduit"));
-                produit.setNom(resultSet.getString("nom"));
-                produit.setDescription(resultSet.getString("Description"));
-                produit.setPrix(resultSet.getDouble("Prix"));
-                produit.setType(resultSet.getString("Type"));
-                produit.setQuantite(resultSet.getInt("Quantite"));
-                produit.setQuantiteVendues(resultSet.getInt("quantiteVendues"));
+                    produit.setIdProduit(resultSet.getInt("idProduit"));
+                    produit.setNom(resultSet.getString("nom"));
+                    produit.setDescription(resultSet.getString("Description"));
+                    produit.setPrix(resultSet.getDouble("Prix"));
+                    produit.setType(resultSet.getString("Type"));
+                    produit.setQuantite(resultSet.getInt("Quantite"));
+                    produit.setQuantiteVendues(resultSet.getInt("quantiteVendues"));
 
-                produits.add(produit);
+                    produits.add(produit);
+                }
             }
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
+            // Gérer les erreurs de connexion ou d'exécution de la requête
         }
         return produits;
     }
+
 
     public List<Commmande> consulterCommandes() {
         List<Commmande> commandes = new ArrayList<>();
@@ -91,6 +95,32 @@ public class ServiceProduit {
     }
 
 
+
+    public List<Commmande> consulterCommandesParDate(LocalDate selectedDate) {
+        List<Commmande> commandes = new ArrayList<>();
+        String query = "SELECT * FROM commande WHERE DATE(dateCommande) = ?";
+
+        try (PreparedStatement preparedStatement = connexion.prepareStatement(query)) {
+            preparedStatement.setDate(1, Date.valueOf(selectedDate));
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    Commmande commande = new Commmande();
+                    commande.setIdCommande(resultSet.getInt("idCommande"));
+                    commande.setDateCommande(resultSet.getTimestamp("dateCommande"));
+                    commande.setIdProduit(resultSet.getInt("idProduit"));
+                    commande.setNom(resultSet.getString("nom"));
+                    commande.setMontant(resultSet.getDouble("montant"));
+                    commandes.add(commande);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return commandes;
+    }
+
+
     public void modifierPrixProduit(int idProduit, double nouveauPrix) {
         // try (Connection connection = ConnexionDB.obtenirConnexion()) {
         String query = "UPDATE produit SET Prix = ? WHERE idProduit = ?";
@@ -105,32 +135,30 @@ public class ServiceProduit {
     }
 
 
-    public void modifierProduit(Produit produit) {
-        try {
-            // Créer la requête SQL pour la mise à jour du produit
+
+    public boolean modifierProduit(Produit produit) {
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgym", "root", "")) {
             String query = "UPDATE produit SET nom=?, description=?, prix=?, type=?, quantite=?, quantiteVendues=? WHERE idProduit=?";
-            PreparedStatement preparedStatement = connexion.prepareStatement(query);
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setString(1, produit.getNom());
+                statement.setString(2, produit.getDescription());
+                statement.setDouble(3, produit.getPrix());
+                statement.setString(4, produit.getType());
+                statement.setInt(5, produit.getQuantite());
+                statement.setInt(6, produit.getQuantiteVendues());
+                statement.setInt(7, produit.getIdProduit());
 
-            preparedStatement.setString(1, produit.getNom());
-            preparedStatement.setString(2, produit.getDescription());
-            preparedStatement.setDouble(3, produit.getPrix());
-            preparedStatement.setString(4, produit.getType());
-            preparedStatement.setInt(5, produit.getQuantite());
-            preparedStatement.setInt(6, produit.getQuantiteVendues());
-            preparedStatement.setInt(7, produit.getIdProduit());
-
-            // Exécuter la mise à jour
-            preparedStatement.executeUpdate();
-
-            // Fermer la déclaration
-            preparedStatement.close();
+                int rowsUpdated = statement.executeUpdate();
+                return rowsUpdated > 0;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
-            // Gérer les erreurs de mise à jour
+            return false;
         }
     }
 
-    public boolean supprimerProduit(int idProduit) {
+
+    /*public boolean supprimerProduit(int idProduit) {
         //try (Connection connection = ConnexionDB.obtenirConnexion()) {
         String query = "DELETE FROM produit WHERE idProduit = ?";
         try (PreparedStatement statement = connexion.prepareStatement(query)) {
@@ -139,6 +167,20 @@ public class ServiceProduit {
             return true;
         }
         catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }*/
+
+    public boolean supprimerProduit(int idProduit) {
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgym", "root", "")) {
+            String query = "DELETE FROM produit WHERE idProduit = ?";
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setInt(1, idProduit);
+                statement.executeUpdate();
+                return true;
+            }
+        }catch (SQLException e) {
             e.printStackTrace();
             return false;
         }

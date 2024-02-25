@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class DashboardView extends Application {
@@ -15,7 +16,15 @@ public class DashboardView extends Application {
         Scene scene = new Scene(root);
         stage.setTitle("FitHub Pro");
         stage.setScene(scene);
-        stage.setResizable(false);
+        stage.setResizable(true);
         stage.show();
+
+
+
+        double screenWidth = Screen.getPrimary().getVisualBounds().getWidth();
+        double screenHeight = Screen.getPrimary().getVisualBounds().getHeight();
+
+        System.out.println("Largeur de l'écran : " + screenWidth);
+        System.out.println("Hauteur de l'écran : " + screenHeight);
     }
 }

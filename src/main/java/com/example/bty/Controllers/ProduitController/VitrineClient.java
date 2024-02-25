@@ -19,6 +19,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Line;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.ByteArrayInputStream;
@@ -48,24 +49,21 @@ public class VitrineClient extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Affichage des produits");
 
-
-
         BorderPane root = new BorderPane();
         root.setPadding(new Insets(10));
 
         VBox topBar = new VBox();
         topBar.setAlignment(Pos.CENTER_LEFT);
-        //topBar.getStyleClass().add("top-bar");
-        topBar.setStyle(" -fx-background-color: #2c3e50;\n" +
-                "    -fx-padding: 15;\n" +
-                "    -fx-border-radius: 15px;" +
-                " -fx-background-insets: 0 0 0 218;");
+        topBar.setStyle("-fx-background-color: #2c3e50;\n" +
+                "-fx-padding: 15;\n" +
+                "-fx-border-radius: 15px;" +
+                "-fx-background-insets: 0 0 0 218;");
         topBar.setSpacing(5);
 
         Image panierImage = new Image(getClass().getResourceAsStream("/com/example/bty/imagesModuleProduit/panier.png"));
         ImageView consulterPanierButton = new ImageView(panierImage);
         consulterPanierButton.setOnMouseClicked(event -> consulterPanier());
-        consulterPanierButton.setFitWidth(40);  // Ajustez la largeur de l'icône selon vos besoins
+        consulterPanierButton.setFitWidth(40);
         consulterPanierButton.setFitHeight(40);
 
         TextField rechercheTextField = new TextField();
@@ -89,32 +87,26 @@ public class VitrineClient extends Application {
 
         topBar.getChildren().addAll(buttonContainer, searchBox);
         root.setTop(topBar);
-       // root.setTop(topBar);
 
         ScrollPane scrollPane = new ScrollPane();
-        FlowPane produitsPane = new FlowPane();
+        VBox produitsBox = new VBox();
+        scrollPane.setContent(produitsBox);
         scrollPane.setFitToHeight(true);
         scrollPane.setFitToWidth(true);
-        produitsPane.setAlignment(Pos.TOP_CENTER);
-        produitsPane.setPadding(new Insets(20));
-        produitsPane.setHgap(30);
-        produitsPane.setVgap(30);
-
-        AnchorPane leftDashboard = createLeftDashboard();
-
-        root.setLeft(leftDashboard);
-
-
-
-        scrollPane.setContent(produitsPane);
         root.setCenter(scrollPane);
 
-        Scene scene = new Scene(root,800,600);
-        primaryStage.setResizable(true);
+
+
+        AnchorPane leftDashboard = createLeftDashboard();
+        leftDashboard.setMinHeight(250);
+        root.setLeft(leftDashboard);
+
+        Scene scene = new Scene(root, 1200, 690); // Ajustez la largeur selon vos besoins
         primaryStage.setScene(scene);
         primaryStage.show();
         scene.getStylesheets().add(getClass().getResource("/com/example/bty/CSSmoduleProduit/VitrineClient.css").toExternalForm());
         scene.getStylesheets().add(getClass().getResource("/dashboardDesign.css").toExternalForm());
+
         try {
             connection = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
         } catch (SQLException ex) {
@@ -127,6 +119,7 @@ public class VitrineClient extends Application {
         afficherProduits(produits, root);
     }
 
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -134,14 +127,14 @@ public class VitrineClient extends Application {
 
     private AnchorPane createLeftDashboard() {
         StackPane stackPane = new StackPane();
-        stackPane.setPrefSize(1100, 600);
+        stackPane.setPrefSize(800, 680);
 
         AnchorPane anchorPane = new AnchorPane();
         stackPane.getChildren().add(anchorPane);
 
 
         BorderPane borderPane = new BorderPane();
-        borderPane.setPrefSize(1100, 600);
+        borderPane.setPrefSize(800, 680);
         borderPane.getStyleClass().add("border-pane");
 
         AnchorPane.setBottomAnchor(borderPane, 0.0);
@@ -152,13 +145,13 @@ public class VitrineClient extends Application {
         AnchorPane leftAnchorPane = new AnchorPane();
         //leftAnchorPane.setTranslateY(-80);
         leftAnchorPane.setTranslateX(-10);
-        leftAnchorPane.setPrefSize(270, 700);
+        //leftAnchorPane.setPrefSize(70, 280);
         AnchorPane.setTopAnchor(leftAnchorPane, 0.0);
         AnchorPane.setLeftAnchor(leftAnchorPane, 0.0);
         leftAnchorPane.setTranslateY(-112);
         AnchorPane innerAnchorPane = new AnchorPane();
         innerAnchorPane.getStyleClass().addAll("nav", "nav-border");
-        innerAnchorPane.setPrefSize(229, 750);
+        innerAnchorPane.setPrefSize(229, 700);
 
         FontAwesomeIconView userIcon = new FontAwesomeIconView();
         userIcon.setFill(javafx.scene.paint.Color.WHITE);
@@ -274,6 +267,8 @@ public class VitrineClient extends Application {
 
         leftAnchorPane.getChildren().add(innerAnchorPane);
 
+
+
         borderPane.setLeft(leftAnchorPane);
         anchorPane.getChildren().add(borderPane);
         return leftAnchorPane;
@@ -363,12 +358,18 @@ public class VitrineClient extends Application {
 
         Label nomLabel = new Label("Nom: " + produit.getNom());
         nomLabel.setStyle("-fx-font-size: 17px; -fx-font-weight: bold;-fx-text-fill: #1E0F1C");
-        Label typeLabel = new Label("Type: " + produit.getNom());
+        Label typeLabel = new Label("Type: " + produit.getType());
         typeLabel.setStyle("-fx-font-size: 15px; -fx-font-weight: bold;-fx-text-fill: #2c3e50;");
         Label prixLabel = new Label("Prix: " + produit.getPrix() + " Dt");
         prixLabel.setStyle("-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #A62609;");
 
-        card.getChildren().addAll(imageView, nomLabel,typeLabel, prixLabel);
+        // Ajouter une icône de description
+        ImageView descriptionIcon = new ImageView(new Image(getClass().getResource("/com/example/bty/imagesModuleProduit/d.png").toExternalForm()));
+        descriptionIcon.setFitWidth(20);
+        descriptionIcon.setFitHeight(20);
+        descriptionIcon.setOnMouseClicked(e -> afficherDescriptionPrompt(produit));
+
+        card.getChildren().addAll(imageView, nomLabel, typeLabel, prixLabel, descriptionIcon);
 
         Button addToCartButton = new Button("Ajouter au panier");
         addToCartButton.getStyleClass().add("add-to-cart-button");
@@ -395,6 +396,26 @@ public class VitrineClient extends Application {
 
         return card;
     }
+
+    private void afficherDescriptionPrompt(Produit produit) {
+        Stage descriptionStage = new Stage();
+        descriptionStage.initModality(Modality.APPLICATION_MODAL);
+        descriptionStage.setTitle("Description du Produit");
+
+        Label descriptionLabel = new Label(produit.getDescription());
+        descriptionLabel.setWrapText(true); // Permet le retour à la ligne automatique
+
+        VBox layout = new VBox(10);
+        layout.setPadding(new Insets(10));
+        layout.getChildren().add(descriptionLabel);
+
+        Scene scene = new Scene(layout, 300, 200);
+        descriptionStage.setScene(scene);
+
+        descriptionStage.showAndWait();
+    }
+
+
 
     private void ajouterAuPanier(Produit produit, int quantite) {
         Commande commande = new Commande(produit.getIdProduit(), produit.getNom(), quantite, produit.getPrix() * quantite);
