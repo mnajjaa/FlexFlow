@@ -158,15 +158,6 @@ public class DashboardProduit {
 
 
 
-
-
-
-
-
-
-
-
-
     public String getProduitMoinsVendu() {
         String produitMoinsVendu = null;
 

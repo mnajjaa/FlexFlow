@@ -65,7 +65,7 @@ public class LoginGymController implements Initializable {
         }
     }
 
-    @FXML
+  /*  @FXML
     private void signup() {
         String email = su_email.getText(); // Récupérer l'email depuis le champ de texte
         String username = su_username.getText(); // Récupérer le nom d'utilisateur depuis le champ de texte
@@ -77,7 +77,7 @@ public class LoginGymController implements Initializable {
          serviceUser.register(u);
         System.out.println("signup success");
 
-    }
+    }*/
 
     public void close(){
         javafx.application.Platform.exit();

@@ -28,7 +28,7 @@ public class App extends Application {
         Model.getInstance().getViewFactory().showLoginWindow();
     }
 
- public static void main(String[] args) {
+    public static void main(String[] args) {
 
 
         IServiceUser serviceUser = new ServiceUser();
@@ -36,7 +36,7 @@ public class App extends Application {
 
         User u=new User("farah","farah@gmail.com","ibtihel1234","12345678",userRole);
 
-         //User u=new User("ibtihel","ibtihel.mnaja123@gmail.com","ibtihel1234");
+        //User u=new User("ibtihel","ibtihel.mnaja123@gmail.com","ibtihel1234");
 
         //**tester la methode register
  /*  if(serviceUser.emailExists(u.getEmail()))
@@ -48,7 +48,7 @@ public class App extends Application {
 
         //**tester la methode Authentification
         int status = serviceUser.Authentification("mnajjaibtihel@gmail.com", "ibtihel1234");
-      switch (status) {
+        switch (status) {
             case 0:
                 System.out.println("Invalid user credentials");
                 break;
@@ -86,13 +86,13 @@ public class App extends Application {
         //**tester la methode delete
         //serviceUser.delete(9);
 
-     //tester la methode getAllMembers
-       // System.out.println(serviceUser.getAllMembers());
+        //tester la methode getAllMembers
+        // System.out.println(serviceUser.getAllMembers());
 
         //tester la methode getAllCoaches
         //System.out.println(serviceUser.getAllCoaches());
 
-    //launch();
+        //launch();
 
     }
 

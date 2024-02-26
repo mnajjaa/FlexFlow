@@ -43,7 +43,7 @@ public class HelloApplication extends Application {
         Produit p5 = new Produit(18,"sneackers", "sneackers", 45, "Vetement", 40);*/
 
 
-        Role userRole = Role.MEMBRE;
+   /*     Role userRole = Role.MEMBRE;
         User u=new User(2,"houssine","houssine@gmail.com","houssine1234","12345678",userRole);
 
         IServiceUser serviceUser = new ServiceUser();
@@ -51,7 +51,7 @@ public class HelloApplication extends Application {
         Role userRole1 = Role.ADMIN;
         User u1=new User("farah","farah@gmail.com","ibtihel1234","12345678",userRole1);
 
-        ServiceProduit ps = new ServiceProduit();
+        ServiceProduit ps = new ServiceProduit();*/
        //ps.ajouterProduit(p5);
 
      /*   ps.ajouterProduit(p1);
@@ -214,14 +214,14 @@ public class HelloApplication extends Application {
         //serviceUser.ActiverOrDesactiver(2);
 
         //**tester la methode update
-        User userUpdate = new User();
+   /*     User userUpdate = new User();
         userUpdate.setId(6);
         userUpdate.setName("Admin1");
         userUpdate.setEmail("Admin1@gmail.com");
         userUpdate.setPassword("Admin1234");
         userUpdate.setTelephone("12345678");
         userUpdate.setRole(userRole);
-        //appel de la methode update
+        //appel de la methode update*/
         //serviceUser.update(userUpdate);
 
         //**tester la methode delete

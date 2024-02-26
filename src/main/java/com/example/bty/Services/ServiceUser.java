@@ -86,27 +86,27 @@ public class ServiceUser implements IServiceUser{
             ResultSet rs = pste.executeQuery();
             while (rs.next()) //l9a une ligne fi wosset lbase de donnee
             {
-                //User u = this.findByEmail(email);
+                User u = this.findByEmail(email);
                 if(rs.getString("etat").equals("0"))
                 {
 
                     return 2 ;
                 }
 
-               if( BCrypt.checkpw(password, rs.getString("password"))) {
-                   System.out.println("Im here");
-                   //if logged in successfully yemchy yasnaalou session w y7ottou fiha les informations mte3ou
+                if( BCrypt.checkpw(password, rs.getString("password"))) {
+                    System.out.println("Im here");
+                    //if logged in successfully yemchy yasnaalou session w y7ottou fiha les informations mte3ou
 
-                   //explain : f session bch y7ott le vrai role du user connecté khater 9bal ken y7ott role.ADMIN ou role.COACH meme si
-                   // user connecté est un coach ou un membre
-                   Role userRole = Role.valueOf(rs.getString("role"));
-                   User u =new User(rs.getInt("id"),rs.getString("nom"),rs.getString("email"),rs.getString("password"),rs.getString("telephone"),userRole);
+                    //explain : f session bch y7ott le vrai role du user connecté khater 9bal ken y7ott role.ADMIN ou role.COACH meme si
+                    // user connecté est un coach ou un membre
+                    Role userRole = Role.valueOf(rs.getString("role"));
+                  //  User u =new User(rs.getInt("id"),rs.getString("nom"),rs.getString("email"),rs.getString("password"),rs.getString("telephone"),userRole);
 
-                   Session s=Session.getInstance();
-                   s.setLoggedInUser(u);
-                   System.out.println("The connected is "+s.getLoggedInUser().getRole());
-                   return 1;
-               }
+                    Session s=Session.getInstance();
+                    s.setLoggedInUser(u);
+                    System.out.println("The connected is "+s.getLoggedInUser().getRole());
+                    return 1;
+                }
                 System.out.println("Invalid user credentials");
             }
         } catch (Exception ex) {
@@ -118,7 +118,7 @@ public class ServiceUser implements IServiceUser{
     @Override
     public void ActiverOrDesactiver(int id) {
 
-       //verifier si l'utilisateur connecté est un admin
+        //verifier si l'utilisateur connecté est un admin
         Session s=Session.getInstance();
         User u = s.getLoggedInUser();
         if(u.getRole() != Role.ADMIN)

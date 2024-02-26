@@ -106,6 +106,15 @@ public class User {
                 '}';
     }
 
+    public User(String name, String email, String password, String telephone, Role role) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.telephone = telephone;
+        this.role = role;
+
+    }
+
     public Role getRole() {
         return  role;
     }
