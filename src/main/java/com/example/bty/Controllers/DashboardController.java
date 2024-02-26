@@ -123,6 +123,9 @@ public class DashboardController implements Initializable {
     public Button Cours_btn;
     public Button logoutMembre;
     public Button CoursCoach_btn;
+    public Button membreCoach_btn;
+    public Button logoutCoach;
+    public Button Produits_btn;
     Session session = Session.getInstance();
     User u=session.getLoggedInUser();
     User user ;
@@ -182,33 +185,32 @@ public class DashboardController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-//        this.user = session.getLoggedInUser();
-//        if(user.getRole().equals(Role.ADMIN)){
-//            dashboard_Admin.setVisible(true);
-//            //dashboard_coach.setVisible(false);
-//            dashboard_membre.setVisible(false);
-//            usernameAdmin.setText(u.getName());
-//            consulterCoaches();
-//        }
-//        else if(user.getRole().equals(Role.COACH)){
-//            dashboard_coach.setVisible(true);
-//            dashboard_Admin.setVisible(false);
-//            dashboard_membre.setVisible(false);
-//            usernameCoach.setText(u.getName());
-//        }
-//        else if(user.getRole().equals(Role.MEMBRE)){
-//            System.out.println("membre found");
-//            dashboard_membre.setVisible(true);
-//            dashboard_Admin.setVisible(false);
-//            dashboard_coach.setVisible(false);
-//            usernameMembre.setText(u.getName());
-//        }
-//        else{
-//            System.out.println("user not found");
-//        }
-//
-//    // consulterMembers();
-        consulterCoaches();
+        this.user = session.getLoggedInUser();
+        if(user.getRole().equals(Role.ADMIN)){
+            dashboard_Admin.setVisible(true);
+            //dashboard_coach.setVisible(false);
+            dashboard_membre.setVisible(false);
+            usernameAdmin.setText(u.getName());
+            //consulterCoaches();
+        }
+        else if(user.getRole().equals(Role.COACH)){
+            dashboard_coach.setVisible(true);
+            dashboard_Admin.setVisible(false);
+            dashboard_membre.setVisible(false);
+            usernameCoach.setText(u.getName());
+        }
+        else if(user.getRole().equals(Role.MEMBRE)){
+            System.out.println("membre found");
+            dashboard_membre.setVisible(true);
+            dashboard_Admin.setVisible(false);
+            dashboard_coach.setVisible(false);
+            usernameMembre.setText(u.getName());
+        }
+        else{
+            System.out.println("user not found");
+        }
+
+    // consulterMembers();
     }
 
     public void switchForm(ActionEvent actionEvent) {
