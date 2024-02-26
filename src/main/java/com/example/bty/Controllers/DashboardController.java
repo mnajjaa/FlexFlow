@@ -126,6 +126,12 @@ public class DashboardController implements Initializable {
     public Button membreCoach_btn;
     public Button logoutCoach;
     public Button Produits_btn;
+    public Button eventsAdmin_btn;
+    public Button coursAdmin_btn;
+    public Button storeAdmin_btn;
+    public Button profileAdmin_btn;
+    public Button logout00_btn;
+    public Button report_btn;
     Session session = Session.getInstance();
     User u=session.getLoggedInUser();
     User user ;
@@ -295,5 +301,8 @@ public class DashboardController implements Initializable {
     }
 
     public void goToMembreCoach(ActionEvent actionEvent) {
+    }
+
+    public void goToStoreAdmin(ActionEvent event) {
     }
 }
