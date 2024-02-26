@@ -10,12 +10,14 @@ public class DashboardView extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         FXMLLoader fxmlLoader = new FXMLLoader(LoginView.class.getResource("/dashboard.fxml "));
+        FXMLLoader fxmlLoader = new FXMLLoader(LoginView.class.getResource("/dashboardX.fxml"));
 
         Parent root = fxmlLoader.load();
         Scene scene = new Scene(root);
         stage.setTitle("FitHub Pro");
         stage.setScene(scene);
         stage.setResizable(false);
+        stage.setResizable(true);
         stage.show();
     }
 }

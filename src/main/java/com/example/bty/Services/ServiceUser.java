@@ -101,6 +101,7 @@ public class ServiceUser implements IServiceUser{
                    // user connecté est un coach ou un membre
                    Role userRole = Role.valueOf(rs.getString("role"));
                    User u =new User(rs.getInt("id"),rs.getString("nom"),rs.getString("email"),rs.getString("password"),rs.getString("telephone"),userRole);
+                   User u =new User(rs.getInt("id"),rs.getString("nom"),rs.getString("email"),rs.getString("password"),rs.getString("telephone"),userRole,rs.getString("image"));
 
                    Session s=Session.getInstance();
                    s.setLoggedInUser(u);
@@ -202,6 +203,10 @@ public class ServiceUser implements IServiceUser{
                 user.setPassword(rs.getString("password"));
                 user.setTelephone(rs.getString("telephone"));
                 user.setRole(Role.valueOf(rs.getString("role")));
+                //user.setPassword(rs.getString("password"));
+                user.setTelephone(rs.getString("telephone"));
+                user.setRole(Role.valueOf(rs.getString("role")));
+                user.setEtat(rs.getBoolean("etat"));
                 users.add(user);
             }
         } catch (SQLException ex) {
@@ -226,6 +231,10 @@ public class ServiceUser implements IServiceUser{
                 coach.setPassword(rs.getString("password"));
                 coach.setTelephone(rs.getString("telephone"));
                 coach.setRole(Role.valueOf(rs.getString("role")));
+                // Removed the line that fetches the password
+                coach.setTelephone(rs.getString("telephone"));
+                coach.setRole(Role.valueOf(rs.getString("role")));
+                coach.setEtat(rs.getBoolean("etat"));
                 coaches.add(coach);
             }
         } catch (SQLException ex) {
