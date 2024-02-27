@@ -132,6 +132,8 @@ public class DashboardController implements Initializable {
     public Button profileAdmin_btn;
     public Button logout00_btn;
     public Button report_btn;
+    public Button commande_btn;
+    public Button offre_btn;
     Session session = Session.getInstance();
     User u=session.getLoggedInUser();
     User user ;
@@ -304,5 +306,11 @@ public class DashboardController implements Initializable {
     }
 
     public void goToStoreAdmin(ActionEvent event) {
+    }
+
+    public void goToCommandes(ActionEvent event) {
+    }
+
+    public void goToOffres(ActionEvent event) {
     }
 }
