@@ -5,7 +5,6 @@ import javafx.beans.property.SimpleObjectProperty;
 
 import java.sql.Date;
 import java.sql.Time;
-import java.sql.Timestamp;
 
 public class Evenement {
     int id;
@@ -23,10 +22,15 @@ public class Evenement {
 
     private final ObjectProperty<byte[]> image = new SimpleObjectProperty<>();
 
-    public Evenement(int id, String nom, byte[] image) {
+    public Evenement(int id, String nom, byte[] image, String categorie, String objectif, Date date, java.sql.Time time, int nbrPlace) {
         this.id = id;
         this.nom = nom;
         this.image.set(image);
+        this.categorie=categorie;
+        this.objectif = objectif;
+        this.date = date;
+        this.Time = time;
+        this.nbre_place = nbrPlace;
     }
 
 

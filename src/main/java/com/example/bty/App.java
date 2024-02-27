@@ -47,7 +47,7 @@ public class App extends Application {
             serviceUser.register(u);*/
 
         //**tester la methode Authentification
-        int status = serviceUser.Authentification("mnajjaibtihel@gmail.com", "ibtihel1234");
+        int status = serviceUser.Authentification("salma1@gmail.com", "salma1234");
       switch (status) {
             case 0:
                 System.out.println("Invalid user credentials");

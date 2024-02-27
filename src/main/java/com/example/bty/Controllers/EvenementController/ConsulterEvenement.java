@@ -27,7 +27,9 @@ import javafx.stage.Stage;
 
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -201,8 +203,12 @@ public class ConsulterEvenement extends Application {
         modificationStage.setTitle("Modifier le cours");
 
         TextField nomField = new TextField(evenement.getNom());
-        TextField CategorieField = new TextField(evenement.getCategorie());
-        TextField objectifField = new TextField(evenement.getObjectif());
+        ComboBox<String> CategorieComboBox = new ComboBox<>();
+        CategorieComboBox.getItems().addAll("Fitness ", "Cycling ","Powerlifting","Gymnastics","Cardio");
+        CategorieComboBox.setValue(evenement.getCategorie());
+        ComboBox<String> ObjectiFComboBox = new ComboBox<>();
+        ObjectiFComboBox.getItems().addAll("Compétition amicale ", "Gain musculaire ","Perdre du poid","Renforcement de l'esprit d'équipe ");
+        ObjectiFComboBox.setValue(evenement.getObjectif());
         TextField nbrPlaceField = new TextField(String.valueOf(evenement.getNbre_place()));
         DatePicker DateField = new DatePicker(evenement.getDate().toLocalDate());
         TextField TimeField = new TextField(evenement.getTime().toString());
@@ -213,13 +219,81 @@ public class ConsulterEvenement extends Application {
         // Bouton pour enregistrer les modifications
         Button saveButton = new Button("Enregistrer");
         saveButton.setOnAction(event -> {
+            String nomEvenement = nomField.getText();
+            String categorie = CategorieComboBox.getValue();
+            String objectif = ObjectiFComboBox.getValue();
+            int nbrePlace = Integer.parseInt(nbrPlaceField.getText());
+            LocalDate date = DateField.getValue();
+            Date d = date != null ? Date.valueOf(date) : null;
+            String time = TimeField.getText();
+            String idCoachText = idCoachField.getText();
+
+            // Vérification si les champs sont vides
+            if (nomEvenement.isEmpty()  || time.isEmpty() || idCoachText.isEmpty() ) {
+                afficherMessage("Erreur", "Veuillez remplir tous les champs avant de sauvegarder.");
+
+                // Mettre en rouge les bordures des champs vides
+                if (nomEvenement.isEmpty()) {
+                    nomField.setStyle("-fx-border-color: red;");
+                } else {
+                    nomField.setStyle(""); // Remettre le style par défaut si le champ n'est pas vide
+                }
+
+                if (time.isEmpty()) {
+                    TimeField.setStyle("-fx-border-color: red;");
+                } else {
+                    TimeField.setStyle(""); // Remettre le style par défaut si le champ n'est pas vide
+                }
+
+
+                if (idCoachText.isEmpty()) {
+                    idCoachField.setStyle("-fx-border-color: red;");
+                } else {
+                    idCoachField.setStyle(""); // Remettre le style par défaut si le champ n'est pas vide
+                }
+
+                return; // Sortie de la méthode si un champ est vide
+            }
+
+
+            // Vérification si le nom de cours contient des chiffres
+            if (nomEvenement.matches(".*\\d.*")) {
+                afficherMessage("Erreur", "Le nom de l'evenement ne doit pas contenir de chiffres.");
+                nomField.setStyle("-fx-border-color: red;"); // Mettre en rouge en cas de condition non respectée
+                return; // Sortie de la méthode si la condition n'est pas respectée
+            } else {
+                nomField.setStyle("-fx-text-inner-color: black;"); // Remettre en noir
+            }
+            // Ajout de la validation pour la capacité
+            if (nbrePlace < 10 || nbrePlace > 40) {
+                afficherMessage("Erreur", "La nombre de place  doit être comprise entre 10 et 30.");
+                nbrPlaceField.setStyle("-fx-border-color: red;"); // Mettre en rouge en cas de condition non respectée
+                return; // Sortie de la méthode si la condition n'est pas respectée
+            } else {
+                nbrPlaceField.setStyle("-fx-text-inner-color: black;"); // Remettre en noir si la condition est respectée
+            }
+            if (!time.matches("\\d{2}:\\d{2}:\\d{2}")) {
+                afficherMessage("Erreur", "Format d'heure invalide. Utilisez le format HH:MM:SS.");
+                return; // Sortie de la méthode si le format n'est pas respecté
+            }
+            // Division de la chaîne de temps en ses composants
+            String[] timeComponents = time.split(":");
+            int hours = Integer.parseInt(timeComponents[0]);
+            int minutes = Integer.parseInt(timeComponents[1]);
+            int seconds = Integer.parseInt(timeComponents[2]);
+
+            // Vérification des heures, minutes et secondes dans des intervalles logiques
+            if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59 || seconds < 0 || seconds > 59) {
+                afficherMessage("Erreur", "Heure invalide.");
+                return; // Sortie de la méthode si l'heure est invalide
+            }
             // Code pour sauvegarder les modifications dans la base de données
             try (PreparedStatement statement = connection.prepareStatement(
                     "UPDATE evenement SET nomEvenement = ?, categorie = ?, Objectif = ?, nbrPlace = ?, Date = ?, Time = ?,etat = ? ,id_user = ?  WHERE id_evenement  = ?")) {
 
                 statement.setString(1, nomField.getText());
-                statement.setString(2, CategorieField.getText());
-                statement.setString(3, objectifField.getText());
+                statement.setString(2, CategorieComboBox.getValue());
+                statement.setString(3, ObjectiFComboBox.getValue());
                 statement.setString(4, nbrPlaceField.getText());
                 statement.setDate(5, Date.valueOf(DateField.getValue()));
                 statement.setString(6, TimeField.getText());
@@ -230,8 +304,8 @@ public class ConsulterEvenement extends Application {
                 if (rowsAffected > 0) {
                     // Mise à jour réussie
                     evenement.setNom(nomField.getText());
-                    evenement.setCategorie(CategorieField.getText());
-                    evenement.setObjectif(objectifField.getText());
+                    evenement.setCategorie(CategorieComboBox.getValue());
+                    evenement.setObjectif(ObjectiFComboBox.getValue());
                     evenement.setNbre_place(Integer.parseInt(nbrPlaceField.getText()));
                     evenement.setDate(java.sql.Date.valueOf(DateField.getValue()));
                     evenement.setTime(Time.valueOf(TimeField.getText()));
@@ -245,7 +319,7 @@ public class ConsulterEvenement extends Application {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Erreur");
                     alert.setHeaderText("La mise à jour a échoué");
-                    alert.setContentText("Impossible de mettre à jour le cours. Veuillez réessayer.");
+                    alert.setContentText("Impossible de mettre à jour l'evenement. Veuillez réessayer.");
                     alert.showAndWait();
                 }
             } catch (SQLException e) {
@@ -253,17 +327,66 @@ public class ConsulterEvenement extends Application {
             }
             modificationStage.close(); // Fermeture de la fenêtre de modification après la mise à jour
         });
+
+        // Ajout de la validation pour le champ de nom de cours
+        nomField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.matches(".*\\d.*")) { // Vérifie s'il y a des chiffres dans la nouvelle valeur
+                nomField.setStyle("-fx-text-inner-color: red;"); // Change la couleur du texte en rouge
+            } else {
+                nomField.setStyle("-fx-text-inner-color: black;"); // Remet la couleur du texte en noir si aucun chiffre n'est présent
+            }
+        });
+        TimeField.textProperty().addListener((observable, oldValue, newValue) ->{
+            if (!newValue.matches("\\d{2}:\\d{2}:\\d{2}")){
+
+                TimeField.setStyle("-fx-text-inner-color: red;");
+            }
+            else{
+                try {
+                    LocalTime time = LocalTime.parse(newValue);
+                    TimeField.setStyle("-fx-text-inner-color: black;");
+                }
+                catch (DateTimeParseException e) {
+                    TimeField.setStyle("-fx-text-inner-color: red;"); // Change la couleur du texte en rouge si la conversion échoue
+                }
+            }
+                });
+        // Ajout de l'écouteur de changement de texte sur le champ de durée
+        nbrPlaceField.textProperty().addListener((observable, oldValue, newValue) -> {
+            // Vérifie si la nouvelle valeur ne contient que des chiffres
+            if (!newValue.matches("\\d*")) {
+                // Changement de la couleur du texte en noir si la condition n'est pas respectée
+                nbrPlaceField.setStyle("-fx-text-inner-color: black;");
+            } else {
+                try {
+                    int dureeValue = Integer.parseInt(newValue.trim());
+                    // Vérifie si la durée est en dehors de la plage valide
+                    if (dureeValue < 10 || dureeValue > 40) {
+                        // Changement de la couleur du texte en rouge si la condition n'est pas respectée
+                        nbrPlaceField.setStyle("-fx-text-inner-color: red;");
+                    } else {
+                        // Remet la couleur du texte en noir si la condition est respectée
+                        nbrPlaceField.setStyle("-fx-text-inner-color: black;");
+                    }
+                } catch (NumberFormatException e) {
+                    // Changement de la couleur du texte en rouge si la conversion échoue
+                    nbrPlaceField.setStyle("-fx-text-inner-color: red;");
+                }
+            }
+        });
+
+
         // Mise en page de la fenêtre de modification
         VBox layout = new VBox(10);
         layout.setPadding(new Insets(10));
         layout.getChildren().addAll(
-                new Label("Nom du cours :"), nomField,
-                new Label("Durée du cours :"), CategorieField,
-                new Label("Intensité du cours :"), objectifField,
-                new Label("Cible du cours :"), nbrPlaceField,
-                new Label("Catégorie du cours :"), DateField,
-                new Label("Objectif du cours :"), TimeField,
-                new Label("État du cours :"), etatCheckBox,
+                new Label("Nom d'evenement :"), nomField,
+                new Label("Catégorie  :"), CategorieComboBox,
+                new Label("Objectif :"), ObjectiFComboBox,
+                new Label("nombre de Place :"), nbrPlaceField,
+                new Label("Date :"), DateField,
+                new Label("Time :"), TimeField,
+                new Label("État  :"), etatCheckBox,
                 new Label("ID du coach :"), idCoachField,
                 saveButton
         );
@@ -286,6 +409,13 @@ public class ConsulterEvenement extends Application {
             supprimerCours(evenement);
         }
     }
+    private void afficherMessage(String titre, String contenu) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(titre);
+        alert.setHeaderText(null);
+        alert.setContentText(contenu);
+        alert.showAndWait();
+    }
 
     private void supprimerCours(Evenement evenement) {
         try {
@@ -306,7 +436,7 @@ public class ConsulterEvenement extends Application {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Erreur");
                     alert.setHeaderText("La suppression a échoué");
-                    alert.setContentText("Impossible de supprimer le cours. Veuillez réessayer.");
+                    alert.setContentText("Impossible de supprimer l'evenement . Veuillez réessayer.");
                     alert.showAndWait();
                 }
             }
