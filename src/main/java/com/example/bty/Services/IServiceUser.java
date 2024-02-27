@@ -2,6 +2,8 @@ package com.example.bty.Services;
 
 import com.example.bty.Entities.User;
 
+import java.util.List;
+
 public interface IServiceUser {
     public void register(User user);
     public boolean emailExists(String email);
@@ -9,6 +11,8 @@ public interface IServiceUser {
     public void ActiverOrDesactiver(int id);
     public void update(User user);
     public void delete(int id);
+    public List<User> getAllMembers();
+    public List<User> getAllCoaches();
 
 
 }
