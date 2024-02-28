@@ -4,20 +4,20 @@ import java.sql.Time;
 
 public class Demande {
     public boolean isMaladieCHronique;
-    String nom;
+   private String nom;
 
-    int id;
-    int age;
-    int nbre_heure;
-    boolean maladie_chronique;
-    String but;
-    String niveau_physique;
-    User membre;
-    Offre offre;
-    Etat etat;
-    Byte image;
-    String lesjours;
-    Time horaire;
+    private int id;
+     private int age;
+    private int nbre_heure;
+    private boolean maladie_chronique;
+    private String but;
+    private String niveau_physique;
+    private User membre;
+    private Offre offre;
+    private Etat etat;
+    private Byte image;
+    private String lesjours;
+    private Time horaire;
 
     public Demande(String id, String age, String nbre_heure, String maladie_chronique, String but, String niveau_physique, String m, String f, String etat, Time lesjours, String horaire) {
     }
@@ -38,6 +38,9 @@ public class Demande {
         this.nom = nom;
     }
 
+    public void setEtat(Etat etat) {
+        this.etat = etat;
+    }
 
     public int getId() {
         return id;

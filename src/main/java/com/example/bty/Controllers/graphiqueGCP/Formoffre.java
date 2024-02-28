@@ -12,6 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.sql.*;
+import java.util.Optional;
 
 public class Formoffre extends Application {
 
@@ -19,6 +20,8 @@ public class Formoffre extends Application {
     private ChoiceBox<String> specialiteChoice;
     private TextField tarifField;
     private TextField coachField;
+
+    private int id = 0;
 
     @Override
     public void start(Stage primaryStage) {
@@ -67,6 +70,13 @@ public class Formoffre extends Application {
         grid.add(coachLabel, 0, 3);
         grid.add(coachField, 1, 3);
 
+        Label etatLabel = new Label("Etat:");
+        grid.add(etatLabel, 0, 4);
+
+        TextField etatField = new TextField("En Attente");
+        etatField.setEditable(false);
+        grid.add(etatField, 1, 4);
+
         // Bouton d'ajout de l'offre
         Button addButton = new Button("Ajouter");
         grid.add(addButton, 1, 5);
@@ -83,6 +93,31 @@ public class Formoffre extends Application {
         Button deleteButton = new Button("Supprimer");
         grid.add(deleteButton, 3, 5);
         deleteButton.setOnAction(event -> deleteOffre());
+
+
+        Button consulterButton = new Button("Consulter liste de demande");
+        GridPane.setConstraints(consulterButton, 3, 6);
+        consulterButton.setOnAction(event -> {
+            // Créer une boîte de dialogue pour saisir l'ID
+            TextInputDialog dialog = new TextInputDialog();
+            dialog.setTitle("Consulter liste de demande");
+            dialog.setHeaderText("Veuillez entrer votre ID:");
+            dialog.setContentText("ID:");
+
+            // Afficher la boîte de dialogue et attendre la réponse de l'utilisateur
+            Optional<String> result = dialog.showAndWait();
+
+            // Vérifier si l'utilisateur a saisi une valeur
+            result.ifPresent(id -> {
+                if (!id.isEmpty()) {
+                    consulterOffre(Integer.parseInt(id));
+                } else {
+                    // Gérer le cas où l'ID est vide
+                    System.out.println("L'ID est vide.");
+                }
+            });
+        });
+        grid.getChildren().add(consulterButton);
 
         idField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.matches("\\d*")) { // Vérifie si la nouvelle valeur ne contient que des chiffres
@@ -125,12 +160,14 @@ public class Formoffre extends Application {
         String password = "";
 
         try (Connection conn = DriverManager.getConnection(url, username, password)) {
-            String query = "INSERT INTO Offre (id, Specialite, tarif_heure, id_Coach) VALUES (?, ?, ?, ?)";
+            String query = "INSERT INTO Offre (id, Specialite, tarif_heure, id_Coach,etatOffre) VALUES (?, ?, ?, ?,?)";
+            String etatOffre = "En Attente";
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setInt(1, Integer.parseInt(idField.getText()));
             statement.setString(2, specialiteChoice.getValue());
             statement.setDouble(3, Double.parseDouble(tarifField.getText()));
             statement.setInt(4, Integer.parseInt(coachField.getText()));
+            statement.setString(5, etatOffre);
 
             int rowsInserted = statement.executeUpdate();
             if (rowsInserted > 0) {
@@ -185,6 +222,14 @@ public class Formoffre extends Application {
             System.out.println("Erreur lors de la suppression de l'offre: " + e.getMessage());
         }
     }
+
+    // Méthode pour gérer l'événement du bouton "Consulter"
+    private void consulterOffre(int id) {
+        // Ouvrir la fenêtre de consultation des demandes avec l'ID du client
+        ConsultationOffre consultationOffre = new ConsultationOffre(id);
+        consultationOffre.start(new Stage());
+    }
+
 
 
 

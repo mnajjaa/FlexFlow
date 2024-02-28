@@ -61,7 +61,9 @@ public class AdminInterface extends Application {
                         resultSet.getString("id"),
                         resultSet.getString("specialite"),
                         resultSet.getFloat("tarif_heure"),
-                        resultSet.getString("id_coach")
+                        resultSet.getString("id_coach"),
+                        resultSet.getString("etatOffre")
+
                 );
 
                 offresListView.getItems().add(offreItem);
@@ -76,36 +78,54 @@ public class AdminInterface extends Application {
     }
 
     public static class OffreItem extends HBox {
-        public OffreItem(String id, String specialite, float tarif_heure, String id_coach) {
+        public OffreItem(String id, String specialite, float tarif_heure, String id_coach, String etatOffre) {
             super();
 
             Label label = new Label("ID offre : " + id + ", Spécialité : " + specialite +
-                    ", Tarif par heure : " + tarif_heure + ", ID coach : " + id_coach);
+                    ", Tarif par heure : " + tarif_heure + ", ID coach : " + id_coach+", EtatOffre : " +etatOffre) ;
 
             Button accepterButton = new Button("Accepter");
             Button refuserButton = new Button("Refuser");
-            Button modifierButton = new Button("Modifier");
+
 
             accepterButton.setOnAction(e -> accepterOffre(id));
             refuserButton.setOnAction(e -> refuserOffre(id));
-            modifierButton.setOnAction(e -> modifierOffre(id));
 
-            this.getChildren().addAll(label, accepterButton, refuserButton, modifierButton);
+
+            this.getChildren().addAll(label, accepterButton, refuserButton);
             this.setSpacing(10);
         }
     }
 
     private static void accepterOffre(String id) {
-        // Implémenter la logique pour accepter une offre
+        try {
+            // Modifier l'état dans la base de données
+            PreparedStatement statement = connection.prepareStatement("UPDATE Offre SET etatOffre = 'Acceptée' WHERE id = ?");
+            statement.setString(1, id);
+            statement.executeUpdate();
+            statement.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Gérer les erreurs de base de données
+        }
     }
 
     private static void refuserOffre(String id) {
-        // Implémenter la logique pour refuser une offre
+        try {
+            // Modifier l'état dans la base de données
+            PreparedStatement statement = connection.prepareStatement("UPDATE Offre SET etatOffre = 'Refusée' WHERE id= ?");
+            statement.setString(1, id);
+            statement.executeUpdate();
+            statement.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Gérer les erreurs de base de données
+        }
     }
 
-    private static void modifierOffre(String id) {
-        // Implémenter la logique pour modifier une offre
-    }
+
 
     @Override
     public void stop() throws Exception {

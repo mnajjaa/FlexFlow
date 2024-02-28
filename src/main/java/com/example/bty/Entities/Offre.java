@@ -5,7 +5,10 @@ public class Offre {
     private Specialite  specialite;
     private float tarif_heure;
     private User coach;
-    //private byte[] image;
+    private Etat etatOffree;
+
+
+//private byte[] image;
 
 
     public Offre() {
@@ -60,6 +63,21 @@ public class Offre {
 
     public void setCoach(User coach) {
         this.coach = coach;
+    }
+    public Specialite getSpecialite() {
+        return specialite;
+    }
+
+    public void setSpecialite(Specialite specialite) {
+        this.specialite = specialite;
+    }
+
+    public Etat getEtatOffree() {
+        return etatOffree;
+    }
+
+    public void setEtatOffree(Etat etatOffree) {
+        this.etatOffree = etatOffree;
     }
 
     @Override
