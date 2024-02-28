@@ -199,7 +199,7 @@ public class DashboardController implements Initializable {
             //dashboard_coach.setVisible(false);
             dashboard_membre.setVisible(false);
             usernameAdmin.setText(u.getName());
-            //consulterCoaches();
+           // consulterCoaches();
         }
         else if(user.getRole().equals(Role.COACH)){
             dashboard_coach.setVisible(true);
