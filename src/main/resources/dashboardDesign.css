@@ -9,6 +9,15 @@ and open the template in the editor.
  * Subscribe our YouTube Channel: https://www.youtube.com/@marcomanchannel
 */
 
+.card-container1 {
+    -fx-background-color: pink;
+    -fx-border-radius: 10;
+    -fx-padding: 20;
+    -fx-min-width: 200;
+    -fx-min-height: 300;
+    -fx-background-size: cover;
+}
+
 .border-pane{
     -fx-border-color: #000;
     -fx-border-width: .4px;
@@ -32,6 +41,14 @@ and open the template in the editor.
     -fx-background-color: #f85757;
 }
 
+.border-pane {
+    -fx-background-color: #2c3e50; /* Bleu */
+}
+
+.report_container {
+    -fx-background-color: #ffffff; /* Blanc pour le conteneur de rapport */
+}
+
 .minimize-btn{
     -fx-background-color: transparent;
     -fx-cursor:hand;
@@ -43,12 +60,12 @@ and open the template in the editor.
 .nav{
     -fx-background-color: #2c3e50;
     -fx-border-radius: 10;
-
 }
 
 .nav1{
     -fx-background-color: linear-gradient(to top right, #7AA95C , #7AA95C);
     -fx-border-radius: 10;
+    -fx-background-color: linear-gradient(to top right, #2c2c57, #2c3e50);
 }
 .nav-border{
     -fx-border-color: #000;
@@ -99,8 +116,55 @@ and open the template in the editor.
 
 
 .white-bg{
-    -fx-background-color: #fff;
+    -fx-background-color: white ;
+    -fx-background-radius: 2%; /* Applique un rayon de 50% pour rendre le fond circulaire */
+    -fx-border-radius:2%;
+    -fx-border-color: #2c3e50;
+    -fx-border-width: 1px;
+}
+
+.bg{
+    -fx-background-color: white ;
+    -fx-background-radius: 6%; /* Applique un rayon de 50% pour rendre le fond circulaire */
+
+}
+
+
+
+
+.report_container {
+    -fx-background-color:WHITE; /* Bleu */
+    -fx-border-radius: 15;
+    -fx-background-radius:15;
+    -fx-border-color:#2c3e50; /* Couleur de bordure bleue légère */
+    -fx-padding: 10;
+}
+
+.report_text {
+    -fx-fill: #2c3e50; /* Texte blanc */
+    -fx-font-size: 16;
+    -fx-font-weight: bold;
+}
+
+.report_label {
+    -fx-text-fill: #2c3e50; /* Texte blanc */
+    -fx-font-size: 14;
+}
+
+.report_button {
+    -fx-background-color: #2c3e50; /* Blanc pour le bouton */
+    -fx-text-fill: #ffffff; /* Texte bleu pour le bouton */
+    -fx-font-weight: bold;
+}
+
+
+
+
+
+.white-bg1{
+    -fx-background-color: white ;
     -fx-background-radius: 6px;
+
 }
 
 .textfield{
@@ -146,6 +210,31 @@ and open the template in the editor.
     -fx-size: 50px;
 }
 .table-view .column-header .label{
-    -fx-text-fill: #fff;
+    -fx-text-fill: MintCream;
     -fx-font-family: Arial;
+}
+
+
+
+/* dashboardDesign.css */
+
+/* Style du champ de recherche */
+.search-field {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-border-color: #ddd;
+    -fx-border-radius: 8;
+    -fx-padding: 10;
+    -fx-font-size: 12;
+    -fx-text-fill: #1E0F1C;
+    -fx-border-color: #2c3e50;
+    -fx-border-width: 1px;
+}
+
+/* Style du texte de la barre de recherche lorsqu'elle est inactive */
+
+
+/* Style du texte de la barre de recherche lorsqu'elle est active */
+.search-field:focused {
+    -fx-border-color: #3498db;
 }

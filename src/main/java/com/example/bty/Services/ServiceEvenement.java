@@ -58,14 +58,16 @@ Boolean etat=true;
 
 //methode pour supprimer un evenement
 
-    public void supprimerEvenement(int id){
+    public Boolean supprimerEvenement(int id){
         String req="DELETE FROM evenement WHERE id_evenement=?";
         try {
             pde=connexion.prepareStatement(req);
             pde.setInt(1,id);
             pde.executeUpdate();
+            return true;
         } catch (SQLException ex) {
             ex.printStackTrace();
+            return false;
         }
     }
 

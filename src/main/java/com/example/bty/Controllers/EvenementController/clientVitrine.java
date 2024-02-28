@@ -17,6 +17,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.scene.text.Text;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 
@@ -56,14 +57,16 @@ public class clientVitrine extends Application {
         topBar.setStyle(" -fx-background-color: #2c3e50;\n" +
                 "    -fx-padding: 25;\n" +
                 "    -fx-border-radius: 15px;" +
-                " -fx-background-insets: 0 0 0 218;");
-        topBar.setSpacing(5);
+                " -fx-background-insets: 0 0 0 232;"
+
+        );
+       // topBar.setSpacing(5);
 
         root.setTop(topBar);
 
 
 
-        AnchorPane leftDashboard = createLeftDashboard();
+        AnchorPane leftDashboard = createLeftDashboard(primaryStage);
 
         root.setLeft(leftDashboard);
 
@@ -94,7 +97,10 @@ public class clientVitrine extends Application {
 
 
 
-        Scene scene = new Scene(root, 800, 600);
+
+
+
+        Scene scene = new Scene(root, 1536, 780);
         primaryStage.setResizable(true);
 
         primaryStage.setScene(scene);
@@ -109,161 +115,188 @@ public class clientVitrine extends Application {
             flowPane.getChildren().add(carte);
         }
     }
+    private AnchorPane createLeftDashboard(Stage primaryStage) {
+        AnchorPane mainForm = new AnchorPane();
+        mainForm.setPrefSize(1100, 900);
 
-    private AnchorPane createLeftDashboard() {
-        StackPane stackPane = new StackPane();
-
-
-        stackPane.setPrefSize(1100, 600);
-
-        AnchorPane anchorPane = new AnchorPane();
-        stackPane.getChildren().add(anchorPane);
-
-
-        BorderPane borderPane = new BorderPane();
-        borderPane.setPrefSize(1100, 600);
-        borderPane.getStyleClass().add("border-pane");
-
-        AnchorPane.setBottomAnchor(borderPane, 0.0);
-        AnchorPane.setTopAnchor(borderPane, 0.0);
-        AnchorPane.setRightAnchor(borderPane, 0.0);
-        AnchorPane.setLeftAnchor(borderPane, 0.0);
-
-
-        AnchorPane leftAnchorPane = new AnchorPane();
-        //  leftAnchorPane.setTranslateY(-80);
-        // leftAnchorPane.setTranslateX(-10);
-        leftAnchorPane.setPrefSize(270, 600);
-        //leftAnchorPane.setPrefHeight(Double.MAX_VALUE);
+        //AnchorPane dashboardAdmin = new AnchorPane();
 
 
 
-
-        AnchorPane.setTopAnchor(leftAnchorPane, 0.0);
-        AnchorPane.setLeftAnchor(leftAnchorPane, 0.0);
-        //leftAnchorPane.setTranslateY(-112);
-        AnchorPane innerAnchorPane = new AnchorPane();
-        innerAnchorPane.getStyleClass().addAll("nav", "nav-border");
-        innerAnchorPane.setPrefSize(229, 750);
-
-        FontAwesomeIconView userIcon = new FontAwesomeIconView();
-        userIcon.setFill(javafx.scene.paint.Color.WHITE);
-        userIcon.setGlyphName("USER");
-        userIcon.setLayoutX(82);
-        userIcon.setLayoutY(91);
-        userIcon.setSize("6em");
-
-        Label welcomeLabel = new Label("Welcome,");
-        welcomeLabel.setLayoutX(78);
-        welcomeLabel.setLayoutY(101);
-        welcomeLabel.setTextFill(javafx.scene.paint.Color.WHITE);
-        welcomeLabel.setFont(new javafx.scene.text.Font("Tahoma", 15));
-
-        Label usernameLabel = new Label("MarcoMan");
-        usernameLabel.setId("username");
-        usernameLabel.setAlignment(javafx.geometry.Pos.CENTER);
-        usernameLabel.setLayoutX(11);
-        usernameLabel.setLayoutY(120);
-        usernameLabel.setPrefSize(201, 23);
-        usernameLabel.setTextFill(javafx.scene.paint.Color.WHITE);
-        usernameLabel.setFont(new javafx.scene.text.Font("Arial Bold", 20));
-
-        Line line = new Line();
-        line.setEndX(100);
-        line.setLayoutX(111);
-        line.setLayoutY(152);
-        line.setStartX(-100);
-        line.setStroke(javafx.scene.paint.Color.WHITE);
+        AnchorPane dashboardAdmin = new AnchorPane();
+        //leftAnchorPane.setTranslateY(-80);
+        dashboardAdmin.setTranslateX(0);
+        //leftAnchorPane.setPrefSize(70, 280);
+//        dashboardAdmin.setBottomAnchor(mainForm, 40.0);
+//        dashboardAdmin.setLeftAnchor(mainForm, 40.0);
+        dashboardAdmin.setTranslateY(-90);
+        dashboardAdmin.setPrefSize(234, 1600);
+        dashboardAdmin.getStyleClass().add("border-pane");
 
 
+        FontAwesomeIconView usernameAdmin = createFontAwesomeIconView("USER", "WHITE", 50, 82, 91);
+        Label welcomeLabel = createLabel("Welcome,", "Tahoma", 15, 78, 101,"WHITE");
+        Label usernameLabel = createLabel("MarcoMan", "Arial Bold", 20, 11, 120,"WHITE");
+        // Line line = createLine(-100, 152, 100, 152, 111);
+        Line line = createColoredLine(-100, 152, 100, 152, 111, "WHITE");
+
+        Button DashboardBtn = createButton("Dashboard", 22, 186);
+        Button CoursBtn = createButton("Cours", 22, 234);
+        Button eventsBtn = createButton("Evenements", 22, 276);
+        Button demandeBtn = createButton("Demande Coahing", 22, 319);
+        Button offreAdminBtn = createButton("Offre", 22, 361);
+        Button storeAdminBtn = createButton("Store", 22, 405);
+
+//        CoursBtn.setOnAction(event -> {
+//            // Instancier et afficher la vue DashboardVitrineController
+//            CourMembre v = new CourMembre();
+//            v.start(primaryStage);
+//        });
 
 
-        Button dashboardBtn = new Button("Dashboard");
-        dashboardBtn.setId("dashboard_btn");
-        dashboardBtn.setLayoutX(21);
-        dashboardBtn.setLayoutY(170);
-        dashboardBtn.setMnemonicParsing(false);
-        dashboardBtn.setPrefSize(180, 35);
-        dashboardBtn.getStyleClass().addAll("nav-btn", "dashboard-btn");
-        dashboardBtn.setText("Dashboard");
-
-        Button userBtn = new Button("Utilisateurs");
-        userBtn.setId("user_btn");
-        userBtn.setLayoutX(21);
-        userBtn.setLayoutY(220);
-        userBtn.setMnemonicParsing(false);
-        userBtn.setPrefSize(180, 35);
-        userBtn.getStyleClass().addAll("nav-btn");
-
-        Button coursBtn = new Button("Cours");
-        coursBtn.setId("cours_btn");
-        coursBtn.setLayoutX(21);
-        coursBtn.setLayoutY(270);
-        coursBtn.setMnemonicParsing(false);
-        coursBtn.setPrefSize(180, 35);
-        coursBtn.getStyleClass().addAll("nav-btn");
-
-        Button evenementBtn = new Button("Evenement");
-        evenementBtn.setId("evenement_btn");
-        evenementBtn.setLayoutX(21);
-        evenementBtn.setLayoutY(320);
-        evenementBtn.setMnemonicParsing(false);
-        evenementBtn.setPrefSize(180, 35);
-        evenementBtn.getStyleClass().addAll("nav-btn");
-
-        Button produitBtn = new Button("Produits");
-        produitBtn.setId("produit_btn");
-        produitBtn.setLayoutX(21);
-        produitBtn.setLayoutY(370);
-        produitBtn.setMnemonicParsing(false);
-        produitBtn.setPrefSize(180, 35);
-        produitBtn.getStyleClass().addAll("nav-btn");
-
-        Button coachBtn = new Button("Coaching privé");
-        coachBtn.setId("coach_btn");
-        coachBtn.setLayoutX(21);
-        coachBtn.setLayoutY(420);
-        coachBtn.setMnemonicParsing(false);
-        coachBtn.setPrefSize(180, 35);
-        coachBtn.getStyleClass().addAll("nav-btn");
-
-        Button reclamationBtn = new Button("Réclamation");
-        reclamationBtn.setId("reclamation_btn");
-        reclamationBtn.setLayoutX(21);
-        reclamationBtn.setLayoutY(470);
-        reclamationBtn.setMnemonicParsing(false);
-        reclamationBtn.setPrefSize(180, 35);
-        reclamationBtn.getStyleClass().addAll("nav-btn");
-
-        Button logoutBtn = new Button();
-        logoutBtn.setId("logout");
-        logoutBtn.setLayoutX(14);
-        logoutBtn.setLayoutY(545);
-        logoutBtn.setMnemonicParsing(false);
-        logoutBtn.getStyleClass().addAll("logout", "shadow");
+        eventsBtn.setOnAction(event -> {
+            // Instancier et afficher la vue DashboardVitrineController
+            clientVitrine v=new clientVitrine();
+            v.start(primaryStage);
+        });
 
 
-        FontAwesomeIconView logoutIcon = new FontAwesomeIconView();
-        logoutIcon.setFill(javafx.scene.paint.Color.WHITE);
-        logoutIcon.setGlyphName("SIGN_OUT");
-        logoutIcon.setSize("2em");
+      /*  demandeBtn.setOnAction(event -> {
+            // Instancier et afficher la vue DashboardVitrineController
+            FD f = new FD();
+            f.start(primaryStage);
+        });*/
 
-        logoutBtn.setGraphic(logoutIcon);
 
-        Label logoutLabel = new Label("Logout");
-        logoutLabel.setLayoutX(58);
-        logoutLabel.setLayoutY(551);
-        logoutLabel.setTextFill(javafx.scene.paint.Color.WHITE);
-        logoutLabel.setFont(new javafx.scene.text.Font(15));
+        offreAdminBtn.setOnAction(event -> {
+            // Instancier et afficher la vue DashboardVitrineController
 
-        innerAnchorPane.getChildren().addAll(userIcon, welcomeLabel, usernameLabel, line, dashboardBtn, userBtn, coursBtn, evenementBtn, produitBtn, coachBtn, reclamationBtn, logoutBtn, logoutLabel);
+        });
 
-        leftAnchorPane.getChildren().add(innerAnchorPane);
-        leftAnchorPane.setPrefHeight(Double.MAX_VALUE);
 
-        borderPane.setLeft(leftAnchorPane);
-        anchorPane.getChildren().add(borderPane);
-        return leftAnchorPane;
+        storeAdminBtn.setOnAction(event -> {
+            // Instancier et afficher la vue DashboardVitrineController
+
+        });
+
+
+
+        Line line2 = createColoredLine(-100, 449, 100, 449, 112, "WHITE");
+
+        Button profileAdminBtn = createButton("Profile", 22, 462);
+        Button logoutBtn = createButton("Logout", 22, 503);
+
+        FontAwesomeIconView[] icons = {
+                createFontAwesomeIconView("HOME", "WHITE", 20, 38, 212),
+                createFontAwesomeIconView("USER", "WHITE", 20, 38, 258),
+                createFontAwesomeIconView("USERS", "WHITE", 20, 38, 300),
+                createFontAwesomeIconView("BOOK", "WHITE", 20, 38, 343),
+                createFontAwesomeIconView("CALENDAR", "WHITE", 20, 38, 385),
+
+                createFontAwesomeIconView("SHOPPING_CART", "WHITE", 20, 38, 429),
+
+                createFontAwesomeIconView("ID_CARD", "WHITE", 20, 38, 486),
+                createFontAwesomeIconView("EXTERNAL_LINK", "WHITE", 20, 38, 529)
+        };
+
+        VBox reportContainer = new VBox();
+        reportContainer.setLayoutX(13);
+        reportContainer.setLayoutY(750);
+        reportContainer.setPrefSize(180, 91);
+        reportContainer.setStyle(" -fx-background-color:WHITE; /* Bleu */\n" +
+                "    -fx-border-radius: 15;\n" +
+                "    -fx-background-radius:15;\n" +
+                "    -fx-border-color:#2c3e50; /* Couleur de bordure bleue légère */\n" +
+                "    -fx-padding: 12;\n" +
+                "    -fx-translate-y: -30;");
+
+        Text reportText = new Text("Report Suggestion/Bug?");
+        reportText.getStyleClass().add("report_text");
+
+        Label reportLabel = new Label("Use this to report any errors or suggestions.");
+        reportLabel.getStyleClass().add("report_label");
+
+        Button reportButton = createButton("Report", 0, 0);
+        reportButton.getStyleClass().add("report_button");
+
+
+
+        reportContainer.getChildren().addAll(reportText, reportLabel, reportButton);
+
+        StackPane contentPlaceholder = new StackPane();
+        contentPlaceholder.setLayoutX(220);
+        contentPlaceholder.setLayoutY(0);
+
+        dashboardAdmin.getChildren().addAll(
+                usernameAdmin, welcomeLabel, usernameLabel, line,
+                DashboardBtn,CoursBtn, eventsBtn, demandeBtn, offreAdminBtn,
+                storeAdminBtn, line2, profileAdminBtn,
+                logoutBtn, icons[0], icons[1], icons[2], icons[3],
+                icons[4], icons[5], icons[6],icons[7], reportContainer,
+                contentPlaceholder
+        );
+
+        mainForm.getChildren().addAll(dashboardAdmin);
+        return dashboardAdmin;
+
+
+    }
+
+
+
+    private FontAwesomeIconView createFontAwesomeIconView(String glyphName, String fill, double size, double layoutX, double layoutY) {
+        FontAwesomeIconView iconView = new FontAwesomeIconView();
+        iconView.setGlyphName(glyphName);
+
+        // Définir la couleur de remplissage ici
+        iconView.setFill(javafx.scene.paint.Paint.valueOf(fill));
+
+        iconView.setSize(String.valueOf(size));
+
+        iconView.setLayoutX(layoutX);
+        iconView.setLayoutY(layoutY);
+        return iconView;
+    }
+
+
+    private Label createLabel(String text, String fontName, double fontSize, double layoutX, double layoutY, String textFill) {
+        Label label = new Label(text);
+        label.setFont(new javafx.scene.text.Font(fontName, fontSize));
+        label.setLayoutX(layoutX);
+        label.setLayoutY(layoutY);
+
+        // Définir la couleur du texte ici
+        label.setTextFill(javafx.scene.paint.Paint.valueOf(textFill));
+
+        return label;
+    }
+
+
+    private Line createLine(double startX, double startY, double endX, double endY, double layoutX) {
+        Line line = new Line(startX, startY, endX, endY);
+        line.setLayoutX(layoutX);
+        return line;
+    }
+
+
+    private Line createColoredLine(double startX, double startY, double endX, double endY, double layoutX, String strokeColor) {
+        Line line = new Line(startX, startY, endX, endY);
+        line.setLayoutX(layoutX);
+
+        // Définir la couleur de la ligne ici
+        line.setStroke(javafx.scene.paint.Paint.valueOf(strokeColor));
+
+        return line;
+    }
+
+    private Button createButton(String text, double layoutX, double layoutY) {
+        Button button = new Button(text);
+        button.setLayoutX(layoutX);
+        button.setLayoutY(layoutY);
+        button.setMnemonicParsing(false);
+        button.getStyleClass().add("nav-btn");
+        button.setPrefSize(180, 35);
+        return button;
     }
 
     private VBox createEventCard(Evenement evenement) {

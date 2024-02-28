@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import de.jensd.fx.glyphs.fontawesome.*?>
-<?import java.lang.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.*?>
-<?import javafx.scene.text.*?>
+<?import java.lang.String?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bty.Controllers.EvenementController.DashbordEvenement">
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bty.Controllers.EvenementController.DashbordEvenement">
 <AnchorPane fx:id="main_form" prefHeight="200.0" prefWidth="200.0">
     <BorderPane layoutX="146.0" layoutY="29.0" prefHeight="600.0" prefWidth="1100.0" styleClass="border-pane" stylesheets="/dashboardDesign.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 
@@ -74,61 +74,63 @@
             <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                 <!--*******************************************  DASHBOARD :)   *****************************-->
 
-                <AnchorPane fx:id="dashboard_form" layoutX="143.0" layoutY="126.0" prefHeight="555.0" prefWidth="880.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <AnchorPane fx:id="dashboard_form" layoutX="143.0" layoutY="126.0" prefHeight="555.0" prefWidth="880.0" style="-fx-background-color: white;" stylesheets="/dashboardDesign.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <children>
-                        <AnchorPane layoutX="13.0" layoutY="14.0" prefHeight="153.0" prefWidth="854.0" stylesheets="/dashboardDesign.css">
-                            <styleClass>
-                                <String fx:value="white-bg" />
-                                <String fx:value="shadow" />
-                            </styleClass>
-                            <children>
-                                <AnchorPane layoutX="24.0" layoutY="9.0" prefHeight="135.0" prefWidth="246.0" styleClass="nav" stylesheets="/dashboardDesign.css">
-                                    <children>
-                                        <FontAwesomeIconView fill="WHITE" glyphName="EXCLAMATION" layoutX="14.0" layoutY="88.0" size="5em" />
-                                        <Label  alignment="CENTER_RIGHT" layoutX="84.0" layoutY="14.0" prefHeight="17.0" prefWidth="148.0" text="Produit moins acheté" textFill="WHITE">
-                                            <font>
-                                                <Font name="Tahoma" size="15.0" />
-                                            </font>
-                                        </Label>
-                                        <Label fx:id="dashboard_NM" alignment="CENTER" layoutX="84.0" layoutY="97.0" prefHeight="17.0" prefWidth="148.0" text="0" textFill="WHITE">
-                                            <font>
-                                                <Font name="Tahoma" size="15.0" />
-                                            </font>
-                                        </Label>
-                                    </children>
-                                </AnchorPane>
-                                <AnchorPane layoutX="315.0" layoutY="10.0" prefHeight="135.0" prefWidth="246.0" styleClass="nav1" stylesheets="/dashboardDesign.css">
-                                    <children>
-                                        <FontAwesomeIconView fill="WHITE" glyphName="SHOPPING_BAG" layoutX="14.0" layoutY="91.0" size="5em" />
-                                        <Label alignment="CENTER_RIGHT" layoutX="84.0" layoutY="17.0" prefHeight="17.0" prefWidth="148.0" text="Produit plus vendue" textFill="WHITE">
-                                            <font>
-                                                <Font name="Tahoma" size="15.0" />
-                                            </font>
-                                        </Label>
-                                        <Label fx:id="dashboard_NC" alignment="CENTER" layoutX="84.0" layoutY="100.0" prefHeight="17.0" prefWidth="148.0" text="0" textFill="WHITE">
-                                            <font>
-                                                <Font name="Tahoma" size="15.0" />
-                                            </font>
-                                        </Label>
-                                    </children>
-                                </AnchorPane>
-                                <AnchorPane layoutX="594.0" layoutY="9.0" prefHeight="135.0" prefWidth="246.0" styleClass="nav" stylesheets="/dashboardDesign.css">
-                                    <children>
-                                        <FontAwesomeIconView fill="WHITE" glyphName="MONEY" layoutX="14.0" layoutY="91.0" size="5em" />
-                                        <Label alignment="CENTER_RIGHT" layoutX="84.0" layoutY="17.0" prefHeight="17.0" prefWidth="148.0" text="Chiffre d'affaires" textFill="WHITE">
-                                            <font>
-                                                <Font name="Tahoma" size="17.0" />
-                                            </font>
-                                        </Label>
-                                        <Label fx:id="dashboard_TI" alignment="CENTER" layoutX="84.0" layoutY="100.0" prefHeight="17.0" prefWidth="148.0" text="0.0 \dnt" textFill="WHITE">
-                                            <font>
-                                                <Font name="Tahoma" size="15.0" />
-                                            </font>
-                                        </Label>
-                                    </children>
-                                </AnchorPane>
-                            </children>
-                        </AnchorPane>
+<!--                        <AnchorPane layoutX="13.0" layoutY="14.0" prefHeight="158.0" prefWidth="1283.0" stylesheets="/dashboardDesign.css">-->
+<!--                            <styleClass>-->
+<!--                                <String fx:value="white-bg" />-->
+<!--                                <String fx:value="shadow" />-->
+<!--                            </styleClass>-->
+<!--                            <children>-->
+<!--                                <AnchorPane layoutX="24.0" layoutY="9.0" prefHeight="135.0" prefWidth="246.0" styleClass="nav" stylesheets="/dashboardDesign.css">-->
+<!--                                    <children>-->
+<!--                                        <FontAwesomeIconView fill="WHITE" glyphName="EXCLAMATION" layoutX="14.0" layoutY="88.0" size="5em" />-->
+<!--                                        <Label  alignment="CENTER_RIGHT" layoutX="84.0" layoutY="14.0" prefHeight="17.0" prefWidth="148.0" text="Produit moins acheté" textFill="WHITE">-->
+<!--                                            <font>-->
+<!--                                                <Font name="Tahoma" size="15.0" />-->
+<!--                                            </font>-->
+<!--                                        </Label>-->
+<!--                                        <Label fx:id="dashboard_NM" alignment="CENTER" layoutX="84.0" layoutY="97.0" prefHeight="17.0" prefWidth="148.0" text="0" textFill="WHITE">-->
+<!--                                            <font>-->
+<!--                                                <Font name="Tahoma" size="15.0" />-->
+<!--                                            </font>-->
+<!--                                        </Label>-->
+<!--                                    </children>-->
+<!--                                </AnchorPane>-->
+<!--                                <AnchorPane layoutX="315.0" layoutY="10.0" prefHeight="135.0" prefWidth="246.0" styleClass="nav1" stylesheets="/dashboardDesign.css">-->
+<!--                                    <children>-->
+<!--                                        <FontAwesomeIconView fill="WHITE" glyphName="SHOPPING_BAG" layoutX="14.0" layoutY="91.0" size="5em" />-->
+<!--                                        <Label alignment="CENTER_RIGHT" layoutX="84.0" layoutY="17.0" prefHeight="17.0" prefWidth="148.0" text="Produit plus vendue" textFill="WHITE">-->
+<!--                                            <font>-->
+<!--                                                <Font name="Tahoma" size="15.0" />-->
+<!--                                            </font>-->
+<!--                                        </Label>-->
+<!--                                        <Label fx:id="dashboard_NC" alignment="CENTER" layoutX="84.0" layoutY="100.0" prefHeight="17.0" prefWidth="148.0" text="0" textFill="WHITE">-->
+<!--                                            <font>-->
+<!--                                                <Font name="Tahoma" size="15.0" />-->
+<!--                                            </font>-->
+<!--                                        </Label>-->
+<!--                                    </children>-->
+<!--                                </AnchorPane>-->
+<!--                                <AnchorPane layoutX="594.0" layoutY="9.0" prefHeight="135.0" prefWidth="246.0" styleClass="nav" stylesheets="/dashboardDesign.css">-->
+<!--                                    <children>-->
+<!--                                        <FontAwesomeIconView fill="WHITE" glyphName="MONEY" layoutX="14.0" layoutY="91.0" size="5em" />-->
+<!--                                        <Label alignment="CENTER_RIGHT" layoutX="84.0" layoutY="17.0" prefHeight="17.0" prefWidth="148.0" text="Chiffre d'affaires" textFill="WHITE">-->
+<!--                                            <font>-->
+<!--                                                <Font name="Tahoma" size="17.0" />-->
+<!--                                            </font>-->
+<!--                                        </Label>-->
+<!--                                        <Label fx:id="dashboard_TI" alignment="CENTER" layoutX="84.0" layoutY="100.0" prefHeight="17.0" prefWidth="148.0" text="0.0 \dnt" textFill="WHITE">-->
+<!--                                            <font>-->
+<!--                                                <Font name="Tahoma" size="15.0" />-->
+<!--                                            </font>-->
+<!--                                        </Label>-->
+<!--                                    </children>-->
+<!--                                </AnchorPane>-->
+<!--                            </children>-->
+<!--                        </AnchorPane>-->
+
+
                         <AnchorPane layoutX="10.0" layoutY="234.0" prefHeight="315.0" prefWidth="861.0" stylesheets="/dashboardDesign.css">
                             <styleClass>
                                 <String fx:value="white-bg" />
@@ -136,32 +138,32 @@
                             </styleClass>
                             <children>
 
-                                <AnchorPane layoutX="1.0" layoutY="39.0" prefHeight="311.0" prefWidth="860.0">
+                                <AnchorPane layoutX="-11.0" layoutY="-113.0" prefHeight="430.0" prefWidth="1302.0">
 
-                                    <TableView fx:id="tableView" layoutY="-40.0" prefHeight="351.0" prefWidth="860.0" xmlns:fx="http://javafx.com/fxml/1">
+                                    <TableView fx:id="tableView" layoutX="5.0" layoutY="23.0" prefHeight="436.0" prefWidth="1291.0" xmlns:fx="http://javafx.com/fxml/1">
                                         <columns>
                                             <TableColumn fx:id="idCol" prefWidth="50" text="ID" />
-                                            <TableColumn fx:id="nomCol" prefWidth="170" text="Nom" />
-                                            <TableColumn fx:id="categorieCol" prefWidth="190" text="Catégorie" />
-                                            <TableColumn fx:id="ObjectifCol" prefWidth="190" text="Objectif" />
-                                            <TableColumn fx:id="placeCol" prefWidth="80" text="N°Place" />
-                                            <TableColumn fx:id="dateCol" prefWidth="115" text="Date" />
-                                            <TableColumn fx:id="timeCol" prefWidth="80" text="Time" />
-                                            <TableColumn fx:id="idCoachCol" prefWidth="120" text="ID Coach" />
-                                            <TableColumn fx:id="nomCoachCol" prefWidth="120" text="Nom Coach" />
-                                            <TableColumn fx:id="Etat" prefWidth="120" text="Etat" />
-                                            <TableColumn fx:id="actionColumn" prefWidth="100" text="Actions" />
+                                            <TableColumn fx:id="nomCol" prefWidth="127.20001220703125" text="Nom" />
+                                            <TableColumn fx:id="categorieCol" prefWidth="81.5999755859375" text="Catégorie" />
+                                            <TableColumn fx:id="ObjectifCol" prefWidth="143.199951171875" text="Objectif" />
+                                            <TableColumn fx:id="placeCol" prefWidth="95.199951171875" text="N°Place" />
+                                            <TableColumn fx:id="dateCol" prefWidth="121.5999755859375" text="Date" />
+                                            <TableColumn fx:id="timeCol" prefWidth="126.4000244140625" text="Time" />
+                                            <TableColumn fx:id="Etat" prefWidth="116.0" text="Etat" />
+                                            <TableColumn fx:id="idCoachCol" prefWidth="140.0" text="ID Coach" />
+                                            <TableColumn fx:id="nomCoachCol" prefWidth="130.39990234375" text="Nom Coach" />
+
+                                            <TableColumn fx:id="actionColumn" prefWidth="147.9998779296875" text="Actions" />
                                         </columns>
                                     </TableView>
                                 </AnchorPane>
                             </children>
                         </AnchorPane>
-                        <Separator layoutX="14.0" layoutY="179.0" prefHeight="5.0" prefWidth="856.0" />
-                        <Button fx:id="ajout_produit" layoutX="797.0" layoutY="191.0" mnemonicParsing="false" onAction="#ouvrirFenetreAjoutEvenement" prefHeight="30.0" prefWidth="69.0" styleClass="nav-btnproduit" stylesheets="/dashboardDesign.css" text="Ajout" />
-
+<!--                        <Separator layoutX="14.0" layoutY="179.0" prefHeight="5.0" prefWidth="1280" />-->
+                        <Button fx:id="ajout_evenement" layoutX="1218.0" layoutY="48.0" mnemonicParsing="false" onAction="#ouvrirFenetreAjoutEvenement" prefHeight="30.0" prefWidth="69.0" styleClass="nav-btnproduit" stylesheets="/dashboardDesign.css" text="Ajout" />
+                        <Button fx:id="actuliser_Evenement" layoutX="1126.0" layoutY="48.0" mnemonicParsing="false" onAction="#reloadEvenements" styleClass="nav-btnactualiser" stylesheets="/dashboardDesign.css" text="Actualiser" />
                     </children>
                 </AnchorPane>
-
 
             </AnchorPane>
         </center>
