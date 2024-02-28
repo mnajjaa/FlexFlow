@@ -164,3 +164,11 @@ and open the template in the editor.
 .report_container Button FontAwesomeIconView {
     -fx-fill: #FFFFFF;
 }
+
+.update-icon {
+    -fx-fill: green; /* Change the color of the update icon to green */
+}
+
+.delete-icon {
+    -fx-fill: red; /* Change the color of the delete icon to red */
+}

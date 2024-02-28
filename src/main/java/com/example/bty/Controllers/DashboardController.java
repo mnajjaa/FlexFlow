@@ -5,20 +5,32 @@ import com.example.bty.Entities.User;
 import com.example.bty.Services.IServiceUser;
 import com.example.bty.Services.ServiceUser;
 import com.example.bty.Utils.Session;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.application.Application;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.util.Callback;
 import java.net.URL;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class DashboardController implements Initializable {
@@ -69,6 +81,7 @@ public class DashboardController implements Initializable {
     public Button payment_btn;
 
     // **************** COACHES *****************
+    public static int id;
     @FXML
     public AnchorPane coaches_form;
     @FXML
@@ -110,7 +123,6 @@ public class DashboardController implements Initializable {
     public Button coach_btn;
     public Button reclamation_btn;
     public AnchorPane coaches_list;
-    public TableColumn coaches_col_action;
     public AnchorPane dashboard_coach;
     public AnchorPane dashboard_membre;
     public AnchorPane dashboard_Admin;
@@ -134,9 +146,27 @@ public class DashboardController implements Initializable {
     public Button report_btn;
     public Button commande_btn;
     public Button offre_btn;
+    public TableColumn coaches_col_action;
+    @FXML
+    public AnchorPane user_profil;
+    public ImageView image;
+    public AnchorPane box_1;
+    public Button coaches_updateBtn1;
+    public AnchorPane box_11;
+    public TextField confirm_password;
+    public ImageView profile_img;
+    public Button update_img_btn;
+    @FXML
+    public TextField profil_name;
+    @FXML
+    public TextField profil_email;
+    @FXML
+    public TextField profil_telephone;
+    public TextField new_password;
     Session session = Session.getInstance();
     User u=session.getLoggedInUser();
     User user ;
+    public static String pathImage ;
 
 
     // ****************  //  fin MEMBERS ****************
@@ -185,7 +215,98 @@ public class DashboardController implements Initializable {
         coaches_col_nom.setCellValueFactory(new PropertyValueFactory<>("name"));
         coaches_col_email.setCellValueFactory(new PropertyValueFactory<>("email"));
         coaches_col_telephone.setCellValueFactory(new PropertyValueFactory<>("telephone"));
+        coaches_col_etat.setCellFactory(tc -> new TableCell<User, Boolean>() {
+            @Override
+            protected void updateItem(Boolean item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null) {
+                    setGraphic(null);
+                } else {
+                    Label label = new Label();
+                    if (item) {
+                        label.setText("Actif");
+                        label.setStyle("-fx-text-fill: green;");
+                    } else {
+                        label.setText("Inactif");
+                        label.setStyle("-fx-text-fill: red;");
+                    }
+                    setGraphic(label);
+                }
+            }
+        });
         coaches_col_etat.setCellValueFactory(new PropertyValueFactory<>("etat"));
+        coaches_col_action.setCellFactory(param -> new TableCell<User, Void>() {
+            final FontAwesomeIconView updateIcon = new FontAwesomeIconView(FontAwesomeIcon.PENCIL_SQUARE);
+            final FontAwesomeIconView deleteIcon = new FontAwesomeIconView(FontAwesomeIcon.TRASH);
+            final HBox pane = new HBox(updateIcon, deleteIcon);
+
+            {
+                updateIcon.getStyleClass().add("update-icon");
+                deleteIcon.getStyleClass().add("delete-icon");
+
+                updateIcon.setOnMouseClicked(event -> {
+//  Get the selected coach
+                    User selectedCoach = coaches_tableView.getSelectionModel().getSelectedItem();
+
+                    // Check if a row has been selected
+                    if (selectedCoach != null) {
+                        id = selectedCoach.getId();
+                        coaches_list.setVisible(false);
+                        coaches_list.setManaged(false);
+
+                        coaches_form.setVisible(true);
+                        coaches_form.setManaged(true);
+
+                        // Populate the form fields with the selected coach's details
+
+
+                        coaches_name.setText(selectedCoach.getName());
+                        coaches_email.setText(selectedCoach.getEmail());
+                        coaches_telephone.setText(selectedCoach.getTelephone());
+                        coaches_password.setText(selectedCoach.getPassword());
+
+                        coaches_name.setEditable(true);
+                        coaches_email.setEditable(true);
+                        coaches_telephone.setEditable(true);
+                        coaches_password.setEditable(true);
+
+
+                        System.out.println(coaches_name.getText() + " " + coaches_email.getText() + " " + coaches_telephone.getText());
+                    }
+                });
+                deleteIcon.setOnMouseClicked(event -> {
+                    User selectedCoach = coaches_tableView.getSelectionModel().getSelectedItem();
+
+                    // Create a confirmation dialog
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setTitle("Confirmation Dialog");
+                    alert.setHeaderText("Delete Coach");
+                    alert.setContentText("Are you sure you want to delete this coach?");
+
+                    // Show the dialog and wait for user's response
+                    alert.showAndWait().ifPresent(response -> {
+                        if (response == ButtonType.OK) {
+                            // If user confirmed, delete the coach
+                            serviceUser00.delete(selectedCoach.getId());
+
+                            // Refresh the table
+                            consulterCoaches();
+                        }
+                    });
+                });
+            }
+
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(pane);
+                }
+            }
+        });
 
         // Add fetched coaches to the table
         coaches_tableView.getItems().addAll(coaches);
@@ -193,13 +314,31 @@ public class DashboardController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+
         this.user = session.getLoggedInUser();
+        System.out.println("Image"+user.getImage());
+
+        profil_name.setText(user.getName());
+        profil_email.setText(user.getEmail());
+        profil_telephone.setText(user.getTelephone());
+        if(user.getImage()!=null){
+            Image img = new Image("file:"+user.getImage());
+            profile_img.setImage(img);
+        }
+
+
+
+
         if(user.getRole().equals(Role.ADMIN)){
             dashboard_Admin.setVisible(true);
+            dashboard_Admin.setManaged(true);
+
             //dashboard_coach.setVisible(false);
             dashboard_membre.setVisible(false);
+            dashboard_membre.setManaged(false);
             usernameAdmin.setText(u.getName());
-           // consulterCoaches();
+            consulterCoaches();
         }
         else if(user.getRole().equals(Role.COACH)){
             dashboard_coach.setVisible(true);
@@ -260,7 +399,7 @@ public class DashboardController implements Initializable {
             alert.setContentText("Email already exists. Please use a different email.");
             alert.showAndWait();
         } else {
-            User newCoach = new User(name, email, password, telephone, defaultRole,null);
+            User newCoach = new User(name, email, password, telephone, defaultRole,true,null);
             // Appeler la méthode d'inscription avec les valeurs récupérées
             serviceUser00.register(newCoach);
             // serviceUser00.ActiverOrDesactiver(newCoach.getId());
@@ -269,12 +408,22 @@ public class DashboardController implements Initializable {
     }
 
     public void coachesUpdateBtn(ActionEvent actionEvent) {
+
+    User coach=new User(id,coaches_name.getText(),coaches_email.getText(),coaches_telephone.getText(),Role.COACH,true,null);
+    serviceUser00.update(coach);
+       // coaches_list.setVisible(true);
+        ///coaches_list.setManaged(true);
+
+        coaches_form.setVisible(false);
+        coaches_form.setManaged(false);
+        consulterCoaches();
     }
 
     public void coachesDeleteBtn(ActionEvent actionEvent) {
     }
 
     public void coachesSelect(MouseEvent mouseEvent) {
+
     }
 
 
@@ -282,6 +431,7 @@ public class DashboardController implements Initializable {
     }
 
     public void goToCoach(ActionEvent actionEvent) {
+        consulterCoaches();
     }
 
     public void goToMembre(ActionEvent actionEvent) {
@@ -309,8 +459,67 @@ public class DashboardController implements Initializable {
     }
 
     public void goToCommandes(ActionEvent event) {
+
     }
 
     public void goToOffres(ActionEvent event) {
+
+
     }
+
+    public void coachesUpdateImage(ActionEvent event) {
+
+
+
+
+
+    }
+
+    @FXML
+    public void goToProfile(ActionEvent event) {
+        System.out.println("Hello");
+        user_profil.setManaged(true);
+        user_profil.setVisible(true);
+        coaches_list.setManaged(false);
+        coaches_list.setVisible(false);
+
+
+    }
+
+    public void updateImgBtn(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg")
+        );
+        pathImage= fileChooser.showOpenDialog(null).getAbsolutePath();
+        Image img = new Image("file:"+pathImage);
+        profile_img.setImage(img);
+        serviceUser00.updateImage(pathImage,Session.getInstance().getLoggedInUser().getId());
+    }
+
+    public void updateCoachBtn(ActionEvent event) {
+    }
+
+
+    public void dali(ActionEvent event) {
+        System.out.println("Hello");
+        user_profil.setManaged(true);
+        user_profil.setVisible(true);
+        coaches_list.setManaged(false);
+        coaches_list.setVisible(false);
+    }
+
+    public void updatePassword(ActionEvent event) {
+       if(!Objects.equals(new_password.getText(), confirm_password.getText())){
+           Alert alert = new Alert(Alert.AlertType.WARNING);
+           alert.setTitle("Password");
+           alert.setHeaderText(null);
+           alert.setContentText("Password not match");
+           alert.showAndWait();
+       }
+       else{
+           serviceUser00.updatePassword(new_password.getText(),Session.getInstance().getLoggedInUser().getId());
+       }
+    }
+
 }

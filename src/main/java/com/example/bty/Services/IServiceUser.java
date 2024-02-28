@@ -15,4 +15,10 @@ public interface IServiceUser {
     public List<User> getAllCoaches();
 
 
+
+
+
+    void updateImage(String image, int id);
+
+    void updatePassword(String text, Integer id);
 }
