@@ -4,6 +4,8 @@ import java.sql.Time;
 
 public class Demande {
     public boolean isMaladieCHronique;
+    String nom;
+
     int id;
     int age;
     int nbre_heure;
@@ -16,7 +18,8 @@ public class Demande {
     Byte image;
     String lesjours;
     Time horaire;
-    public Demande(int id, int age, int nbre_heure, boolean maladie_chronique, String but, String niveau_physique, User m, Offre f, String etat,String lesjours,String horaire) {
+
+    public Demande(String id, String age, String nbre_heure, String maladie_chronique, String but, String niveau_physique, String m, String f, String etat, Time lesjours, String horaire) {
     }
 
     public Time getHoraire() {
@@ -26,6 +29,15 @@ public class Demande {
     public void setHoraire(Time horaire) {
         this.horaire = horaire;
     }
+
+    public String getNom() {
+        return nom;
+    }
+
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+
 
     public int getId() {
         return id;
@@ -108,8 +120,7 @@ public class Demande {
     }
 
 
-
-    public Demande(int id_demande, int age, int nbre_heure, boolean maladie_chronique, String but, String niveau_physique, User membre, Offre offre,Etat etat,String lesjours,Time horaire) {
+    public Demande(int id_demande, int age, int nbre_heure, boolean maladie_chronique, String but, String niveau_physique, User membre, Offre offre, Etat etat, String lesjours, Time horaire) {
         this.id = id_demande;
         this.age = age;
         this.nbre_heure = nbre_heure;
@@ -119,8 +130,8 @@ public class Demande {
         this.membre = membre;
         this.offre = offre;
         this.etat = Etat.REFUSER; // Par défaut, l'état est initialisé à refu
-        this.lesjours=lesjours;
-        this.horaire=horaire;
+        this.lesjours = lesjours;
+        this.horaire = horaire;
     }
 
     public Demande(int age, int nbre_heure, boolean maladie_chronique, String but, String niveau_physique, User membre, Offre offre) {
@@ -151,7 +162,8 @@ public class Demande {
         return maladie_chronique;
     }
 
-    public int getId_demande() {return id;
+    public int getId_demande() {
+        return id;
     }
 
     public Etat getEtat() {
@@ -168,4 +180,6 @@ public class Demande {
         this.etat = Etat.REFUSER;
 
     }
+
+
 }

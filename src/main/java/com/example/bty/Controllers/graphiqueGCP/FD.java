@@ -3,15 +3,13 @@ package com.example.bty.Controllers.graphiqueGCP;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.sql.*;
+import java.util.Optional;
 
 public class FD extends Application {
 
@@ -24,6 +22,7 @@ public class FD extends Application {
     private TextField idOffreField;
     private TextField lesjoursFiled;
     private TextField horaireFiled;
+    private TextField nomField;
 
     @Override
     public void start(Stage primaryStage) {
@@ -42,64 +41,70 @@ public class FD extends Application {
         grid.setHgap(15);
         grid.setStyle("-fx-background-color: #d5bce7; -fx-padding: 25; -fx-border-radius: 10; -fx-background-radius: 10; -fx-alignment: center;");
 
+
+        Label nomLabel = new Label("Nom:");
+        GridPane.setConstraints(nomLabel, 0, 0);
+        nomField = new TextField();
+        GridPane.setConstraints(nomField, 1, 0);
+
         Label ageLabel = new Label("Age:");
-        GridPane.setConstraints(ageLabel, 0, 0);
+        GridPane.setConstraints(ageLabel, 0, 1);
         ageField = new TextField();
-        GridPane.setConstraints(ageField, 1, 0);
+        GridPane.setConstraints(ageField, 1, 1);
 
         Label butLabel = new Label("But:");
-        GridPane.setConstraints(butLabel, 0, 1);
+        GridPane.setConstraints(butLabel, 0, 2);
         butField = new TextField();
-        GridPane.setConstraints(butField, 1, 1);
+        GridPane.setConstraints(butField, 1, 2);
 
         Label niveauPhysiqueLabel = new Label("Niveau Physique:");
-        GridPane.setConstraints(niveauPhysiqueLabel, 0, 2);
+        GridPane.setConstraints(niveauPhysiqueLabel, 0, 3);
         niveauPhysiqueField = new TextField();
-        GridPane.setConstraints(niveauPhysiqueField, 1, 2);
+        GridPane.setConstraints(niveauPhysiqueField, 1, 3);
 
         Label maladieChroniqueLabel = new Label("Maladie Chronique:");
-        GridPane.setConstraints(maladieChroniqueLabel, 0, 3);
+        GridPane.setConstraints(maladieChroniqueLabel, 0, 4);
         maladieChroniqueField = new TextField();
-        GridPane.setConstraints(maladieChroniqueField, 1, 3);
+        GridPane.setConstraints(maladieChroniqueField, 1, 4);
 
         Label nombreHeureLabel = new Label("Nombre d'Heures:");
-        GridPane.setConstraints(nombreHeureLabel, 0, 4);
+        GridPane.setConstraints(nombreHeureLabel, 0, 5);
         nombreHeureField = new TextField();
-        GridPane.setConstraints(nombreHeureField, 1, 4);
+        GridPane.setConstraints(nombreHeureField, 1, 5);
 
         Label idUserLabel = new Label("ID Utilisateur:");
-        GridPane.setConstraints(idUserLabel, 0, 5);
+        GridPane.setConstraints(idUserLabel, 0, 6);
         idUserField = new TextField();
-        GridPane.setConstraints(idUserField, 1, 5);
+        GridPane.setConstraints(idUserField, 1, 6);
 
         Label idOffreLabel = new Label("ID Offre:");
-        GridPane.setConstraints(idOffreLabel, 0, 6);
+        GridPane.setConstraints(idOffreLabel, 0, 7);
         idOffreField = new TextField();
-        GridPane.setConstraints(idOffreField, 1, 6);
+        GridPane.setConstraints(idOffreField, 1, 7);
 
         Label etatLabel = new Label("Etat:");
-        grid.add(etatLabel, 0, 7);
+        grid.add(etatLabel, 0, 8);
 
         TextField etatField = new TextField("En Attente");
         etatField.setEditable(false);
-        grid.add(etatField, 1, 7);
+        grid.add(etatField, 1, 8);
 
         Label horaireLabel = new Label("Horaire:");
-        GridPane.setConstraints(horaireLabel, 0, 8);
+        GridPane.setConstraints(horaireLabel, 0, 9);
         horaireFiled = new TextField();
-        GridPane.setConstraints(horaireFiled, 1, 8);
+        GridPane.setConstraints(horaireFiled, 1, 9);
 
         Label lesjoursLabel = new Label("Lesjours:");
-        GridPane.setConstraints(lesjoursLabel, 0, 9);
+        GridPane.setConstraints(lesjoursLabel, 0, 10);
         lesjoursFiled = new TextField();
-        GridPane.setConstraints(lesjoursFiled, 1, 9);
+        GridPane.setConstraints(lesjoursFiled, 1, 10);
 
         Button sendButton = new Button("Envoyer");
-        GridPane.setConstraints(sendButton, 1, 10);
+        GridPane.setConstraints(sendButton, 1, 11);
         sendButton.setOnAction(event -> insertDemande());
 
         Button consulterButton = new Button("Consulter liste de demande");
-        GridPane.setConstraints(consulterButton, 2, 10);
+        GridPane.setConstraints(consulterButton, 2, 11);
         consulterButton.setOnAction(event -> consulterDemandes());
         grid.getChildren().add(consulterButton);
 
@@ -107,7 +112,7 @@ public class FD extends Application {
 
         grid.getChildren().addAll(ageLabel, ageField, butLabel, butField, niveauPhysiqueLabel, niveauPhysiqueField,
                 maladieChroniqueLabel, maladieChroniqueField, nombreHeureLabel, nombreHeureField, idUserLabel,
-                idUserField, idOffreLabel, idOffreField, lesjoursLabel, lesjoursFiled, horaireLabel, horaireFiled,
+                idUserField, idOffreLabel, idOffreField, lesjoursLabel, lesjoursFiled, horaireLabel, horaireFiled,nomLabel,nomField,
                 sendButton);
 
 
@@ -147,7 +152,8 @@ public class FD extends Application {
 
         // Appel de la méthode pour configurer la validation du champ horaireFiled
         setupTimeValidation(horaireFiled);
-
+        // Appel de la méthode pour configurer la validation des champs de type String
+        setupStringValidation(nomField);
         setupStringValidation(maladieChroniqueField);
         setupStringValidation(butField);
         setupStringValidation(niveauPhysiqueField);
@@ -211,20 +217,21 @@ public class FD extends Application {
         String password = "";
 
         try (Connection conn = DriverManager.getConnection(url, username, password)) {
-            String query = "INSERT INTO demande (Age, But, NiveauPhysique, MaladieChronique, NombreHeure, ID_User, ID_Offre, Etat, Horaire, lesjours) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO demande (nom,Age, But, NiveauPhysique, MaladieChronique, NombreHeure, ID_User, ID_Offre, Etat, Horaire, lesjours) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
             String etat = "En Attente";
             java.sql.Time horaire = java.sql.Time.valueOf("08:00:00");
             PreparedStatement statement = conn.prepareStatement(query);
-            statement.setInt(1, Integer.parseInt(ageField.getText()));
-            statement.setString(2, butField.getText());
-            statement.setString(3, niveauPhysiqueField.getText());
-            statement.setString(4, maladieChroniqueField.getText());
-            statement.setInt(5, Integer.parseInt(nombreHeureField.getText()));
-            statement.setInt(6, Integer.parseInt(idUserField.getText()));
-            statement.setInt(7, Integer.parseInt(idOffreField.getText()));
-            statement.setString(8, etat);
-            statement.setTime(9, horaire);
-            statement.setString(10, lesjoursFiled.getText());
+            statement.setString(1, nomField.getText());
+            statement.setInt(2, Integer.parseInt(ageField.getText()));
+            statement.setString(3, butField.getText());
+            statement.setString(4, niveauPhysiqueField.getText());
+            statement.setString(5, maladieChroniqueField.getText());
+            statement.setInt(6, Integer.parseInt(nombreHeureField.getText()));
+            statement.setInt(7, Integer.parseInt(idUserField.getText()));
+            statement.setInt(8, Integer.parseInt(idOffreField.getText()));
+            statement.setString(9, etat);
+            statement.setTime(10, horaire);
+            statement.setString(11, lesjoursFiled.getText());
 
             int rowsInserted = statement.executeUpdate();
             if (rowsInserted > 0) {
@@ -239,8 +246,19 @@ public class FD extends Application {
 
     // Méthode pour gérer l'événement du bouton "Consulter"
     private void consulterDemandes() {
-        ConsultationDemandes consultationDemandes = new ConsultationDemandes();
-        consultationDemandes.start(new Stage());
+        // Ouvrir une fenêtre modale pour demander le nom du client
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Nom du client");
+        dialog.setHeaderText("Entrez votre nom");
+        dialog.setContentText("Nom :");
+
+        Optional<String> result = dialog.showAndWait();
+
+        result.ifPresent(nom -> {
+            // Ouvrir la fenêtre de consultation des demandes avec le nom du client
+            ConsultationDemandes consultationDemandes = new ConsultationDemandes(nom);
+            consultationDemandes.start(new Stage());
+        });
     }
 
     private String getSpecialiteFromOffreId(int idOffre) {
@@ -311,6 +329,7 @@ public class FD extends Application {
     }
 
     private void setInvalidStyle() {
+        nomField.setStyle("-fx-border-color: initial;");
         ageField.setStyle("-fx-border-color: initial;");
         butField.setStyle("-fx-border-color: initial;");
         niveauPhysiqueField.setStyle("-fx-border-color: initial;");
@@ -321,6 +340,7 @@ public class FD extends Application {
         lesjoursFiled.setStyle("-fx-border-color: initial;");
         horaireFiled.setStyle("-fx-border-color: initial;");
 
+        nomField.setStyle("-fx-border-color: initial;");
         ageField.setStyle("-fx-border-color: red;");
         butField.setStyle("-fx-border-color: red;");
         niveauPhysiqueField.setStyle("-fx-border-color: red;");

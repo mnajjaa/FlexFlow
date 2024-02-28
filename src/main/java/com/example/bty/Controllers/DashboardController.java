@@ -305,4 +305,10 @@ public class DashboardController implements Initializable {
 
     public void goToStoreAdmin(ActionEvent event) {
     }
+
+    public void goToOffres(ActionEvent actionEvent) {
+    }
+
+    public void goToCommandes(ActionEvent actionEvent) {
+    }
 }

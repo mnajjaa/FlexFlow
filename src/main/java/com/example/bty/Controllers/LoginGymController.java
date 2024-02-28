@@ -6,6 +6,7 @@ import com.example.bty.LoginView;
 import com.example.bty.Services.IServiceUser;
 import com.example.bty.Services.ServiceUser;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,11 +14,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.net.URL;
@@ -29,6 +29,10 @@ import java.util.ResourceBundle;
 public class LoginGymController implements Initializable {
     public TextField su_telephone;
     public FontAwesomeIconView close_icon;
+    public Label edit_label;
+    public Button sub_loginBtn;
+    public Button sub_signupBtn;
+    public AnchorPane sub_form;
     @FXML
     private Button si_loginBtn;
     @FXML
@@ -52,36 +56,84 @@ public class LoginGymController implements Initializable {
     private PasswordField si_password;
 
 
-    // Champ de texte pour le mot de passe
-
+    public LoginGymController() {
+    }
     IServiceUser serviceUser=new ServiceUser();
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+    }
     @FXML
     private void login(ActionEvent event) throws IOException {
 
         String email = si_email.getText(); // Récupérer l'email depuis le champ de texte
         String password = si_password.getText(); // Récupérer le mot de passe depuis le champ de texte
-        System.out.println(email + " " + password);
 
-        // Appeler la méthode de connexion avec les valeurs récupérées
-        int i = serviceUser.Authentification(email, password);
-        if (i == 1) {
-            System.out.println("login success");
-            FXMLLoader dashboardLoader = new FXMLLoader(getClass().getResource("/dashboardX.fxml"));
-            Parent dashboardRoot = dashboardLoader.load();
-            Scene dashboardScene = new Scene(dashboardRoot);
+        if (email.isEmpty() || password.isEmpty()) {
+            // Reset the style of the text fields
+            si_email.setStyle("");
+            si_password.setStyle("");
 
-            // Accéder au contrôleur du tableau de bord si nécessaire
-            // DashboardController dashboardController = dashboardLoader.getController();
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning Dialog");
+            alert.setHeaderText(null);
+            alert.setContentText("Email and Password fields cannot be empty!");
+            alert.showAndWait();
+            // Change the border color of the text fields to red
+            if (email.isEmpty()) {
+                si_email.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
+            }
+            if (password.isEmpty()) {
+                si_password.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
+            }
+            return;
 
-            // Obtenir la scène principale et changer la scène actuelle
-            Stage primaryStage = (Stage) si_email.getScene().getWindow();
-            primaryStage.setScene(dashboardScene);
-            primaryStage.setTitle("Dashboard");
+        } else if (!email.contains("@") || !email.contains(".")) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning Dialog");
+            alert.setHeaderText(null);
+            alert.setContentText("Invalid email format!");
+            alert.showAndWait();
+            return;
+        } else if (password.length() < 8) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning Dialog");
+            alert.setHeaderText(null);
+            alert.setContentText("Password must be at least 8 characters long!");
+            alert.showAndWait();
+            return;
+        } else {
+            System.out.println(email + " " + password);
 
+            // Appeler la méthode de connexion avec les valeurs récupérées
+            int i = serviceUser.Authentification(email, password);
+            if (i == 1) {
+                System.out.println("login success");
+                FXMLLoader dashboardLoader = new FXMLLoader(getClass().getResource("/dashboardX.fxml"));
+                Parent dashboardRoot = dashboardLoader.load();
+                Scene dashboardScene = new Scene(dashboardRoot);
 
-    }
-        else{
-            System.out.println("login failed");
+                // Accéder au contrôleur du tableau de bord si nécessaire
+                // DashboardController dashboardController = dashboardLoader.getController();
+
+                // Obtenir la scène principale et changer la scène actuelle
+                Stage primaryStage = (Stage) si_email.getScene().getWindow();
+                primaryStage.setScene(dashboardScene);
+                primaryStage.setTitle("Dashboard");
+            }
+            else{
+                System.out.println("login failed");
+                // Reset the style of the text fields
+                si_email.setStyle("");
+                si_password.setStyle("");
+                si_password.setStyle("-fx-border-color: red ; -fx-border-width: 1px ;");
+                si_email.setStyle("-fx-border-color: red ; -fx-border-width: 1px ;");
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Warning Dialog");
+                alert.setHeaderText(null);
+                alert.setContentText("Invalid email or password!");
+                alert.showAndWait();
+
+            }
         }
     }
 
@@ -91,21 +143,100 @@ public class LoginGymController implements Initializable {
         String username = su_username.getText(); // Récupérer le nom d'utilisateur depuis le champ de texte
         String password = su_password.getText();
         String telehone = su_telephone.getText();// Récupérer le mot de passe depuis le champ de texte
-        Role defaultRole = Role.MEMBRE; // Définissez le rôle par défaut ici
-        User u = new User(username,email,password,telehone, defaultRole,null);
-        // Appeler la méthode d'inscription avec les valeurs récupérées
-         serviceUser.register(u);
 
-        System.out.println("signup success");
+        // Check if any of the fields are empty
+        if (email.isEmpty() || username.isEmpty() || password.isEmpty() || telehone.isEmpty() ) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning Dialog");
+            alert.setHeaderText(null);
+            alert.setContentText("All fields must be filled!");
+            alert.showAndWait();
+
+            // Change the border color of the text fields to red
+            if (email.isEmpty()) {
+                su_email.setStyle("-fx-border-color: red ; -fx-border-width: 1px ;");
+            }
+            if (username.isEmpty()) {
+                su_username.setStyle("-fx-border-color: red ; -fx-border-width: 1px ;");
+            }
+            if (password.isEmpty()) {
+                su_password.setStyle("-fx-border-color: red ; -fx-border-width: 1px ;");
+            }
+            if (telehone.isEmpty()){
+                su_telephone.setStyle("-fx-border-color: red ; -fx-border-width: 1px ;");
+            }
+            return;
+        } else if (!email.contains("@") || !email.contains(".")) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning Dialog");
+            alert.setHeaderText(null);
+            alert.setContentText("Invalid email format!");
+            alert.showAndWait();
+            return;
+        } else if (password.length() < 8) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning Dialog");
+            alert.setHeaderText(null);
+            alert.setContentText("Password must be at least 8 characters long!");
+            alert.showAndWait();
+            return;
+        } else if (telehone.length() < 8) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning Dialog");
+            alert.setHeaderText(null);
+            alert.setContentText("Telephone must be at least 8 characters long!");
+            alert.showAndWait();
+            return;
+        } else {
+            // Check if the email already exists
+            if (serviceUser.emailExists(email)) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Email Already Exists");
+                alert.setHeaderText(null);
+                alert.setContentText("Email already exists. Please use a different email.");
+                alert.showAndWait();
+            } else {
+                Role defaultRole = Role.MEMBRE; // Définissez le rôle par défaut ici
+                User u = new User(username,email,password,telehone, defaultRole,null);
+                // Appeler la méthode d'inscription avec les valeurs récupérées
+                serviceUser.register(u);
+
+                System.out.println("signup success");
+            }
+        }
 
     }
 
     public void close(){
         javafx.application.Platform.exit();
     }
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
 
+    public void signupSlider() {
+        TranslateTransition slider1 = new TranslateTransition();
+        slider1.setNode(sub_form);
+        slider1.setToX(300);
+        slider1.setDuration(Duration.seconds(0.5));
+        slider1.play();
+
+        slider1.setOnFinished((ActionEvent e) -> {
+            edit_label.setText("Login Account");
+            sub_signupBtn.setVisible(false);
+            sub_loginBtn.setVisible(true);
+
+        });
     }
 
+    public void loginSlider (){
+        TranslateTransition slider1 = new TranslateTransition();
+        slider1.setNode(sub_form);
+        slider1.setToX(0);
+        slider1.setDuration(Duration.seconds(0.5));
+        slider1.play();
+
+        slider1.setOnFinished((ActionEvent e) -> {
+            edit_label.setText("Create Account");
+            sub_signupBtn.setVisible(true);
+            sub_loginBtn.setVisible(false);
+        });
+    }
 }
