@@ -82,21 +82,21 @@ public class Formoffre extends Application {
         grid.add(addButton, 1, 5);
         addButton.setOnAction(event -> insertOffre());
 
+//
+//        // Bouton d'ajout de l'offre
+//        Button updateButton = new Button("Modifier");
+//        grid.add(updateButton,2, 5);
+//        updateButton.setOnAction(event -> updateOffre());
+//
+//
+//        //
+//        Button deleteButton = new Button("Supprimer");
+//        grid.add(deleteButton, 3, 5);
+//        deleteButton.setOnAction(event -> deleteOffre());
+//
 
-        // Bouton d'ajout de l'offre
-        Button updateButton = new Button("Modifier");
-        grid.add(updateButton,2, 5);
-        updateButton.setOnAction(event -> updateOffre());
-
-
-        //
-        Button deleteButton = new Button("Supprimer");
-        grid.add(deleteButton, 3, 5);
-        deleteButton.setOnAction(event -> deleteOffre());
-
-
-        Button consulterButton = new Button("Consulter liste de demande");
-        GridPane.setConstraints(consulterButton, 3, 6);
+        Button consulterButton = new Button("Consulter liste des offres");
+        GridPane.setConstraints(consulterButton, 2, 5);
         consulterButton.setOnAction(event -> {
             // Créer une boîte de dialogue pour saisir l'ID
             TextInputDialog dialog = new TextInputDialog();
@@ -153,17 +153,23 @@ public class Formoffre extends Application {
     }
 
     private void insertOffre() {
-
-
         String url = "jdbc:mysql://localhost:3306/pidevgym";
         String username = "root";
         String password = "";
 
         try (Connection conn = DriverManager.getConnection(url, username, password)) {
+            String id = idField.getText();
+            // Vérifier si l'ID existe déjà
+            if (offreExists(conn, id)) {
+                // Afficher un message à l'utilisateur dans l'interface
+                showAlert("Erreur", "Une offre avec cet ID existe déjà !");
+                return; // Arrêter l'exécution de la méthode car l'offre existe déjà
+            }
+
             String query = "INSERT INTO Offre (id, Specialite, tarif_heure, id_Coach,etatOffre) VALUES (?, ?, ?, ?,?)";
             String etatOffre = "En Attente";
             PreparedStatement statement = conn.prepareStatement(query);
-            statement.setInt(1, Integer.parseInt(idField.getText()));
+            statement.setInt(1, Integer.parseInt(id));
             statement.setString(2, specialiteChoice.getValue());
             statement.setDouble(3, Double.parseDouble(tarifField.getText()));
             statement.setInt(4, Integer.parseInt(coachField.getText()));
@@ -171,12 +177,23 @@ public class Formoffre extends Application {
 
             int rowsInserted = statement.executeUpdate();
             if (rowsInserted > 0) {
-                System.out.println("Offre insérée avec succès !");
+                showAlert("Succès", "Offre insérée avec succès !");
             }
         } catch (SQLException e) {
             System.out.println("Erreur lors de l'insertion de l'offre: " + e.getMessage());
         }
     }
+
+    private boolean offreExists(Connection conn, String id) throws SQLException {
+        String query = "SELECT COUNT(*) FROM Offre WHERE id = ?";
+        PreparedStatement statement = conn.prepareStatement(query);
+        statement.setInt(1, Integer.parseInt(id));
+        ResultSet resultSet = statement.executeQuery();
+        resultSet.next();
+        int count = resultSet.getInt(1);
+        return count > 0;
+    }
+
 
     private void updateOffre() {
         String url = "jdbc:mysql://localhost:3306/pidevgym";
@@ -230,8 +247,13 @@ public class Formoffre extends Application {
         consultationOffre.start(new Stage());
     }
 
-
-
+    private void showAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
 
 
 

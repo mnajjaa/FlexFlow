@@ -1,8 +1,11 @@
 package com.example.bty.Entities;
 
+import com.example.bty.Services.ServiceOffre;
+
+
 public class Offre {
     private int id;
-    private Specialite  specialite;
+    private Specialite specialite;
     private float tarif_heure;
     private User coach;
     private Etat etatOffree;
@@ -11,8 +14,8 @@ public class Offre {
 //private byte[] image;
 
 
-    public Offre() {
-        this.specialite = specialite;
+    public Offre(int id, String specialite, float tarifHeure, int idCoach, String etatOffre) {
+        this.specialite = this.specialite;
         this.tarif_heure = tarif_heure;
         this.coach = coach;
     }
@@ -23,6 +26,10 @@ public class Offre {
         this.tarif_heure = tarif_heure;
         this.coach = coach;
         //this.image=image;
+    }
+
+    public Offre() {
+
     }
 
     public int getId() {
@@ -50,7 +57,7 @@ public class Offre {
     }
 
     public float getTarif_heure() {
-        return  tarif_heure;
+        return tarif_heure;
     }
 
     public void setTarif_heure(float tarif_heure) {
@@ -64,6 +71,7 @@ public class Offre {
     public void setCoach(User coach) {
         this.coach = coach;
     }
+
     public Specialite getSpecialite() {
         return specialite;
     }
@@ -89,4 +97,5 @@ public class Offre {
                 ", coach=" + coach +
                 '}';
     }
+
 }

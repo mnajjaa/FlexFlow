@@ -2,10 +2,12 @@ package com.example.bty.Controllers.graphiqueGCP;
 
 import com.example.bty.Entities.Demande;
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -124,10 +126,104 @@ public class ConsultationDemandes extends Application {
         }
     }
     // Méthode pour modifier les jours d'une demande
+    // Méthode pour modifier les jours d'une demande
     private static void modifierDemande(String id_demande) {
-        // Implémentez ici la logique pour permettre à l'utilisateur de modifier  la demande
-        System.out.println("Modifierla demande : " + id_demande);
+        try {
+            // Récupérer les détails de la demande spécifique à partir de la base de données en utilisant l'ID de la demande
+            String query = "SELECT * FROM Demande WHERE id_demande = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, id_demande);
+            ResultSet resultSet = statement.executeQuery();
+
+            // Vérifier si une demande correspondante est trouvée
+            if (resultSet.next()) {
+                // Créer une nouvelle fenêtre pour permettre à l'utilisateur de modifier les détails de la demande
+                Stage stage = new Stage();
+                VBox vbox = new VBox(10);
+                vbox.setPadding(new Insets(10));
+
+                // Créer des champs de texte pour chaque attribut de la demande avec les valeurs actuelles
+                TextField nomField = new TextField(resultSet.getString("nom"));
+                TextField butField = new TextField(resultSet.getString("but"));
+                TextField niveauPhysiqueField = new TextField(resultSet.getString("NiveauPhysique"));
+                TextField maladieChroniqueField = new TextField(resultSet.getString("MaladieChronique"));
+                TextField ageField = new TextField(resultSet.getString("age"));
+                TextField id_userField = new TextField(resultSet.getString("id_user"));
+                TextField id_offreField = new TextField(resultSet.getString("id_offre"));
+                TextField etatField = new TextField(resultSet.getString("etat"));
+                TextField nombreHeureField = new TextField(resultSet.getString("nombreHeure"));
+                TextField horaireField = new TextField(resultSet.getTime("horaire").toString());
+                TextField lesjoursField = new TextField(resultSet.getString("lesjours"));
+
+                // Ajouter des libellés pour chaque champ
+                vbox.getChildren().addAll(
+                        new Label("Nom :"), nomField,
+                        new Label("But :"), butField,
+                        new Label("Niveau Physique :"), niveauPhysiqueField,
+                        new Label("Maladie Chronique :"), maladieChroniqueField,
+                        new Label("Age :"), ageField,
+                        new Label("ID Utilisateur :"), id_userField,
+                        new Label("ID Offre :"), id_offreField,
+                        new Label("État :"), etatField,
+                        new Label("Nombre d'Heures :"), nombreHeureField,
+                        new Label("Horaire :"), horaireField,
+                        new Label("Lesjours :"), lesjoursField
+                );
+
+                // Créer un bouton pour confirmer les modifications
+                Button confirmerButton = new Button("Confirmer les modifications");
+                confirmerButton.setOnAction(event -> {
+                    try {
+                        // Mettre à jour les informations de la demande dans la base de données avec les nouvelles valeurs
+                        String updateQuery = "UPDATE Demande SET nom=?, but=?, NiveauPhysique=?, MaladieChronique=?, age=?, id_user=?, id_offre=?, etat=?, nombreHeure=?, horaire=?, lesjours=? WHERE id_demande=?";
+                        PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
+                        updateStatement.setString(1, nomField.getText());
+                        updateStatement.setString(2, butField.getText());
+                        updateStatement.setString(3, niveauPhysiqueField.getText());
+                        updateStatement.setString(4, maladieChroniqueField.getText());
+                        updateStatement.setString(5, ageField.getText());
+                        updateStatement.setString(6, id_userField.getText());
+                        updateStatement.setString(7, id_offreField.getText());
+                        updateStatement.setString(8, etatField.getText());
+                        updateStatement.setString(9, nombreHeureField.getText());
+                        updateStatement.setString(10, horaireField.getText());
+                        updateStatement.setString(11, lesjoursField.getText());
+                        updateStatement.setString(12, id_demande);
+
+                        int rowsUpdated = updateStatement.executeUpdate();
+                        if (rowsUpdated > 0) {
+                            System.out.println("Demande modifiée avec succès !");
+                            // Rafraîchir la liste des demandes pour refléter les changements
+                            refreshDemandesList(nom);
+                            // Fermer la fenêtre de modification
+                            stage.close();
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                        // Gérer les erreurs de mise à jour
+                    }
+                });
+
+                vbox.getChildren().add(confirmerButton);
+
+                Scene scene = new Scene(vbox, 400, 400);
+                stage.setScene(scene);
+                stage.setTitle("Modifier la demande");
+                stage.show();
+            } else {
+                System.out.println("Aucune demande trouvée avec l'ID : " + id_demande);
+            }
+
+            // Fermer les ressources
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Gérer les erreurs de requête
+        }
     }
+
+
 
     public static class DemandeItem extends HBox {
         public DemandeItem(String nom, String id_demande, String but, String NiveauPhysique, String MaladieChronique,

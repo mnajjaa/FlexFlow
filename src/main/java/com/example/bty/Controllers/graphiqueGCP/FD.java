@@ -1,5 +1,6 @@
 package com.example.bty.Controllers.graphiqueGCP;
-
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -201,7 +202,9 @@ public class FD extends Application {
     }
 
     private void insertDemande() {
-        if (!validateFields()) {
+
+        if (!checkEmptyFields()) {
+            showAlertt("Champs vides", "Veuillez remplir tous les champs !");
             return;
         }
 
@@ -243,6 +246,32 @@ public class FD extends Application {
         }
     }
 
+    // Méthode pour vérifier si des champs sont vides
+    private boolean checkEmptyFields() {
+        if (nomField.getText().isEmpty() || ageField.getText().isEmpty() || butField.getText().isEmpty() ||
+                niveauPhysiqueField.getText().isEmpty() || maladieChroniqueField.getText().isEmpty() ||
+                nombreHeureField.getText().isEmpty() || idUserField.getText().isEmpty() || idOffreField.getText().isEmpty() ||
+                lesjoursFiled.getText().isEmpty()) {
+            return false;
+        }
+        return true;
+    }
+
+    // Méthode pour afficher un message d'alerte dans l'interface utilisateur
+
+
+
+    // Méthode pour vérifier si des champs sont vides
+//    private boolean checkEmptyFields() {
+//        if (nomField.getText().isEmpty() || ageField.getText().isEmpty() || butField.getText().isEmpty() ||
+//                niveauPhysiqueField.getText().isEmpty() || maladieChroniqueField.getText().isEmpty() ||
+//                nombreHeureField.getText().isEmpty() || idUserField.getText().isEmpty() || idOffreField.getText().isEmpty() ||
+//                lesjoursFiled.getText().isEmpty()) {
+//            showAlert("Champs vides", "Veuillez remplir tous les champs !");
+//            return false;
+//        }
+//        return true;
+//    }
 
     // Méthode pour gérer l'événement du bouton "Consulter"
     private void consulterDemandes() {
@@ -360,7 +389,13 @@ public class FD extends Application {
         alert.setContentText(content);
         alert.showAndWait();
     }
-
+    private void showAlertt(String title, String message) {
+        Alert alert = new Alert(AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
 
 
     public static void main(String[] args) {

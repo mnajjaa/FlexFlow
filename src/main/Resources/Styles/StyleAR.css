@@ -56,7 +56,7 @@
 }
 
 .upload-button {
-    -fx-font-size: 13px;
+    -fx-font-size: 18px;
     -fx-padding: 10 16;
     -fx-min-width: 60;
     -fx-background-radius: 10;
@@ -104,10 +104,10 @@
 .button {
     -fx-background-color: #031559; /* Couleur de fond du bouton */
     -fx-text-fill: white; /* Couleur du texte du bouton */
-    -fx-font-size: 14px; /* Taille de police du bouton */
-    -fx-pref-width: 100px; /* Largeur préférée du bouton */
+    -fx-font-size: 10px; /* Taille de police du bouton */
+    -fx-pref-width: 150px; /* Largeur préférée du bouton */
     -fx-pref-height: 40px; /* Hauteur préférée du bouton */
-    -fx-background-radius: 5px; /* Rayon des coins du bouton */
+    -fx-background-radius: 15px; /* Rayon des coins du bouton */
 }
 
 /* Style des boutons lorsqu'ils sont survolés */

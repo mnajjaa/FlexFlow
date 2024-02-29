@@ -20,6 +20,7 @@ exports com.example.bty.Controllers.graphiqueGCP;
     opens com.example.bty.Controllers to javafx.fxml;
     exports Controllers;
     opens Controllers to javafx.fxml;
+    opens com.example.bty.Controllers.graphiqueGCP to javafx.fxml;
 
 
     exports com.example.bty.Views;

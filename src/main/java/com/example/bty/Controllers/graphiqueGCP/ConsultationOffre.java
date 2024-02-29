@@ -14,7 +14,7 @@ import java.util.List;
     public class ConsultationOffre extends Application {
 
         private static Connection connection;
-        private static ListView<com.example.bty.Controllers.graphiqueGCP.ConsultationOffre.OffreItem> OffreListView;
+        public static ListView<com.example.bty.Controllers.graphiqueGCP.ConsultationOffre.OffreItem> OffreListView;
         private static int id;
 
         public ConsultationOffre(int id) {
