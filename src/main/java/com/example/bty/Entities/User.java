@@ -4,13 +4,22 @@ package com.example.bty.Entities;
 
 public class User {
 
-   private int id;
-   private String name;
-   private String email;
-   private String password ;
-   private String telephone ;
-   private Role role;
-   private  boolean etat =false;    // 0 = desactiver , 1 = activer
+    private int id;
+    private String name;
+    private String email;
+    private String password ;
+    private String telephone ;
+    private Role role;
+    private  boolean etat =false;    // 0 = desactiver , 1 = activer
+    private String image;
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 
     public boolean isEtat() {
         return etat;
@@ -20,30 +29,34 @@ public class User {
         this.etat = etat;
     }
 
-    public User(int id, String name, String email, String password, String telephone, Role role) {
+    public User(int id, String name, String email, String password, String telephone, Role role,String image) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
         this.telephone=telephone;
         this.role=role;
-        this.etat=etat;
+        this.image=image;
 
     }
 
     public User() {
     }
 
-    public User(String name, String email, String password,String telephone,Role role) {
+
+
+
+    public User(String name, String email, String password,String telephone,Role role,String image) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.telephone = telephone;
         this.role=role;
         this.etat=etat;
+        this.image=image;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -83,6 +96,16 @@ public class User {
         this.password = password;
     }
 
+    public User(String name, String email, String password, String telephone, Role role, boolean etat, String image) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.telephone = telephone;
+        this.role = role;
+        this.etat = etat;
+        this.image = image;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -92,6 +115,7 @@ public class User {
                 ", password='" + password + '\'' +
                 ", telephone='" + telephone + '\'' +
                 ", role=" + role +
+                ",image='"+image+'\''+
                 '}';
     }
 

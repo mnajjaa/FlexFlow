@@ -93,20 +93,20 @@ public class ServiceUser implements IServiceUser{
                     return 2 ;
                 }
 
-               if( BCrypt.checkpw(password, rs.getString("password"))) {
-                   System.out.println("Im here");
-                   //if logged in successfully yemchy yasnaalou session w y7ottou fiha les informations mte3ou
+                if( BCrypt.checkpw(password, rs.getString("password"))) {
+                    System.out.println("Im here");
+                    //if logged in successfully yemchy yasnaalou session w y7ottou fiha les informations mte3ou
 
-                   //explain : f session bch y7ott le vrai role du user connecté khater 9bal ken y7ott role.ADMIN ou role.COACH meme si
-                   // user connecté est un coach ou un membre
-                   Role userRole = Role.valueOf(rs.getString("role"));
-                   User u =new User(rs.getInt("id"),rs.getString("nom"),rs.getString("email"),rs.getString("password"),rs.getString("telephone"),userRole);
+                    //explain : f session bch y7ott le vrai role du user connecté khater 9bal ken y7ott role.ADMIN ou role.COACH meme si
+                    // user connecté est un coach ou un membre
+                    Role userRole = Role.valueOf(rs.getString("role"));
+                    User u =new User(rs.getInt("id"),rs.getString("nom"),rs.getString("email"),rs.getString("password"),rs.getString("telephone"),userRole,rs.getString("image"));
 
-                   Session s=Session.getInstance();
-                   s.setLoggedInUser(u);
-                   System.out.println("The connected is "+s.getLoggedInUser().getRole());
-                   return 1;
-               }
+                    Session s=Session.getInstance();
+                    s.setLoggedInUser(u);
+                    System.out.println("The connected is "+s.getLoggedInUser().getRole());
+                    return 1;
+                }
                 System.out.println("Invalid user credentials");
             }
         } catch (Exception ex) {
@@ -118,7 +118,7 @@ public class ServiceUser implements IServiceUser{
     @Override
     public void ActiverOrDesactiver(int id) {
 
-       //verifier si l'utilisateur connecté est un admin
+        //verifier si l'utilisateur connecté est un admin
         Session s=Session.getInstance();
         User u = s.getLoggedInUser();
         if(u.getRole() != Role.ADMIN)
@@ -137,6 +137,8 @@ public class ServiceUser implements IServiceUser{
             Logger.getLogger(ServiceUser.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+
 
     //** Update user information
     @Override
@@ -199,9 +201,10 @@ public class ServiceUser implements IServiceUser{
                 user.setId(rs.getInt("id"));
                 user.setName(rs.getString("nom"));
                 user.setEmail(rs.getString("email"));
-                user.setPassword(rs.getString("password"));
+                //user.setPassword(rs.getString("password"));
                 user.setTelephone(rs.getString("telephone"));
                 user.setRole(Role.valueOf(rs.getString("role")));
+                user.setEtat(rs.getBoolean("etat"));
                 users.add(user);
             }
         } catch (SQLException ex) {
@@ -223,9 +226,10 @@ public class ServiceUser implements IServiceUser{
                 coach.setId(rs.getInt("id"));
                 coach.setName(rs.getString("nom"));
                 coach.setEmail(rs.getString("email"));
-                coach.setPassword(rs.getString("password"));
+                // Removed the line that fetches the password
                 coach.setTelephone(rs.getString("telephone"));
                 coach.setRole(Role.valueOf(rs.getString("role")));
+                coach.setEtat(rs.getBoolean("etat"));
                 coaches.add(coach);
             }
         } catch (SQLException ex) {

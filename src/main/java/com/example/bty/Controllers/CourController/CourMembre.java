@@ -2,7 +2,10 @@ package com.example.bty.Controllers.CourController;
 
 import com.example.bty.Entities.Role;
 import com.example.bty.Entities.User;
+import com.example.bty.Services.IServiceUser;
+import com.example.bty.Services.ServiceUser;
 import com.example.bty.Utils.ConnexionDB;
+import com.example.bty.Utils.Session;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.application.Application;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -17,6 +20,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Line;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 //import com.example.pidevgraphique.Cours;
 import java.io.ByteArrayInputStream;
@@ -26,6 +30,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import com.example.bty.Entities.Cours;
 
 import static com.example.bty.Services.ServiceCours.filtrerCours;
@@ -35,6 +42,11 @@ public class CourMembre extends Application {
     private BorderPane root;
     private Label messageLabel;
 
+    Session session = Session.getInstance();
+    User u=session.getLoggedInUser();
+    User user ;
+
+
     public CourMembre() {
         connection = ConnexionDB.getInstance().getConnexion();
     }
@@ -42,12 +54,39 @@ public class CourMembre extends Application {
     private ObservableList<Cours> coursList;
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage)  {
+     /*   Scanner scanner = new Scanner(System.in);
+        System.out.print("Veuillez saisir votre email : ");
+        String email = scanner.nextLine();
+        System.out.print("Veuillez saisir votre mot de passe : ");
+        String password = scanner.nextLine();
+
+        IServiceUser serviceUser = new ServiceUser();
+        int status = serviceUser.Authentification(email, password);
+      switch (status) {
+            case 0:
+                System.out.println("Invalid user credentials");
+                break;
+            case 1:
+                System.out.println("Logged in successfully");
+                break;
+            case 2:
+                System.out.println("User is desactiver");
+                break;
+        }
+
+        Session s= Session.getInstance();
+        System.out.println(s.getLoggedInUser());
+       // s.logout();
+*/
+
+
+
         primaryStage.setTitle("Affichage des cours");
 
         root = new BorderPane(); // Initialisation de root
 
-        root.setPadding(new Insets(10));
+        // root.setPadding(new Insets(10));
 
         VBox filterBox = new VBox();
         filterBox.setAlignment(Pos.CENTER_LEFT);
@@ -57,7 +96,7 @@ public class CourMembre extends Application {
                 "    -fx-border-radius: 15px;" +
                 "-fx-background-insets: 0 0 0 219");
 
-        filterBox.setSpacing(5);
+        //   filterBox.setSpacing(5);
 
         ComboBox<String> cibleComboBox = new ComboBox<>();
         cibleComboBox.getItems().addAll("Enfant", "Adulte");
@@ -99,6 +138,8 @@ public class CourMembre extends Application {
             afficherCours(); // Réafficher tous les cours
         });
 
+
+
         HBox filterHBox = new HBox(cibleComboBox, categorieComboBox, objectifComboBox, filterButton, resetButton);
         filterHBox.setAlignment(Pos.CENTER_LEFT);
         filterHBox.setSpacing(10);
@@ -124,7 +165,7 @@ public class CourMembre extends Application {
         messageLabel = new Label();
         root.setBottom(messageLabel); // Ajout de messageLabel au bas de root
 
-        Scene scene = new Scene(root, 800, 600);
+        Scene scene = new Scene(root, 1366, 700);
         primaryStage.setScene(scene);
 
         String cssFile = getClass().getResource("/com/example/bty/CSSmoduleCours/membre.css").toExternalForm();
@@ -134,157 +175,196 @@ public class CourMembre extends Application {
         primaryStage.setTitle("Consultation des cours");
         primaryStage.show();
 
-        AnchorPane leftDashboard = createLeftDashboard();
-        leftDashboard.setMinHeight(250);
+        AnchorPane leftDashboard = createLeftDashboard(primaryStage);
+        //  leftDashboard.setMinHeight(250);
         root.setLeft(leftDashboard);
 
         root.setLeft(leftDashboard);
     }
 
 
-    private AnchorPane createLeftDashboard() {
-        StackPane stackPane = new StackPane();
-        stackPane.setPrefSize(1100, 600);
+    private AnchorPane createLeftDashboard(Stage primaryStage) {
+        AnchorPane mainForm = new AnchorPane();
+        mainForm.setPrefSize(1100, 900);
 
-        AnchorPane anchorPane = new AnchorPane();
-        stackPane.getChildren().add(anchorPane);
+        //AnchorPane dashboardAdmin = new AnchorPane();
 
 
-        BorderPane borderPane = new BorderPane();
-        borderPane.setPrefSize(1100, 600);
-        borderPane.getStyleClass().add("border-pane");
 
-        AnchorPane.setBottomAnchor(borderPane, 0.0);
-        AnchorPane.setTopAnchor(borderPane, 0.0);
-        AnchorPane.setRightAnchor(borderPane, 0.0);
-        AnchorPane.setLeftAnchor(borderPane, 0.0);
-
-        AnchorPane leftAnchorPane = new AnchorPane();
+        AnchorPane dashboardAdmin = new AnchorPane();
         //leftAnchorPane.setTranslateY(-80);
-        leftAnchorPane.setTranslateX(-10);
-        // leftAnchorPane.setPrefSize(270, 700);
-        AnchorPane.setTopAnchor(leftAnchorPane, 0.0);
-        AnchorPane.setLeftAnchor(leftAnchorPane, 0.0);
-        leftAnchorPane.setTranslateY(-70);
-        AnchorPane innerAnchorPane = new AnchorPane();
-        innerAnchorPane.getStyleClass().addAll("nav", "nav-border");
-        innerAnchorPane.setPrefSize(229, 900);
-
-        FontAwesomeIconView userIcon = new FontAwesomeIconView();
-        userIcon.setFill(javafx.scene.paint.Color.WHITE);
-        userIcon.setGlyphName("USER");
-        userIcon.setLayoutX(82);
-        userIcon.setLayoutY(91);
-        userIcon.setSize("6em");
-
-        Label welcomeLabel = new Label("Welcome,");
-        welcomeLabel.setLayoutX(78);
-        welcomeLabel.setLayoutY(101);
-        welcomeLabel.setTextFill(javafx.scene.paint.Color.WHITE);
-        welcomeLabel.setFont(new javafx.scene.text.Font("Tahoma", 15));
-
-        Label usernameLabel = new Label("MarcoMan");
-        usernameLabel.setId("username");
-        usernameLabel.setAlignment(javafx.geometry.Pos.CENTER);
-        usernameLabel.setLayoutX(11);
-        usernameLabel.setLayoutY(120);
-        usernameLabel.setPrefSize(201, 23);
-        usernameLabel.setTextFill(javafx.scene.paint.Color.WHITE);
-        usernameLabel.setFont(new javafx.scene.text.Font("Arial Bold", 20));
-
-        Line line = new Line();
-        line.setEndX(100);
-        line.setLayoutX(111);
-        line.setLayoutY(152);
-        line.setStartX(-100);
-        line.setStroke(javafx.scene.paint.Color.WHITE);
+        dashboardAdmin.setTranslateX(0);
+        //leftAnchorPane.setPrefSize(70, 280);
+//        dashboardAdmin.setBottomAnchor(mainForm, 40.0);
+//        dashboardAdmin.setLeftAnchor(mainForm, 40.0);
+        dashboardAdmin.setTranslateY(-112);
+        dashboardAdmin.setPrefSize(234, 1600);
+        dashboardAdmin.getStyleClass().add("border-pane");
 
 
-        Button dashboardBtn = new Button("Dashboard");
-        dashboardBtn.setId("dashboard_btn");
-        dashboardBtn.setLayoutX(21);
-        dashboardBtn.setLayoutY(170);
-        dashboardBtn.setMnemonicParsing(false);
-        dashboardBtn.setPrefSize(180, 35);
-        dashboardBtn.getStyleClass().addAll("nav-btn", "dashboard-btn");
-        dashboardBtn.setText("Dashboard");
+        FontAwesomeIconView usernameAdmin = createFontAwesomeIconView("USER", "WHITE", 50, 82, 91);
+        Label welcomeLabel = createLabel("Welcome,", "Tahoma", 15, 78, 101,"WHITE");
+        Label usernameLabel = createLabel("MarcoMan", "Arial Bold", 20, 11, 120,"WHITE");
+        // Line line = createLine(-100, 152, 100, 152, 111);
+        Line line = createColoredLine(-100, 152, 100, 152, 111, "WHITE");
 
-        Button userBtn = new Button("Utilisateurs");
-        userBtn.setId("user_btn");
-        userBtn.setLayoutX(21);
-        userBtn.setLayoutY(220);
-        userBtn.setMnemonicParsing(false);
-        userBtn.setPrefSize(180, 35);
-        userBtn.getStyleClass().addAll("nav-btn");
+        Button DashboardBtn = createButton("Dashboard", 22, 186);
+        Button CoursBtn = createButton("Cours", 22, 234);
+        Button eventsBtn = createButton("Evenements", 22, 276);
+        Button demandeBtn = createButton("Demande Coahing", 22, 319);
+        Button offreAdminBtn = createButton("Offre", 22, 361);
+        Button storeAdminBtn = createButton("Store", 22, 405);
 
-        Button coursBtn = new Button("Cours");
-        coursBtn.setId("cours_btn");
-        coursBtn.setLayoutX(21);
-        coursBtn.setLayoutY(270);
-        coursBtn.setMnemonicParsing(false);
-        coursBtn.setPrefSize(180, 35);
-        coursBtn.getStyleClass().addAll("nav-btn");
-
-        Button evenementBtn = new Button("Evenement");
-        evenementBtn.setId("evenement_btn");
-        evenementBtn.setLayoutX(21);
-        evenementBtn.setLayoutY(320);
-        evenementBtn.setMnemonicParsing(false);
-        evenementBtn.setPrefSize(180, 35);
-        evenementBtn.getStyleClass().addAll("nav-btn");
-
-        Button produitBtn = new Button("Produits");
-        produitBtn.setId("produit_btn");
-        produitBtn.setLayoutX(21);
-        produitBtn.setLayoutY(370);
-        produitBtn.setMnemonicParsing(false);
-        produitBtn.setPrefSize(180, 35);
-        produitBtn.getStyleClass().addAll("nav-btn");
-
-        Button coachBtn = new Button("Coaching privé");
-        coachBtn.setId("coach_btn");
-        coachBtn.setLayoutX(21);
-        coachBtn.setLayoutY(420);
-        coachBtn.setMnemonicParsing(false);
-        coachBtn.setPrefSize(180, 35);
-        coachBtn.getStyleClass().addAll("nav-btn");
-
-        Button reclamationBtn = new Button("Réclamation");
-        reclamationBtn.setId("reclamation_btn");
-        reclamationBtn.setLayoutX(21);
-        reclamationBtn.setLayoutY(470);
-        reclamationBtn.setMnemonicParsing(false);
-        reclamationBtn.setPrefSize(180, 35);
-        reclamationBtn.getStyleClass().addAll("nav-btn");
-
-        Button logoutBtn = new Button();
-        logoutBtn.setId("logout");
-        logoutBtn.setLayoutX(14);
-        logoutBtn.setLayoutY(545);
-        logoutBtn.setMnemonicParsing(false);
-        logoutBtn.getStyleClass().addAll("logout", "shadow");
+        CoursBtn.setOnAction(event -> {
+            // Instancier et afficher la vue DashboardVitrineController
+            CourMembre v = new CourMembre();
+            v.start(primaryStage);
+        });
 
 
-        FontAwesomeIconView logoutIcon = new FontAwesomeIconView();
-        logoutIcon.setFill(javafx.scene.paint.Color.WHITE);
-        logoutIcon.setGlyphName("SIGN_OUT");
-        logoutIcon.setSize("2em");
+        eventsBtn.setOnAction(event -> {
+            // Instancier et afficher la vue DashboardVitrineController
 
-        logoutBtn.setGraphic(logoutIcon);
+        });
 
-        Label logoutLabel = new Label("Logout");
-        logoutLabel.setLayoutX(58);
-        logoutLabel.setLayoutY(551);
-        logoutLabel.setTextFill(javafx.scene.paint.Color.WHITE);
-        logoutLabel.setFont(new javafx.scene.text.Font(15));
 
-        innerAnchorPane.getChildren().addAll(userIcon, welcomeLabel, usernameLabel, line, dashboardBtn, userBtn, coursBtn, evenementBtn, produitBtn, coachBtn, reclamationBtn, logoutBtn, logoutLabel);
+      /*  demandeBtn.setOnAction(event -> {
+            // Instancier et afficher la vue DashboardVitrineController
+            FD f = new FD();
+            f.start(primaryStage);
+        });*/
 
-        leftAnchorPane.getChildren().add(innerAnchorPane);
 
-        borderPane.setLeft(leftAnchorPane);
-        anchorPane.getChildren().add(borderPane);
-        return leftAnchorPane;
+        offreAdminBtn.setOnAction(event -> {
+            // Instancier et afficher la vue DashboardVitrineController
+
+        });
+
+
+        storeAdminBtn.setOnAction(event -> {
+            // Instancier et afficher la vue DashboardVitrineController
+
+        });
+
+
+
+        Line line2 = createColoredLine(-100, 449, 100, 449, 112, "WHITE");
+
+        Button profileAdminBtn = createButton("Profile", 22, 462);
+        Button logoutBtn = createButton("Logout", 22, 503);
+
+        FontAwesomeIconView[] icons = {
+                createFontAwesomeIconView("HOME", "WHITE", 20, 38, 212),
+                createFontAwesomeIconView("USER", "WHITE", 20, 38, 258),
+                createFontAwesomeIconView("USERS", "WHITE", 20, 38, 300),
+                createFontAwesomeIconView("BOOK", "WHITE", 20, 38, 343),
+                createFontAwesomeIconView("CALENDAR", "WHITE", 20, 38, 385),
+
+                createFontAwesomeIconView("SHOPPING_CART", "WHITE", 20, 38, 429),
+
+                createFontAwesomeIconView("ID_CARD", "WHITE", 20, 38, 486),
+                createFontAwesomeIconView("EXTERNAL_LINK", "WHITE", 20, 38, 529)
+        };
+
+        VBox reportContainer = new VBox();
+        reportContainer.setLayoutX(13);
+        reportContainer.setLayoutY(750);
+        reportContainer.setPrefSize(180, 91);
+        reportContainer.setStyle(" -fx-background-color:WHITE; /* Bleu */\n" +
+                "    -fx-border-radius: 15;\n" +
+                "    -fx-background-radius:15;\n" +
+                "    -fx-border-color:#2c3e50; /* Couleur de bordure bleue légère */\n" +
+                "    -fx-padding: 12;\n" +
+                "    -fx-translate-y: -10;");
+
+        Text reportText = new Text("Report Suggestion/Bug?");
+        reportText.getStyleClass().add("report_text");
+
+        Label reportLabel = new Label("Use this to report any errors or suggestions.");
+        reportLabel.getStyleClass().add("report_label");
+
+        Button reportButton = createButton("Report", 0, 0);
+        reportButton.getStyleClass().add("report_button");
+
+
+
+        reportContainer.getChildren().addAll(reportText, reportLabel, reportButton);
+
+        StackPane contentPlaceholder = new StackPane();
+        contentPlaceholder.setLayoutX(220);
+        contentPlaceholder.setLayoutY(0);
+
+        dashboardAdmin.getChildren().addAll(
+                usernameAdmin, welcomeLabel, usernameLabel, line,
+                DashboardBtn,CoursBtn, eventsBtn, demandeBtn, offreAdminBtn,
+                storeAdminBtn, line2, profileAdminBtn,
+                logoutBtn, icons[0], icons[1], icons[2], icons[3],
+                icons[4], icons[5], icons[6],icons[7], reportContainer,
+                contentPlaceholder
+        );
+
+        mainForm.getChildren().addAll(dashboardAdmin);
+        return dashboardAdmin;
+
+
+    }
+
+
+
+
+    private FontAwesomeIconView createFontAwesomeIconView(String glyphName, String fill, double size, double layoutX, double layoutY) {
+        FontAwesomeIconView iconView = new FontAwesomeIconView();
+        iconView.setGlyphName(glyphName);
+
+        // Définir la couleur de remplissage ici
+        iconView.setFill(javafx.scene.paint.Paint.valueOf(fill));
+
+        iconView.setSize(String.valueOf(size));
+
+        iconView.setLayoutX(layoutX);
+        iconView.setLayoutY(layoutY);
+        return iconView;
+    }
+
+
+    private Label createLabel(String text, String fontName, double fontSize, double layoutX, double layoutY, String textFill) {
+        Label label = new Label(text);
+        label.setFont(new javafx.scene.text.Font(fontName, fontSize));
+        label.setLayoutX(layoutX);
+        label.setLayoutY(layoutY);
+
+        // Définir la couleur du texte ici
+        label.setTextFill(javafx.scene.paint.Paint.valueOf(textFill));
+
+        return label;
+    }
+
+
+    private Line createLine(double startX, double startY, double endX, double endY, double layoutX) {
+        Line line = new Line(startX, startY, endX, endY);
+        line.setLayoutX(layoutX);
+        return line;
+    }
+
+
+    private Line createColoredLine(double startX, double startY, double endX, double endY, double layoutX, String strokeColor) {
+        Line line = new Line(startX, startY, endX, endY);
+        line.setLayoutX(layoutX);
+
+        // Définir la couleur de la ligne ici
+        line.setStroke(javafx.scene.paint.Paint.valueOf(strokeColor));
+
+        return line;
+    }
+
+    private Button createButton(String text, double layoutX, double layoutY) {
+        Button button = new Button(text);
+        button.setLayoutX(layoutX);
+        button.setLayoutY(layoutY);
+        button.setMnemonicParsing(false);
+        button.getStyleClass().add("nav-btn");
+        button.setPrefSize(180, 35);
+        return button;
     }
 
 
@@ -316,6 +396,7 @@ public class CourMembre extends Application {
         Button participerButton = new Button("Participer");
         participerButton.getStyleClass().add("add-to-cart-button");
 
+
         // Vérifier la capacité restante avant de permettre la participation
         participerButton.setOnAction(e -> participerAuCours(cours, participerButton));
 
@@ -327,7 +408,7 @@ public class CourMembre extends Application {
         return card;
     }
 
-    private void participerAuCours(Cours cours, Button participerButton) {
+  /*  private void participerAuCours(Cours cours, Button participerButton) {
         try {
             String username = "dridi"; // Remplacez par le nom d'utilisateur de l'utilisateur connecté
             User utilisateurConnecte = getUtilisateurConnecte(username);
@@ -366,9 +447,9 @@ public class CourMembre extends Application {
             e.printStackTrace();
             System.out.println("Erreur lors de la participation au cours.");
         }
-    }
+    }*/
 
-    private User getUtilisateurConnecte(String username) {
+  /*  private User getUtilisateurConnecte(String username) {
         User utilisateurConnecte = null;
         try {
             String query = "SELECT * FROM user WHERE nom = ? AND role = 'MEMBRE'";
@@ -383,13 +464,93 @@ public class CourMembre extends Application {
                 String telephone = resultSet.getString("telephone");
                 Role role = Role.valueOf(resultSet.getString("role"));
 
-                utilisateurConnecte = new User(id, nom, email, password, telephone, role);
+                utilisateurConnecte = new User(id, nom, email, password, telephone, role );
+
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return utilisateurConnecte;
+    }*/
+
+    private void participerAuCours(Cours cours, Button participerButton) {
+        // Récupérer l'utilisateur connecté à partir de la session
+        User loggedInUser = Session.getInstance().getLoggedInUser();
+
+        // Vérifier si l'utilisateur est connecté
+        if (loggedInUser != null) {
+            // Vérifier si l'utilisateur est un membre
+            if (loggedInUser.getRole() == Role.MEMBRE) {
+                // Afficher une boîte de dialogue de confirmation
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Confirmation de participation");
+                alert.setHeaderText(null);
+                alert.setContentText("Êtes-vous sûr de vouloir participer à ce cours ?");
+
+                // Personnaliser les boutons de la boîte de dialogue
+                ButtonType buttonTypeOui = new ButtonType("Oui");
+                ButtonType buttonTypeNon = new ButtonType("Non");
+                alert.getButtonTypes().setAll(buttonTypeOui, buttonTypeNon);
+
+                // Attendre la réponse de l'utilisateur
+                alert.showAndWait().ifPresent(response -> {
+                    if (response == buttonTypeOui) {
+                        // L'utilisateur a cliqué sur "Oui", procéder à la participation
+                        participerAuCoursEffectif(cours, participerButton,  loggedInUser);
+                    }
+                });
+            } else {
+                System.out.println("Seuls les membres peuvent participer aux cours.");
+            }
+        } else {
+            // Gérer le cas où l'utilisateur n'est pas connecté
+            System.out.println("Vous devez être connecté pour participer à un cours.");
+        }
     }
+
+    private void participerAuCoursEffectif(Cours cours, Button participerButton, User loggedInUser) {
+        int userID = loggedInUser.getId();
+        String userName = loggedInUser.getName();
+
+        try {
+            if (cours.getCapacite() > 0) {
+                // Insérer l'ID du membre et l'ID du cours dans la table de participation
+                String queryInsert = "INSERT INTO participation (id_user, nomCour, nomParticipant) VALUES (?,?,?)";
+                PreparedStatement statementInsert = connection.prepareStatement(queryInsert);
+                statementInsert.setInt(1, userID);
+                statementInsert.setString(2, cours.getNom());
+                statementInsert.setString(3, userName); // Envoyer le nom du participant à la base de données
+
+                int rowsInserted = statementInsert.executeUpdate();
+
+                if (rowsInserted > 0) {
+                    // Participation réussie
+                    System.out.println("Vous avez participé au cours avec succès !");
+
+                    // Diminuer la capacité du cours dans la base de données
+                    cours.setCapacite(cours.getCapacite() - 1);
+                    String queryUpdate = "UPDATE cours SET capacite = ? WHERE id_cour = ?";
+                    PreparedStatement statementUpdate = connection.prepareStatement(queryUpdate);
+                    statementUpdate.setInt(1, cours.getCapacite());
+                    statementUpdate.setInt(2, cours.getId());
+                    statementUpdate.executeUpdate();
+
+                    // Vérifier si la capacité est épuisée
+                    if (cours.getCapacite() == 0) {
+                        participerButton.setDisable(true);
+                        participerButton.setText("Complet");
+                    }
+                } else {
+                    System.out.println("Erreur lors de la participation au cours.");
+                }
+            } else {
+                System.out.println("La capacité de ce cours est épuisée. Vous ne pouvez plus participer.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void afficherCoursDansGridPane() {
         GridPane gridPane = new GridPane();
@@ -419,7 +580,7 @@ public class CourMembre extends Application {
     private void afficherCours() {
         coursList.clear();
         try {
-            String query = "SELECT * FROM cours WHERE etat = 1 ";
+            String query = "SELECT * FROM cours WHERE etat = 1 AND capacite > 0"; // Filtrer les cours avec capacité > 0
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {

@@ -18,6 +18,8 @@ public class Cours {
     private final ObjectProperty<byte[]> image = new SimpleObjectProperty<>();
     User coach;
 
+
+
     public Cours() {
     }
 

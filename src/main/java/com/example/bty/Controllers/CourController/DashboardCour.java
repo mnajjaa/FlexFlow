@@ -8,6 +8,7 @@ import com.example.bty.Entities.User;
 import com.example.bty.Services.ServiceCours;
 import com.example.bty.Entities.Cours;
 import com.example.bty.Utils.ConnexionDB;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -42,8 +43,9 @@ import java.util.function.Consumer;
 public class DashboardCour {
 
     public Button ajout_produit;
-    public Button actuliser_produit;
+    public Button reloadCours;
     public Label dashboard_NM;
+    public TextField searchField;
 
     @FXML
     private TableView<Cours> tableView;
@@ -73,7 +75,7 @@ public class DashboardCour {
     @FXML
     private TableColumn<  Cours, String> nomcoachCol;
 
-    private consulter reloadCours = new consulter();
+    //private consulter reloadCours = new consulter();
     @FXML
     private TableColumn<Cours, Void> actionColumn;
 
@@ -150,9 +152,41 @@ public class DashboardCour {
             }
         });
 
-    }
-    // Création de la fenêtre de modification
 
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+            // Appeler une méthode de mise à jour de la TableView avec le nouveau texte de recherche
+            updateTableView(newValue);
+        });
+
+        Platform.runLater(() -> {
+            checkZeroCapacityCourses();
+        });
+    }
+
+
+
+    private void checkZeroCapacityCourses() {
+        for (Cours cours : coursList) {
+            if (cours.getCapacite() == 0) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Capacité épuisée");
+                alert.setHeaderText(null);
+                alert.setContentText("La capacité du cours \"" + cours.getNom().trim() + "\" est maintenant épuisée.");
+                alert.showAndWait();
+            }
+        }
+    }
+
+    // Création de la fenêtre de modification
+    private void updateTableView(String searchText) {
+        List<Cours> filteredCours = new ArrayList<>();
+        for (Cours cours : coursList) {
+            if (cours.getNom().toLowerCase().startsWith(searchText.toLowerCase())) {
+                filteredCours.add(cours);
+            }
+        }
+        tableView.getItems().setAll(filteredCours);
+    }
 
     private void confirmerSuppression(Cours cours) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
