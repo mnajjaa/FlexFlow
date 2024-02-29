@@ -130,7 +130,7 @@ private void participerAuCours(Evenement evenement, Button ReserverButton) {
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Confirmation de Reservation");
                 alert.setHeaderText(null);
-                alert.setContentText("Êtes-vous sûr de vouloir participer à cet événement ?");
+                alert.setContentText("Veuillez confirmer votre inscription à cet événement.");
 
                 // Personnaliser les boutons de la boîte de dialogue
                 ButtonType buttonTypeOui = new ButtonType("Oui");
@@ -187,6 +187,7 @@ private void participerAuCours(Evenement evenement, Button ReserverButton) {
                     if (evenement.getNbre_place() == 0) {
                         ReserverButton.setDisable(true);
                         ReserverButton.setText("Complet");
+                        ReserverButton.setStyle("-fx-opacity: 0.5");
                     }
                 } else {
                     afficherMessage("Échec","Erreur lors de la participation à l'evenement.");

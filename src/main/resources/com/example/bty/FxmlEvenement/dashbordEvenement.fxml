@@ -132,10 +132,10 @@
 
 
                         <AnchorPane layoutX="10.0" layoutY="234.0" prefHeight="315.0" prefWidth="861.0" stylesheets="/dashboardDesign.css">
-                            <styleClass>
-                                <String fx:value="white-bg" />
-                                <String fx:value="shadow" />
-                            </styleClass>
+<!--                            <styleClass>-->
+<!--                                <String fx:value="white-bg" />-->
+<!--                                <String fx:value="shadow" />-->
+<!--                            </styleClass>-->
                             <children>
 
                                 <AnchorPane layoutX="-11.0" layoutY="-113.0" prefHeight="430.0" prefWidth="1302.0">

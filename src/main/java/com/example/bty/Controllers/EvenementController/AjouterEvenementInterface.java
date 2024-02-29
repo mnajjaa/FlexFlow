@@ -21,7 +21,9 @@ import javafx.scene.paint.Color;
 import java.io.*;
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.chrono.Chronology;
+import java.time.format.DateTimeParseException;
 
 public class AjouterEvenementInterface extends Application {
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/pidevgym";
@@ -95,6 +97,7 @@ public class AjouterEvenementInterface extends Application {
 // Vérification du format de l'heure
                 if (!time.matches("\\d{2}:\\d{2}:\\d{2}")) {
                     afficherMessage("Erreur", "Format d'heure invalide. Utilisez le format HH:MM:SS.");
+
                     return; // Sortie de la méthode si le format n'est pas respecté
                 }
                 // Division de la chaîne de temps en ses composants
@@ -109,6 +112,7 @@ public class AjouterEvenementInterface extends Application {
                     return; // Sortie de la méthode si l'heure est invalide
                 }
 
+
                 Time t = java.sql.Time.valueOf(time);
                 String nomCoach = nomCoachField.getText();
                 int idCoach = getCoachIdByName(nomCoach);
@@ -119,6 +123,13 @@ public class AjouterEvenementInterface extends Application {
                     return; // Sortie de la méthode si la condition n'est pas respectée
                 } else {
                     nomField.setStyle("-fx-text-inner-color: black;"); // Remettre en noir
+                }
+                if (nomCoach.matches(".*\\d.*")) {
+                    afficherMessage("Erreur", "Le nom du coach ne doit pas contenir de chiffres.");
+                    nomCoachField.setStyle("-fx-text-inner-color: red;"); // Mettre en rouge en cas de condition non respectée
+                    return; // Sortie de la méthode si la condition n'est pas respectée
+                } else {
+                    nomCoachField.setStyle("-fx-text-inner-color: black;"); // Remettre en noir
                 }
                 // Ajout de la validation pour la capacité
                 if (nbrePlace < 10 || nbrePlace > 40) {
@@ -205,6 +216,51 @@ public class AjouterEvenementInterface extends Application {
                     nomField.setStyle("-fx-text-inner-color: red;"); // Change la couleur du texte en rouge
                 } else {
                     nomField.setStyle("-fx-text-inner-color: black;"); // Remet la couleur du texte en noir si aucun chiffre n'est présent
+                }
+            });
+            nomCoachField.textProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue.matches(".*\\d.*")) { // Vérifie s'il y a des chiffres dans la nouvelle valeur
+                    nomCoachField.setStyle("-fx-text-inner-color: red;"); // Change la couleur du texte en rouge
+                } else {
+                    nomCoachField.setStyle("-fx-text-inner-color: black;"); // Remet la couleur du texte en noir si aucun chiffre n'est présent
+                }
+            });
+            TimeField.textProperty().addListener((observable, oldValue, newValue) ->{
+                if (!newValue.matches("\\d{2}:\\d{2}:\\d{2}")){
+
+                    TimeField.setStyle("-fx-text-inner-color: red;");
+                }
+                else{
+                    try {
+                        LocalTime time = LocalTime.parse(newValue);
+                        TimeField.setStyle("-fx-text-inner-color: black;");
+                    }
+                    catch (DateTimeParseException e) {
+                        TimeField.setStyle("-fx-text-inner-color: red;"); // Change la couleur du texte en rouge si la conversion échoue
+                    }
+                }
+            });
+            // Ajout de l'écouteur de changement de texte sur le champ de durée
+            NbrPlaceField.textProperty().addListener((observable, oldValue, newValue) -> {
+                // Vérifie si la nouvelle valeur ne contient que des chiffres
+                if (!newValue.matches("\\d*")) {
+                    // Changement de la couleur du texte en noir si la condition n'est pas respectée
+                    NbrPlaceField.setStyle("-fx-text-inner-color: black;");
+                } else {
+                    try {
+                        int dureeValue = Integer.parseInt(newValue.trim());
+                        // Vérifie si la durée est en dehors de la plage valide
+                        if (dureeValue < 10 || dureeValue > 40) {
+                            // Changement de la couleur du texte en rouge si la condition n'est pas respectée
+                            NbrPlaceField.setStyle("-fx-text-inner-color: red;");
+                        } else {
+                            // Remet la couleur du texte en noir si la condition est respectée
+                            NbrPlaceField.setStyle("-fx-text-inner-color: black;");
+                        }
+                    } catch (NumberFormatException e) {
+                        // Changement de la couleur du texte en rouge si la conversion échoue
+                        NbrPlaceField.setStyle("-fx-text-inner-color: red;");
+                    }
                 }
             });
             cardContainer.getChildren().addAll(cardTitle, grid);
