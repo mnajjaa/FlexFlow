@@ -2,6 +2,7 @@ package com.example.bty.Controllers.graphiqueGCP;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -16,12 +17,12 @@ import java.util.Optional;
 
 public class Formoffre extends Application {
 
-    private TextField idField;
+    private TextField nomField;
     private ChoiceBox<String> specialiteChoice;
     private TextField tarifField;
     private TextField coachField;
+    private Label nomLabel;
 
-    private int id = 0;
 
     @Override
     public void start(Stage primaryStage) {
@@ -44,10 +45,12 @@ public class Formoffre extends Application {
 
 
         // Label et champ de texte pour l'ID
-        Label idLabel = new Label("ID:");
-        idField = new TextField();
-        grid.add(idLabel, 0, 0);
-        grid.add(idField, 1, 0);
+
+
+        Label nomLabel = new Label("Nom de L'offre:");
+        nomField = new TextField();
+        grid.add(nomLabel, 0, 0);
+        grid.add(nomField, 1, 0);
 
         // Label et choix de spécialité
         Label specialiteLabel = new Label("Spécialité:");
@@ -82,50 +85,13 @@ public class Formoffre extends Application {
         grid.add(addButton, 1, 5);
         addButton.setOnAction(event -> insertOffre());
 
-//
-//        // Bouton d'ajout de l'offre
-//        Button updateButton = new Button("Modifier");
-//        grid.add(updateButton,2, 5);
-//        updateButton.setOnAction(event -> updateOffre());
-//
-//
-//        //
-//        Button deleteButton = new Button("Supprimer");
-//        grid.add(deleteButton, 3, 5);
-//        deleteButton.setOnAction(event -> deleteOffre());
-//
 
         Button consulterButton = new Button("Consulter liste des offres");
-        GridPane.setConstraints(consulterButton, 2, 5);
-        consulterButton.setOnAction(event -> {
-            // Créer une boîte de dialogue pour saisir l'ID
-            TextInputDialog dialog = new TextInputDialog();
-            dialog.setTitle("Consulter liste de demande");
-            dialog.setHeaderText("Veuillez entrer votre ID:");
-            dialog.setContentText("ID:");
+        grid.add(consulterButton, 2, 5);
+        consulterButton.setOnAction(event -> consulterOffres());
 
-            // Afficher la boîte de dialogue et attendre la réponse de l'utilisateur
-            Optional<String> result = dialog.showAndWait();
 
-            // Vérifier si l'utilisateur a saisi une valeur
-            result.ifPresent(id -> {
-                if (!id.isEmpty()) {
-                    consulterOffre(Integer.parseInt(id));
-                } else {
-                    // Gérer le cas où l'ID est vide
-                    System.out.println("L'ID est vide.");
-                }
-            });
-        });
-        grid.getChildren().add(consulterButton);
 
-        idField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*")) { // Vérifie si la nouvelle valeur ne contient que des chiffres
-                idField.setStyle("-fx-text-inner-color: red;");
-            } else {
-                idField.setStyle("-fx-text-inner-color: black;");
-            }
-        });
 
         tarifField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.matches("\\d*")) {
@@ -143,7 +109,7 @@ public class Formoffre extends Application {
             }
         });
 
-
+        setupStringValidation(nomField);
 
         Scene scene = new Scene(grid, 700, 650);
         scene.getStylesheets().add(getClass().getResource("/Styles/StyleAR.css").toExternalForm());
@@ -158,7 +124,7 @@ public class Formoffre extends Application {
         String password = "";
 
         try (Connection conn = DriverManager.getConnection(url, username, password)) {
-            String id = idField.getText();
+            String id = nomField.getText();
             // Vérifier si l'ID existe déjà
             if (offreExists(conn, id)) {
                 // Afficher un message à l'utilisateur dans l'interface
@@ -166,10 +132,10 @@ public class Formoffre extends Application {
                 return; // Arrêter l'exécution de la méthode car l'offre existe déjà
             }
 
-            String query = "INSERT INTO Offre (id, Specialite, tarif_heure, id_Coach,etatOffre) VALUES (?, ?, ?, ?,?)";
+            String query = "INSERT INTO Offre (nom, Specialite, tarif_heure, id_Coach,etatOffre) VALUES (?, ?, ?, ?,?)";
             String etatOffre = "En Attente";
             PreparedStatement statement = conn.prepareStatement(query);
-            statement.setInt(1, Integer.parseInt(id));
+            statement.setString(1, nomField.getText());
             statement.setString(2, specialiteChoice.getValue());
             statement.setDouble(3, Double.parseDouble(tarifField.getText()));
             statement.setInt(4, Integer.parseInt(coachField.getText()));
@@ -184,66 +150,29 @@ public class Formoffre extends Application {
         }
     }
 
-    private boolean offreExists(Connection conn, String id) throws SQLException {
-        String query = "SELECT COUNT(*) FROM Offre WHERE id = ?";
+
+    private boolean offreExists(Connection conn, String nom) throws SQLException {
+        String query = "SELECT COUNT(*) FROM Offre WHERE nom = ?";
         PreparedStatement statement = conn.prepareStatement(query);
-        statement.setInt(1, Integer.parseInt(id));
+        statement.setString(1, nom);
         ResultSet resultSet = statement.executeQuery();
         resultSet.next();
         int count = resultSet.getInt(1);
         return count > 0;
     }
-
-
-    private void updateOffre() {
-        String url = "jdbc:mysql://localhost:3306/pidevgym";
-        String username = "root";
-        String password = "";
-
-        try (Connection conn = DriverManager.getConnection(url, username, password)) {
-            String query = "UPDATE Offre SET Specialite=?, tarif_heure=?, id_Coach=? WHERE id=?";
-            PreparedStatement statement = conn.prepareStatement(query);
-            statement.setString(1, specialiteChoice.getValue());
-            statement.setDouble(2, Double.parseDouble(tarifField.getText()));
-            statement.setInt(3, Integer.parseInt(coachField.getText()));
-            statement.setInt(4, Integer.parseInt(idField.getText()));
-
-            int rowsUpdated = statement.executeUpdate();
-            if (rowsUpdated > 0) {
-                System.out.println("Offre mise à jour avec succès !");
+    private void setupStringValidation(TextField textField) {
+        textField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null && !newValue.isEmpty() && newValue.matches(".*\\d.*")) {
+                // Vérifie si la nouvelle valeur n'est pas vide et contient des chiffres
+                textField.setStyle("-fx-text-inner-color: red;"); // Change la couleur du texte en rouge
             } else {
-                System.out.println("Aucune offre mise à jour !");
+                textField.setStyle("-fx-text-inner-color: black;"); // Remet la couleur du texte en noir si aucun chiffre n'est présent
             }
-        } catch (SQLException e) {
-            System.out.println("Erreur lors de la mise à jour de l'offre: " + e.getMessage());
-        }
+        });
     }
 
-    private void deleteOffre() {
-        String url = "jdbc:mysql://localhost:3306/pidevgym";
-        String username = "root";
-        String password = "";
-
-        try (Connection conn = DriverManager.getConnection(url, username, password)) {
-            String query = "DELETE FROM Offre WHERE id=?";
-            PreparedStatement statement = conn.prepareStatement(query);
-            statement.setInt(1, Integer.parseInt(idField.getText()));
-
-            int rowsDeleted = statement.executeUpdate();
-            if (rowsDeleted > 0) {
-                System.out.println("Offre supprimée avec succès !");
-            } else {
-                System.out.println("Aucune offre supprimée !");
-            }
-        } catch (SQLException e) {
-            System.out.println("Erreur lors de la suppression de l'offre: " + e.getMessage());
-        }
-    }
-
-    // Méthode pour gérer l'événement du bouton "Consulter"
-    private void consulterOffre(int id) {
-        // Ouvrir la fenêtre de consultation des demandes avec l'ID du client
-        ConsultationOffre consultationOffre = new ConsultationOffre(id);
+    private void consulterOffres() {
+        ConsultationOffre consultationOffre = new ConsultationOffre();
         consultationOffre.start(new Stage());
     }
 

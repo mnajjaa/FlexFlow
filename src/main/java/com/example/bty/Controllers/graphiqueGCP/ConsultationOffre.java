@@ -1,234 +1,312 @@
 package com.example.bty.Controllers.graphiqueGCP;
 
-import com.example.bty.Entities.Demande;
-import com.example.bty.Entities.Offre;
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
-    public class ConsultationOffre extends Application {
 
-        private static Connection connection;
-        public static ListView<com.example.bty.Controllers.graphiqueGCP.ConsultationOffre.OffreItem> OffreListView;
-        private static int id;
+public class ConsultationOffre extends Application {
 
-        public ConsultationOffre(int id) {
-            this.id = id;
-        }
+    private static Connection connection;
+    private static TableView<OffreItem> tableView;
 
-        private List<Offre> offre;
+    @Override
+    public void start(Stage primaryStage) {
+        primaryStage.setTitle("Consultation des offres");
 
+        // Connexion à la base de données
+        connectToDatabase();
 
-        @Override
-        public void start(Stage primaryStage) {
-            primaryStage.setTitle("Consultation des demandes");
+        // Création de la table des offres sous forme de TableView
+        tableView = new TableView<>();
 
-            // Connexion à la base de données
-            connectToDatabase();
+        // Création du TableView et de ses colonnes
+        TableColumn<OffreItem, String> nomCol = new TableColumn<>("Nom");
+        nomCol.setCellValueFactory(new PropertyValueFactory<>("nom"));
 
-            // Création de la liste des demandes
-            OffreListView = new ListView<>();
-            refreshOffreList(id);
+        TableColumn<OffreItem, String> specialiteCol = new TableColumn<>("Spécialité");
+        specialiteCol.setCellValueFactory(new PropertyValueFactory<>("specialite"));
 
-            // Création de la disposition verticale
-            VBox vbox = new VBox();
-            vbox.setSpacing(20);
-            vbox.getChildren().add(OffreListView);
+        TableColumn<OffreItem, String> tarifCol = new TableColumn<>("Tarif");
+        tarifCol.setCellValueFactory(new PropertyValueFactory<>("tarif"));
 
-            Scene scene = new Scene(vbox, 400, 300);
-            primaryStage.setScene(scene);
-            primaryStage.show();
-        }
+        TableColumn<OffreItem, String> coachCol = new TableColumn<>("Coach");
+        coachCol.setCellValueFactory(new PropertyValueFactory<>("coach"));
 
-        private static void connectToDatabase() {
-            try {
-                // Charger le pilote JDBC MySQL
-                Class.forName("com.mysql.cj.jdbc.Driver");
+        TableColumn<OffreItem, String> etatCol = new TableColumn<>("État");
+        etatCol.setCellValueFactory(new PropertyValueFactory<>("etat"));
 
-                // Établir la connexion à la base de données MySQL
-                String url = "jdbc:mysql://localhost:3306/pidevgym";
-                String utilisateur = "root";
-                String motDePasse = "";
+        TableColumn<OffreItem, Void> actionsCol = new TableColumn<>("Actions");
+        actionsCol.setMinWidth(100);
+        actionsCol.setSortable(false);
 
-                connection = DriverManager.getConnection(url, utilisateur, motDePasse);
-            } catch (ClassNotFoundException | SQLException e) {
-                e.printStackTrace();
-                // Gérer les erreurs de connexion
-            }
-        }
+        // Définir la cellule de la colonne d'actions
+        actionsCol.setCellFactory(param -> new TableCell<>() {
+            private final Button editButton = new Button("Modifier");
+            private final Button deleteButton = new Button("Supprimer");
 
-        // Méthode pour récupérer les demandes depuis la base de données
-        private static void refreshOffreList(int id) {
-            try {
-                // Exécuter une requête pour récupérer les demandes du client depuis la base de données
-                String query = "SELECT * FROM Offre WHERE id = ?";
-                PreparedStatement statement = connection.prepareStatement(query);
-                statement.setInt(1, id); // Utiliser setInt pour l'ID au lieu de setString
-                ResultSet resultSet = statement.executeQuery();
+            {
+                // Action du bouton de modification
+                editButton.setOnAction(event -> {
+                    OffreItem offreItem = getTableView().getItems().get(getIndex());
+                    modifierOffre(offreItem);
+                });
 
-                // Effacer la liste des offres précédentes
-                OffreListView.getItems().clear();
-
-                // Ajouter les offres dans la liste
-                while (resultSet.next()) {
-                    ConsultationOffre.OffreItem offreItem = new ConsultationOffre.OffreItem(
-                            resultSet.getString("id"),
-                            resultSet.getString("Specialite"),
-                            resultSet.getString("tarif_heure"),
-                            resultSet.getString("id_Coach"),
-                            resultSet.getString("etatOffre")
-                    );
-                    OffreListView.getItems().add(offreItem); // Ajouter l'élément à la liste
-                }
-
-                // Fermer les ressources
-                resultSet.close();
-                statement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-                // Gérer les erreurs de requête
-            }
-        }
-        // Méthode pour supprimer une demande
-        private static void supprimerDemande(String id_demande, String nomClient) {
-            try {
-                // Créer la requête SQL pour supprimer la demande
-                String query = "DELETE FROM Demande WHERE id_demande = ? AND nom = ?";
-                PreparedStatement statement = connection.prepareStatement(query);
-                statement.setString(1, id_demande); // Utilisation de l'ID de demande passé en paramètre
-                statement.setString(2, nomClient); // Ajout du nom du client dans la clause WHERE
-                int rowsDeleted = statement.executeUpdate();
-
-                if (rowsDeleted > 0) {
-                    // Si la demande est supprimée avec succès, rafraîchir la liste des demandes
-                    refreshOffreList(id);
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-                // Gérer les erreurs de suppression de demande
+                // Action du bouton de suppression
+                deleteButton.setOnAction(event -> {
+                    OffreItem offreItem = getTableView().getItems().get(getIndex());
+                    supprimerOffre(offreItem);
+                });
             }
 
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
 
-        }
-
-        private static void mettreAJourOffre(String id, String nouvelleSpecialite, String nouveauTarif, String nouveauCoach) {
-            try {
-                // Établir une connexion à la base de données
-                connectToDatabase();
-
-                // Exécuter une requête pour mettre à jour les détails de l'offre
-                String query = "UPDATE Offre SET Specialite = ?, tarif_heure = ?, id_Coach = ? WHERE id = ?";
-                PreparedStatement statement = connection.prepareStatement(query);
-                statement.setString(1, nouvelleSpecialite);
-                statement.setString(2, nouveauTarif);
-                statement.setString(3, nouveauCoach);
-                statement.setString(4, id);
-                int rowsUpdated = statement.executeUpdate();
-
-                if (rowsUpdated > 0) {
-                    System.out.println("L'offre a été mise à jour avec succès.");
+                if (empty) {
+                    setGraphic(null);
                 } else {
-                    System.out.println("Impossible de mettre à jour l'offre.");
+                    HBox buttonsContainer = new HBox(5, editButton, deleteButton);
+                    setGraphic(buttonsContainer);
                 }
-
-                // Fermer les ressources
-                statement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-                // Gérer les erreurs de mise à jour de l'offre
             }
+        });
+
+        // Ajouter les colonnes au TableView
+        tableView.getColumns().addAll(nomCol, specialiteCol, tarifCol, coachCol, etatCol, actionsCol);
+
+        // Charger les données dans le TableView
+        try {
+            tableView.getItems().addAll(retrieveOffreItemsArray());
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Gérer les erreurs de récupération des données
         }
-        private static void modifierOffre(String id) {
-            // Créer une nouvelle fenêtre de modification de l'offre
-            Stage modifierStage = new Stage();
-            modifierStage.setTitle("Modifier Offre");
 
-            // Créer des champs de saisie pour les détails de l'offre
-            TextField specialiteField = new TextField();
-            TextField tarifField = new TextField();
-            TextField coachField = new TextField();
+        // Création de la disposition verticale
+        VBox vbox = new VBox();
+        vbox.setSpacing(20);
+        vbox.getChildren().add(tableView);
 
-            // Créer un bouton pour enregistrer les modifications
-            Button saveButton = new Button("Enregistrer");
-            saveButton.setOnAction(event -> {
+        Scene scene = new Scene(vbox, 800, 600);
+        scene.getStylesheets().add(ConsultationDemandes.class.getResource("/Styles/tableStyle.css").toExternalForm());
+
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    private static void connectToDatabase() {
+        try {
+            // Charger le pilote JDBC MySQL
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            // Établir la connexion à la base de données MySQL
+            String url = "jdbc:mysql://localhost:3306/pidevgym";
+            String utilisateur = "root";
+            String motDePasse = "";
+
+            connection = DriverManager.getConnection(url, utilisateur, motDePasse);
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+            // Gérer les erreurs de connexion
+        }
+    }
+
+    // Méthode pour récupérer les offres depuis la base de données et les placer dans un tableau
+    private List<OffreItem> retrieveOffreItemsArray() throws SQLException {
+        List<OffreItem> offresList = new ArrayList<>();
+        try {
+            // Exécuter une requête pour récupérer les offres depuis la base de données
+            String query = "SELECT * FROM Offre";
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet resultSet = statement.executeQuery();
+
+            // Parcourir les résultats de la requête
+            while (resultSet.next()) {
+                // Créer un objet OffreItem pour chaque ligne de la base de données
+                OffreItem offreItem = new OffreItem(
+                        resultSet.getString("nom"),
+                        resultSet.getString("Specialite"),
+                        resultSet.getString("tarif_heure"),
+                        resultSet.getString("id_Coach"),
+                        resultSet.getString("etatOffre")
+                );
+                offresList.add(offreItem); // Ajouter l'objet à la liste
+            }
+
+            // Fermer les ressources
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Gérer les erreurs de requête
+            throw e;
+        }
+
+        return offresList;
+    }
+
+    // Ajoutez ici la méthode modifierOffre et la classe OffreItem
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+    // Méthode pour modifier une offre
+    private void modifierOffre(OffreItem offre) {
+        // Créer une nouvelle fenêtre de modification
+        Stage modificationStage = new Stage();
+        modificationStage.setTitle("Modifier l'offre");
+
+        // Créer des champs de texte pour les nouveaux détails de l'offre
+        TextField nomField = new TextField(offre.getNom());
+        TextField specialiteField = new TextField(offre.getSpecialite());
+        TextField tarifField = new TextField(offre.getTarif());
+        TextField coachField = new TextField(offre.getCoach());
+
+        // Créer un bouton pour appliquer les modifications
+        Button modifierButton = new Button("Modifier");
+        modifierButton.setOnAction(event -> {
+            try {
                 // Récupérer les nouvelles valeurs saisies par l'utilisateur
+                String nouveauNom = nomField.getText();
                 String nouvelleSpecialite = specialiteField.getText();
                 String nouveauTarif = tarifField.getText();
                 String nouveauCoach = coachField.getText();
 
-                // Mettre à jour les informations de l'offre dans la base de données
-                // (vous devez implémenter cette fonctionnalité)
-                mettreAJourOffre(id, nouvelleSpecialite, nouveauTarif, nouveauCoach);
+                // Exécuter une requête SQL UPDATE pour mettre à jour l'offre dans la base de données
+                String query = "UPDATE Offre SET nom = ?, Specialite = ?, tarif_heure = ?, id_Coach = ? WHERE nom = ?";
+                PreparedStatement statement = connection.prepareStatement(query);
+                statement.setString(1, nouveauNom);
+                statement.setString(2, nouvelleSpecialite);
+                statement.setString(3, nouveauTarif);
+                statement.setString(4, nouveauCoach);
+                statement.setString(5, offre.getNom()); // Utiliser l'ancien nom pour la clause WHERE
+                int rowsAffected = statement.executeUpdate();
 
-                // Rafraîchir la liste des offres pour refléter les modifications
-                refreshOffreList(Integer.parseInt(id));
+                // Vérifier si la mise à jour a réussi
+                if (rowsAffected > 0) {
+                    // Afficher un message de succès
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Modification réussie");
+                    alert.setHeaderText(null);
+                    alert.setContentText("L'offre a été modifiée avec succès.");
+                    alert.showAndWait();
 
-                // Fermer la fenêtre de modification de l'offre
-                modifierStage.close();
-            });
+                    // Rafraîchir les données dans le TableView
+                    tableView.getItems().clear();
+                    tableView.getItems().addAll(retrieveOffreItemsArray());
+                } else {
+                    // Afficher un message d'erreur si la mise à jour a échoué
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Erreur de modification");
+                    alert.setHeaderText(null);
+                    alert.setContentText("La modification de l'offre a échoué.");
+                    alert.showAndWait();
+                }
 
-            // Créer une disposition pour organiser les champs de saisie et le bouton
-            VBox vbox = new VBox();
-            vbox.getChildren().addAll(
-                    new Label("Specialité:"),
-                    specialiteField,
-                    new Label("Tarif:"),
-                    tarifField,
-                    new Label("Coach:"),
-                    coachField,
-                    saveButton
-            );
-            vbox.setSpacing(10);
-
-            // Créer une scène pour la fenêtre de modification de l'offre
-            Scene scene = new Scene(vbox, 300, 200);
-            modifierStage.setScene(scene);
-            modifierStage.show();
-        }
-        public static class OffreItem extends HBox {
-            private TextField idField;
-            private ChoiceBox<String> specialiteChoice;
-            private TextField tarifField;
-            private TextField coachField;
-
-            public OffreItem(String id, String specialite, String tarif, String coach, String etat)
-                              {
-                super();
-
-                Label label = new Label("ID  : " + id+ ", SpecialiteChoice : " + specialite +
-                         ", Tarif : "  +tarif +  ",coach  : "  + coach +   ", Etat : " + etat );
-
-
-                Button supprimerButton = new Button("Supprimer");
-                supprimerButton.setOnAction(event -> {
-                    com.example.bty.Controllers.graphiqueGCP.ConsultationOffre.OffreItem offreItem = (OffreItem) supprimerButton.getParent();
-                    String idToDelete = offreItem.getId();
-
-                    // Passer le nom du client à la méthode supprimerDemande
-                    supprimerDemande(idToDelete, String.valueOf(ConsultationOffre.id));
-                });
-
-                Button modifierButton = new Button("Modifier ");
-                modifierButton.setOnAction(event -> modifierOffre(id)); // Passer la demande à la méthode modifierJoursDemande
-
-                this.getChildren().addAll(label, supprimerButton, modifierButton);
-                this.setSpacing(10);
+                // Fermer la fenêtre de modification
+                modificationStage.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
+        });
 
-            public String getId_demande() {
-                return ((Label) this.getChildren().get(0)).getText().replace("ID  : ", "");
+        // Créer une mise en page pour la fenêtre de modification
+        VBox vbox = new VBox(10);
+        vbox.getChildren().addAll(
+                new Label("Nouveau nom :"), nomField,
+                new Label("Nouvelle spécialité :"), specialiteField,
+                new Label("Nouveau tarif :"), tarifField,
+                new Label("Nouveau coach :"), coachField,
+                modifierButton
+        );
+        vbox.setPadding(new Insets(10));
+
+        // Afficher la fenêtre de modification
+        Scene scene = new Scene(vbox);
+        modificationStage.setScene(scene);
+        modificationStage.show();
+    }
+
+    // Méthode pour supprimer une offre
+    private void supprimerOffre(OffreItem offre) {
+        try {
+            // Exécuter une requête SQL DELETE pour supprimer l'offre de la base de données
+            String query = "DELETE FROM Offre WHERE nom = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, offre.getNom());
+            int rowsAffected = statement.executeUpdate();
+
+            // Vérifier si la suppression a réussi
+            if (rowsAffected > 0) {
+                // Afficher un message de succès
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Suppression réussie");
+                alert.setHeaderText(null);
+                alert.setContentText("L'offre a été supprimée avec succès.");
+                alert.showAndWait();
+
+                // Rafraîchir les données dans le TableView
+                tableView.getItems().clear();
+                tableView.getItems().addAll(retrieveOffreItemsArray());
+            } else {
+                // Afficher un message d'erreur si la suppression a échoué
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Erreur de suppression");
+                alert.setHeaderText(null);
+                alert.setContentText("La suppression de l'offre a échoué.");
+                alert.showAndWait();
             }
-
-        }
-
-        public static void main(String[] args) {
-            launch(args);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
 
+    // Classe interne représentant un élément d'offre
+    public class OffreItem {
+        private String nom;
+        private String specialite;
+        private String tarif;
+        private String coach;
+        private String etat;
+
+        public OffreItem(String nom, String specialite, String tarif, String coach, String etat) {
+            this.nom = nom;
+            this.specialite = specialite;
+            this.tarif = tarif;
+            this.coach = coach;
+            this.etat = etat;
+        }
+
+        // Getters pour accéder aux champs de l'offre
+        public String getNom() {
+            return nom;
+        }
+
+        public String getSpecialite() {
+            return specialite;
+        }
+
+        public String getTarif() {
+            return tarif;
+        }
+
+        public String getCoach() {
+            return coach;
+        }
+
+        public String getEtat() {
+            return etat;
+        }
+    }
+}

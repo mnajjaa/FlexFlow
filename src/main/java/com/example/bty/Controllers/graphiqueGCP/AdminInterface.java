@@ -1,9 +1,16 @@
 package com.example.bty.Controllers.graphiqueGCP;
 
 import javafx.application.Application;
-import javafx.geometry.Insets;
+import javafx.beans.property.SimpleFloatProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -13,7 +20,7 @@ import java.sql.*;
 public class AdminInterface extends Application {
 
     private static Connection connection;
-    private static ListView<OffreItem> offresListView;
+    private static TableView<OffreItem> tableView;
 
     @Override
     public void start(Stage primaryStage) {
@@ -22,16 +29,15 @@ public class AdminInterface extends Application {
         // Connexion à la base de données
         connectToDatabase();
 
-        // Création de la liste des offres
-        offresListView = new ListView<>();
-        refreshOffresList();
+        // Création du TableView pour afficher les offres
+        tableView = new TableView<>();
+        setupTableView();
 
         VBox root = new VBox(10);
-        root.setPadding(new Insets(20));
-        root.getChildren().add(offresListView);
+        root.getChildren().add(tableView);
 
-        Scene scene = new Scene(root, 500, 400);
-        scene.getStylesheets().add(getClass().getResource("/Styles/StyleAR.css").toExternalForm());
+        Scene scene = new Scene(root, 700, 400);
+        scene.getStylesheets().add(getClass().getResource("/Styles/tableStyle.css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -50,23 +56,45 @@ public class AdminInterface extends Application {
         }
     }
 
+    private static void setupTableView() {
+        TableColumn<OffreItem, String> idColumn = new TableColumn<>("ID");
+        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+
+        TableColumn<OffreItem, String> specialiteColumn = new TableColumn<>("Spécialité");
+        specialiteColumn.setCellValueFactory(new PropertyValueFactory<>("specialite"));
+
+        TableColumn<OffreItem, Float> tarifHeureColumn = new TableColumn<>("Tarif par Heure");
+        tarifHeureColumn.setCellValueFactory(new PropertyValueFactory<>("tarifHeure"));
+
+        TableColumn<OffreItem, String> idCoachColumn = new TableColumn<>("ID Coach");
+        idCoachColumn.setCellValueFactory(new PropertyValueFactory<>("idCoach"));
+
+        TableColumn<OffreItem, String> etatOffreColumn = new TableColumn<>("État Offre");
+        etatOffreColumn.setCellValueFactory(new PropertyValueFactory<>("etatOffre"));
+
+        TableColumn<OffreItem, Void> actionColumn = new TableColumn<>("Action");
+        actionColumn.setCellFactory(param -> new ButtonCell());
+
+        tableView.getColumns().addAll(idColumn, specialiteColumn, tarifHeureColumn, idCoachColumn, etatOffreColumn, actionColumn);
+
+        refreshOffresList();
+    }
+
     private static void refreshOffresList() {
+        ObservableList<OffreItem> data = FXCollections.observableArrayList();
+
         try {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM offre");
             ResultSet resultSet = statement.executeQuery();
-            offresListView.getItems().clear();
 
             while (resultSet.next()) {
-                OffreItem offreItem = new OffreItem(
+                data.add(new OffreItem(
                         resultSet.getString("id"),
                         resultSet.getString("specialite"),
                         resultSet.getFloat("tarif_heure"),
                         resultSet.getString("id_coach"),
                         resultSet.getString("etatOffre")
-
-                );
-
-                offresListView.getItems().add(offreItem);
+                ));
             }
 
             resultSet.close();
@@ -75,36 +103,80 @@ public class AdminInterface extends Application {
             e.printStackTrace();
             // Gérer les erreurs de requête
         }
+
+        tableView.setItems(data);
     }
 
-    public static class OffreItem extends HBox {
-        public OffreItem(String id, String specialite, float tarif_heure, String id_coach, String etatOffre) {
-            super();
+    public static class OffreItem {
+        private final SimpleStringProperty id;
+        private final SimpleStringProperty specialite;
+        private final SimpleFloatProperty tarifHeure;
+        private final SimpleStringProperty idCoach;
+        private final SimpleStringProperty etatOffre;
 
-            Label label = new Label("ID offre : " + id + ", Spécialité : " + specialite +
-                    ", Tarif par heure : " + tarif_heure + ", ID coach : " + id_coach+", EtatOffre : " +etatOffre) ;
+        public OffreItem(String id, String specialite, float tarifHeure, String idCoach, String etatOffre) {
+            this.id = new SimpleStringProperty(id);
+            this.specialite = new SimpleStringProperty(specialite);
+            this.tarifHeure = new SimpleFloatProperty(tarifHeure);
+            this.idCoach = new SimpleStringProperty(idCoach);
+            this.etatOffre = new SimpleStringProperty(etatOffre);
+        }
 
-            Button accepterButton = new Button("Accepter");
-            Button refuserButton = new Button("Refuser");
+        public String getId() {
+            return id.get();
+        }
 
+        public String getSpecialite() {
+            return specialite.get();
+        }
 
-            accepterButton.setOnAction(e -> accepterOffre(id));
-            refuserButton.setOnAction(e -> refuserOffre(id));
+        public float getTarifHeure() {
+            return tarifHeure.get();
+        }
 
+        public String getIdCoach() {
+            return idCoach.get();
+        }
 
-            this.getChildren().addAll(label, accepterButton, refuserButton);
-            this.setSpacing(10);
+        public String getEtatOffre() {
+            return etatOffre.get();
+        }
+    }
+
+    private static class ButtonCell extends TableCell<OffreItem, Void> {
+        private final Button accepterButton = new Button("Accepter");
+        private final Button refuserButton = new Button("Refuser");
+
+        ButtonCell() {
+            accepterButton.setOnAction(e -> {
+                OffreItem offre = getTableView().getItems().get(getIndex());
+                accepterOffre(offre.getId());
+            });
+
+            refuserButton.setOnAction(e -> {
+                OffreItem offre = getTableView().getItems().get(getIndex());
+                refuserOffre(offre.getId());
+            });
+        }
+
+        @Override
+        protected void updateItem(Void item, boolean empty) {
+            super.updateItem(item, empty);
+            if (empty) {
+                setGraphic(null);
+            } else {
+                setGraphic(new HBox(10, accepterButton, refuserButton));
+            }
         }
     }
 
     private static void accepterOffre(String id) {
         try {
-            // Modifier l'état dans la base de données
             PreparedStatement statement = connection.prepareStatement("UPDATE Offre SET etatOffre = 'Acceptée' WHERE id = ?");
             statement.setString(1, id);
             statement.executeUpdate();
             statement.close();
-
+            refreshOffresList();
         } catch (SQLException e) {
             e.printStackTrace();
             // Gérer les erreurs de base de données
@@ -113,19 +185,16 @@ public class AdminInterface extends Application {
 
     private static void refuserOffre(String id) {
         try {
-            // Modifier l'état dans la base de données
-            PreparedStatement statement = connection.prepareStatement("UPDATE Offre SET etatOffre = 'Refusée' WHERE id= ?");
+            PreparedStatement statement = connection.prepareStatement("UPDATE Offre SET etatOffre = 'Refusée' WHERE id = ?");
             statement.setString(1, id);
             statement.executeUpdate();
             statement.close();
-
+            refreshOffresList();
         } catch (SQLException e) {
             e.printStackTrace();
             // Gérer les erreurs de base de données
         }
     }
-
-
 
     @Override
     public void stop() throws Exception {

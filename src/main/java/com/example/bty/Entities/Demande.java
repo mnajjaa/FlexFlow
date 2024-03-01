@@ -22,6 +22,9 @@ public class Demande {
     public Demande(String id, String age, String nbre_heure, String maladie_chronique, String but, String niveau_physique, String m, String f, String etat, Time lesjours, String horaire) {
     }
 
+    public Demande(Object nom, String idDemande, Object but, Object niveauPhysique, Object maladieChronique, Object age, Object idUser, Object idOffre, Object etat, Object nombreHeure, Object horaire, Object lesjours) {
+    }
+
     public Time getHoraire() {
         return horaire;
     }

@@ -27,6 +27,7 @@ public class FD extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+
         primaryStage.setTitle("Formulaire d'ajout d'une demande ");
 
         VBox cardContainer = new VBox();
@@ -34,14 +35,16 @@ public class FD extends Application {
         cardContainer.setPadding(new Insets(20));
         cardContainer.setSpacing(10);
 
-        Label cardTitle = new Label("Ajouter une demande ");
-        cardTitle.setStyle("-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #d8c6e5; -fx-font-family: 'Arial', sans-serif;");
+
+
 
         GridPane grid = new GridPane();
         grid.setVgap(15);
         grid.setHgap(15);
-        grid.setStyle("-fx-background-color: #d5bce7; -fx-padding: 25; -fx-border-radius: 10; -fx-background-radius: 10; -fx-alignment: center;");
+        grid.setStyle("-fx-background-color: rgba(241,211,166,0.82); -fx-padding: 25; -fx-border-radius: 10; -fx-background-radius: 10; -fx-alignment: center;");
 
+        Label formTitle = new Label("Formulaire d'ajout d'une demande");
+        formTitle.getStyleClass().add("form-title");
 
         Label nomLabel = new Label("Nom:");
         GridPane.setConstraints(nomLabel, 0, 0);
@@ -106,7 +109,13 @@ public class FD extends Application {
 
         Button consulterButton = new Button("Consulter liste de demande");
         GridPane.setConstraints(consulterButton, 2, 11);
-        consulterButton.setOnAction(event -> consulterDemandes());
+        consulterButton.setOnAction(event -> {
+            try {
+                consulterDemandes();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
         grid.getChildren().add(consulterButton);
 
 
@@ -178,6 +187,7 @@ public class FD extends Application {
         }
         return true;
     }
+
 
     private void setupTimeValidation(TextField timeField) {
         timeField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -274,22 +284,11 @@ public class FD extends Application {
 //    }
 
     // Méthode pour gérer l'événement du bouton "Consulter"
-    private void consulterDemandes() {
-        // Ouvrir une fenêtre modale pour demander le nom du client
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("Nom du client");
-        dialog.setHeaderText("Entrez votre nom");
-        dialog.setContentText("Nom :");
-
-        Optional<String> result = dialog.showAndWait();
-
-        result.ifPresent(nom -> {
-            // Ouvrir la fenêtre de consultation des demandes avec le nom du client
-            ConsultationDemandes consultationDemandes = new ConsultationDemandes(nom);
-            consultationDemandes.start(new Stage());
-        });
+    private void consulterDemandes() throws SQLException {
+        // Ouvrir la fenêtre de consultation des demandes sans demander le nom du client
+        ConsultationDemandes consultationDemandes = new ConsultationDemandes();
+        consultationDemandes.start(new Stage());
     }
-
     private String getSpecialiteFromOffreId(int idOffre) {
         String url = "jdbc:mysql://localhost:3306/pidevgym";
         String username = "root";

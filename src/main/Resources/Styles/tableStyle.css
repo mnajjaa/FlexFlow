@@ -7,14 +7,22 @@
     -fx-min-height: 300;
     -fx-background-size: cover;
 }
-/* Styles pour le titre du formulaire */
-.form-title {
-    -fx-font-size: 24px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #023315;
-    -fx-font-family: 'Arial', sans-serif;
+/* Style du fond du tableau */
+.grid-container {
+    -fx-background-color: #7aa95c; /* Couleur de fond du tableau */
+    -fx-padding: 25; /* Espacement interne du tableau */
+    -fx-border-radius: 10; /* Rayon des coins du tableau */
+    -fx-background-radius: 10; /* Rayon des coins du fond du tableau */
+    -fx-alignment: center; /* Alignement du contenu au centre */
 }
 
+.card-title {
+    -fx-font-size: 24px;
+    -fx-text-fill: #3498db;
+    -fx-padding: 0 0 10 0;
+    -fx-font-family: 'Arial', sans-serif;
+    -fx-font-weight: bold;
+}
 
 .fancy-label {
     -fx-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -56,9 +64,9 @@
 }
 
 .upload-button {
-    -fx-font-size: 18px;
+    -fx-font-size: 40px;
     -fx-padding: 10 16;
-    -fx-min-width: 60;
+    -fx-min-width: 150;
     -fx-background-radius: 10;
     -fx-text-fill: #a62609;
 }
@@ -89,8 +97,8 @@
 
 /* Style des étiquettes */
 .label {
-    -fx-font-size: 14px; /* Taille de police des étiquettes */
-    -fx-text-fill: rgb(16, 5, 119); /* Couleur du texte des étiquettes */
+    -fx-font-size: 10px; /* Taille de police des étiquettes */
+    -fx-text-fill: rgb(1, 30, 11); /* Couleur du texte des étiquettes */
     -fx-font-weight: bold; /* Mettre la police en gras */
 }
 
@@ -105,8 +113,8 @@
     -fx-background-color: #055425; /* Couleur de fond du bouton */
     -fx-text-fill: white; /* Couleur du texte du bouton */
     -fx-font-size: 10px; /* Taille de police du bouton */
-    -fx-pref-width: 150px; /* Largeur préférée du bouton */
-    -fx-pref-height: 40px; /* Hauteur préférée du bouton */
+    -fx-pref-width: 100px; /* Largeur préférée du bouton */
+    -fx-pref-height: 10px; /* Hauteur préférée du bouton */
     -fx-background-radius: 15px; /* Rayon des coins du bouton */
 }
 

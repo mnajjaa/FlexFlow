@@ -1,47 +1,49 @@
 package com.example.bty.Controllers.graphiqueGCP;
 
 import javafx.application.Application;
+import javafx.beans.property.SimpleFloatProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 import java.sql.*;
 
-public class AccepterRefuserDemandes extends Application {
+public class ARD extends Application {
 
     private static Connection connection;
-    private static ListView<DemandeItem> demandesListView;
+    private static TableView<DemandeItem> demandesTableView;
 
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Accepter ou Refuser Demandes");
 
-
         // Connexion à la base de données
         connectToDatabase();
 
-        // Création de la liste des demandes
-        demandesListView = new ListView<>();
-        refreshDemandesList();
+        // Création du TableView pour afficher les demandes
+        demandesTableView = new TableView<>();
+        setupTableView();
 
         VBox root = new VBox(10);
         root.setPadding(new Insets(20));
-        root.getChildren().add(demandesListView);
+        root.getChildren().add(demandesTableView);
 
-        Scene scene = new Scene(root, 500, 400);
-        scene.getStylesheets().add(getClass().getResource("/Styles/StyleAR.css").toExternalForm());
+        Scene scene = new Scene(root, 800, 600);
+        scene.getStylesheets().add(getClass().getResource("/Styles/tableStyle.css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
     private void connectToDatabase() {
         try {
-            // Charger le pilote JDBC MySQL
             Class.forName("com.mysql.cj.jdbc.Driver");
-
-            // Établir la connexion à la base de données MySQL
             String url = "jdbc:mysql://localhost:3306/pidevgym";
             String utilisateur = "root";
             String motDePasse = "";
@@ -53,18 +55,55 @@ public class AccepterRefuserDemandes extends Application {
         }
     }
 
+    private static void setupTableView() {
+        TableColumn<DemandeItem, String> idColumn = new TableColumn<>("ID Demande");
+        idColumn.setCellValueFactory(new PropertyValueFactory<>("id_demande"));
+
+        TableColumn<DemandeItem, String> butColumn = new TableColumn<>("But");
+        butColumn.setCellValueFactory(new PropertyValueFactory<>("but"));
+
+        TableColumn<DemandeItem, String> niveauPhysiqueColumn = new TableColumn<>("Niveau Physique");
+        niveauPhysiqueColumn.setCellValueFactory(new PropertyValueFactory<>("niveauPhysique"));
+
+        TableColumn<DemandeItem, String> maladieChroniqueColumn = new TableColumn<>("Maladie Chronique");
+        maladieChroniqueColumn.setCellValueFactory(new PropertyValueFactory<>("maladieChronique"));
+
+        TableColumn<DemandeItem, String> ageColumn = new TableColumn<>("Age");
+        ageColumn.setCellValueFactory(new PropertyValueFactory<>("age"));
+
+        TableColumn<DemandeItem, String> idUserColumn = new TableColumn<>("ID Utilisateur");
+        idUserColumn.setCellValueFactory(new PropertyValueFactory<>("id_user"));
+
+        TableColumn<DemandeItem, String> idOffreColumn = new TableColumn<>("ID Offre");
+        idOffreColumn.setCellValueFactory(new PropertyValueFactory<>("id_offre"));
+
+        TableColumn<DemandeItem, String> etatColumn = new TableColumn<>("État");
+        etatColumn.setCellValueFactory(new PropertyValueFactory<>("etat"));
+
+        TableColumn<DemandeItem, Time> horaireColumn = new TableColumn<>("Horaire");
+        horaireColumn.setCellValueFactory(new PropertyValueFactory<>("horaire"));
+
+        TableColumn<DemandeItem, String> lesjoursColumn = new TableColumn<>("Les Jours");
+        lesjoursColumn.setCellValueFactory(new PropertyValueFactory<>("lesjours"));
+
+        TableColumn<DemandeItem, Void> actionColumn = new TableColumn<>("Action");
+        actionColumn.setCellFactory(param -> new ButtonCell());
+
+        demandesTableView.getColumns().addAll(idColumn, butColumn, niveauPhysiqueColumn, maladieChroniqueColumn,
+                ageColumn, idUserColumn, idOffreColumn, etatColumn, horaireColumn, lesjoursColumn, actionColumn);
+
+        refreshDemandesList();
+    }
+
     private static void refreshDemandesList() {
+        ObservableList<DemandeItem> data = FXCollections.observableArrayList();
+
         try {
-            // Exécuter une requête pour récupérer les demandes depuis la base de données
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM demande");
             ResultSet resultSet = statement.executeQuery();
 
-            // Effacer la liste des demandes précédentes
-            demandesListView.getItems().clear();
-
-            // Ajouter les demandes à la liste
             while (resultSet.next()) {
-                DemandeItem demandeItem = new DemandeItem(
+                data.add(new DemandeItem(
                         resultSet.getString("id_demande"),
                         resultSet.getString("but"),
                         resultSet.getString("NiveauPhysique"),
@@ -73,48 +112,123 @@ public class AccepterRefuserDemandes extends Application {
                         resultSet.getString("id_user"),
                         resultSet.getString("id_offre"),
                         resultSet.getString("etat"),
-                        resultSet.getTime("horaire"), // Récupérer l'horaire depuis la base de données
-                        resultSet.getString("lesjours") // Récupérer les jours depuis la base de données
-                );
-
-                demandesListView.getItems().add(demandeItem);
+                        resultSet.getTime("horaire"),
+                        resultSet.getString("lesjours")
+                ));
             }
 
-            // Fermer les ressources
             resultSet.close();
             statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
             // Gérer les erreurs de requête
         }
+
+        demandesTableView.setItems(data);
     }
 
-    public static class DemandeItem extends HBox {
-        public DemandeItem(String id_demande, String but, String NiveauPhysique, String MaladieChronique,
+    public static class DemandeItem {
+        private final SimpleStringProperty id_demande;
+        private final SimpleStringProperty but;
+        private final SimpleStringProperty niveauPhysique;
+        private final SimpleStringProperty maladieChronique;
+        private final SimpleStringProperty age;
+        private final SimpleStringProperty id_user;
+        private final SimpleStringProperty id_offre;
+        private final SimpleStringProperty etat;
+        private final SimpleObjectProperty<Time> horaire;
+        private final SimpleStringProperty lesjours;
+
+        public DemandeItem(String id_demande, String but, String niveauPhysique, String maladieChronique,
                            String age, String id_user, String id_offre, String etat, Time horaire, String lesjours) {
-            super();
+            this.id_demande = new SimpleStringProperty(id_demande);
+            this.but = new SimpleStringProperty(but);
+            this.niveauPhysique = new SimpleStringProperty(niveauPhysique);
+            this.maladieChronique = new SimpleStringProperty(maladieChronique);
+            this.age = new SimpleStringProperty(age);
+            this.id_user = new SimpleStringProperty(id_user);
+            this.id_offre = new SimpleStringProperty(id_offre);
+            this.etat = new SimpleStringProperty(etat);
+            this.horaire = new SimpleObjectProperty<>(horaire);
+            this.lesjours = new SimpleStringProperty(lesjours);
+        }
 
-            Label label = new Label("ID demande : " + id_demande + ", But : " + but + ", Niveau physique : " +
-                    NiveauPhysique + ", Maladie chronique : " + MaladieChronique + ", Age : " + age +
-                    ", ID utilisateur : " + id_user + ", ID offre : " + id_offre + ", État : " + etat+ ",Horaire :"  +horaire +",Lesjours :" +lesjours );
+        public String getId_demande() {
+            return id_demande.get();
+        }
 
-            Button accepterButton = new Button("Accepter");
-            Button refuserButton = new Button("Refuser");
-            Button modifierJoursButton = new Button("Modifier les jours");
+        public String getBut() {
+            return but.get();
+        }
 
-            // Gestion des événements pour les boutons
-            accepterButton.setOnAction(e -> accepterDemande(id_demande));
-            refuserButton.setOnAction(e -> refuserDemande(id_demande));
-            modifierJoursButton.setOnAction(e -> afficherInterfaceModifierJours(id_demande));
+        public String getNiveauPhysique() {
+            return niveauPhysique.get();
+        }
 
-            this.getChildren().addAll(label, accepterButton, refuserButton, modifierJoursButton);
-            this.setSpacing(10);
+        public String getMaladieChronique() {
+            return maladieChronique.get();
+        }
+
+        public String getAge() {
+            return age.get();
+        }
+
+        public String getId_user() {
+            return id_user.get();
+        }
+
+        public String getId_offre() {
+            return id_offre.get();
+        }
+
+        public String getEtat() {
+            return etat.get();
+        }
+
+        public Time getHoraire() {
+            return horaire.get();
+        }
+
+        public String getLesjours() {
+            return lesjours.get();
+        }
+    }
+
+    private static class ButtonCell extends TableCell<DemandeItem, Void> {
+        private final Button accepterButton = new Button("Accepter");
+        private final Button refuserButton = new Button("Refuser");
+        private final Button modifierJoursButton = new Button("Modifier les jours");
+
+        ButtonCell() {
+            accepterButton.setOnAction(e -> {
+                DemandeItem demande = getTableView().getItems().get(getIndex());
+                accepterDemande(demande.getId_demande());
+            });
+
+            refuserButton.setOnAction(e -> {
+                DemandeItem demande = getTableView().getItems().get(getIndex());
+                refuserDemande(demande.getId_demande());
+            });
+
+            modifierJoursButton.setOnAction(e -> {
+                DemandeItem demande = getTableView().getItems().get(getIndex());
+                afficherInterfaceModifierJours(demande.getId_demande());
+            });
+        }
+
+        @Override
+        protected void updateItem(Void item, boolean empty) {
+            super.updateItem(item, empty);
+            if (empty) {
+                setGraphic(null);
+            } else {
+                setGraphic(new HBox(10, accepterButton, refuserButton, modifierJoursButton));
+            }
         }
     }
 
     private static void accepterDemande(String id_demande) {
         try {
-            // Modifier l'état dans la base de données
             PreparedStatement statement = connection.prepareStatement("UPDATE demande SET etat = 'Acceptée' WHERE id_demande = ?");
             statement.setString(1, id_demande);
             statement.executeUpdate();
@@ -133,7 +247,6 @@ public class AccepterRefuserDemandes extends Application {
 
     private static void refuserDemande(String id_demande) {
         try {
-            // Modifier l'état dans la base de données
             PreparedStatement statement = connection.prepareStatement("UPDATE demande SET etat = 'Refusée' WHERE id_demande = ?");
             statement.setString(1, id_demande);
             statement.executeUpdate();
@@ -160,7 +273,6 @@ public class AccepterRefuserDemandes extends Application {
         Button ajouterButton = new Button("Ajouter");
         ajouterButton.setOnAction(e -> {
             try {
-                // Ajouter l'horaire dans la base de données
                 PreparedStatement statement = connection.prepareStatement("UPDATE demande SET horaire = ? WHERE id_demande = ?");
                 statement.setString(1, horaireField.getText());
                 statement.setString(2, id_demande);
@@ -194,7 +306,6 @@ public class AccepterRefuserDemandes extends Application {
         Button modifierButton = new Button("Modifier");
         modifierButton.setOnAction(e -> {
             try {
-                // Mettre à jour les jours dans la base de données
                 PreparedStatement statement = connection.prepareStatement("UPDATE demande SET lesjours = ? WHERE id_demande = ?");
                 statement.setString(1, joursField.getText());
                 statement.setString(2, id_demande);
