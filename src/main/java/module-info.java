@@ -7,7 +7,7 @@ module com.example.bty {
     requires java.sql;
     requires jbcrypt;
     requires javafx.web;
-
+    requires java.mail;
     opens com.example.bty to javafx.fxml;
     exports com.example.bty;
     exports com.example.bty.Controllers;

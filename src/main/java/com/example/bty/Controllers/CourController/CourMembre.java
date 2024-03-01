@@ -2,14 +2,10 @@ package com.example.bty.Controllers.CourController;
 
 import com.example.bty.Entities.Role;
 import com.example.bty.Entities.User;
-import com.example.bty.Services.IServiceUser;
-import com.example.bty.Services.ServiceUser;
 import com.example.bty.Utils.ConnexionDB;
 import com.example.bty.Utils.Session;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.application.Application;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -22,20 +18,20 @@ import javafx.scene.layout.*;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-//import com.example.pidevgraphique.Cours;
+import com.example.bty.Entities.Cours;
+
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import java.io.ByteArrayInputStream;
+import java.io.UnsupportedEncodingException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import com.example.bty.Entities.Cours;
+import java.util.Properties;
 
-import static com.example.bty.Services.ServiceCours.filtrerCours;
+
 public class CourMembre extends Application {
 
     private static Connection connection;
@@ -473,6 +469,70 @@ public class CourMembre extends Application {
         return utilisateurConnecte;
     }*/
 
+
+
+    private void sendConfirmationEmail(User loggedInUser, Cours cours) {
+        // Récupérer l'adresse e-mail de l'utilisateur connecté
+        String userEmail = loggedInUser.getEmail();
+
+        // Adresse e-mail Gmail et mot de passe Gmail
+        final String username = "bahaeddinedridi1@gmail.com";
+        final String password = "inxx lwuu tsis yane"; // Remplacez par votre mot de passe Gmail
+
+        // Configuration des propriétés pour l'envoi d'e-mails via SMTP
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+
+        // Création de la session de messagerie en utilisant javax.mail.Session
+        javax.mail.Session session = javax.mail.Session.getInstance(props,
+                new javax.mail.Authenticator() {
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(username, password);
+                    }
+                });
+
+        try {
+            // Création d'un message MIME
+            Message message = new MimeMessage(session);
+            // Définition de l'expéditeur avec un nom personnalisé
+            message.setFrom(new InternetAddress(username, "Flex Flow"));
+            // Définition du destinataire
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(userEmail));
+            // Définition du sujet du message
+            message.setSubject("Confirmation d'inscription au cours");
+            // Définition du contenu du message
+            String emailContent = "Bonjour " + loggedInUser.getName() + ",\n\n" +
+                    "Vous êtes inscrit au cours : " + cours.getNom() + ".\n\n" +
+                    "Détails du cours :\n" +
+                    "- Intensité : " + cours.getIntensite() + "\n" +
+                    "- Durée : " + cours.getDuree() + "\n" + "minutes" +
+                    "- Catégorie : " + cours.getCategorie() + "\n\n" +
+                    "Recommandations :\n" +
+                    "- Pensez à ramener une serviette et une bouteille d’eau.\n" +".\n\n"+
+                    "Tenue recommandée :\n" +
+                    "- Vêtements confortables\n\n" +
+                    "Cordialement,\nFlex Flow";
+
+            message.setText(emailContent);
+
+            // Envoi du message
+            Transport.send(message);
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Succès");
+            alert.setHeaderText(null);
+            alert.setContentText("Un e-mail avec les détails du cours vous a été envoyé ❤ ");
+            alert.showAndWait();
+
+        } catch (MessagingException | UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
     private void participerAuCours(Cours cours, Button participerButton) {
         // Récupérer l'utilisateur connecté à partir de la session
         User loggedInUser = Session.getInstance().getLoggedInUser();
@@ -497,6 +557,7 @@ public class CourMembre extends Application {
                     if (response == buttonTypeOui) {
                         // L'utilisateur a cliqué sur "Oui", procéder à la participation
                         participerAuCoursEffectif(cours, participerButton,  loggedInUser);
+
                     }
                 });
             } else {
@@ -513,44 +574,74 @@ public class CourMembre extends Application {
         String userName = loggedInUser.getName();
 
         try {
-            if (cours.getCapacite() > 0) {
-                // Insérer l'ID du membre et l'ID du cours dans la table de participation
-                String queryInsert = "INSERT INTO participation (id_user, nomCour, nomParticipant) VALUES (?,?,?)";
-                PreparedStatement statementInsert = connection.prepareStatement(queryInsert);
-                statementInsert.setInt(1, userID);
-                statementInsert.setString(2, cours.getNom());
-                statementInsert.setString(3, userName); // Envoyer le nom du participant à la base de données
+            // Vérifier si l'utilisateur a déjà participé au cours
+            if (aDejaParticipe(userID, cours.getNom())) {
+                // Afficher une alerte pour informer l'utilisateur
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Avertissement");
+                alert.setHeaderText(null);
+                alert.setContentText("Vous avez déjà participé à ce cours !");
+                alert.showAndWait();
+            } else {
+                // L'utilisateur n'a pas encore participé, procéder à l'inscription
+                if (cours.getCapacite() > 0) {
+                    // Insérer l'ID du membre et l'ID du cours dans la table de participation
+                    String queryInsert = "INSERT INTO participation (id_user, nomCour, nomParticipant) VALUES (?,?,?)";
+                    PreparedStatement statementInsert = connection.prepareStatement(queryInsert);
+                    statementInsert.setInt(1, userID);
+                    statementInsert.setString(2, cours.getNom());
+                    statementInsert.setString(3, userName); // Envoyer le nom du participant à la base de données
 
-                int rowsInserted = statementInsert.executeUpdate();
+                    int rowsInserted = statementInsert.executeUpdate();
 
-                if (rowsInserted > 0) {
-                    // Participation réussie
-                    System.out.println("Vous avez participé au cours avec succès !");
+                    if (rowsInserted > 0) {
 
-                    // Diminuer la capacité du cours dans la base de données
-                    cours.setCapacite(cours.getCapacite() - 1);
-                    String queryUpdate = "UPDATE cours SET capacite = ? WHERE id_cour = ?";
-                    PreparedStatement statementUpdate = connection.prepareStatement(queryUpdate);
-                    statementUpdate.setInt(1, cours.getCapacite());
-                    statementUpdate.setInt(2, cours.getId());
-                    statementUpdate.executeUpdate();
 
-                    // Vérifier si la capacité est épuisée
-                    if (cours.getCapacite() == 0) {
-                        participerButton.setDisable(true);
-                        participerButton.setText("Complet");
+                        // Participation réussie
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Succès");
+                        alert.setHeaderText(null);
+                        alert.setContentText("Vous avez participé au cours avec succès !");
+                        alert.showAndWait();
+
+                        sendConfirmationEmail( loggedInUser,cours);
+                        // Diminuer la capacité du cours dans la base de données
+                        cours.setCapacite(cours.getCapacite() - 1);
+                        String queryUpdate = "UPDATE cours SET capacite = ? WHERE id_cour = ?";
+                        PreparedStatement statementUpdate = connection.prepareStatement(queryUpdate);
+                        statementUpdate.setInt(1, cours.getCapacite());
+                        statementUpdate.setInt(2, cours.getId());
+                        statementUpdate.executeUpdate();
+
+                        // Vérifier si la capacité est épuisée
+                        if (cours.getCapacite() == 0) {
+                            participerButton.setDisable(true);
+                            participerButton.setText("Complet");
+                        }
+                    } else {
+                        System.out.println("Erreur lors de la participation au cours.");
                     }
                 } else {
-                    System.out.println("Erreur lors de la participation au cours.");
+                    System.out.println("La capacité de ce cours est épuisée. Vous ne pouvez plus participer.");
                 }
-            } else {
-                System.out.println("La capacité de ce cours est épuisée. Vous ne pouvez plus participer.");
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
+    private boolean aDejaParticipe(int userID, String coursID) throws SQLException {
+        String query = "SELECT COUNT(*) FROM participation WHERE id_user = ? AND nomCour = ?";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setInt(1, userID);
+        statement.setString(2, coursID);
+        ResultSet resultSet = statement.executeQuery();
+        if (resultSet.next()) {
+            int count = resultSet.getInt(1);
+            return count > 0;
+        }
+        return false;
+    }
 
     private void afficherCoursDansGridPane() {
         GridPane gridPane = new GridPane();
