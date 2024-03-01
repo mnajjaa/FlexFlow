@@ -8,6 +8,8 @@ module com.example.bty {
     requires jbcrypt;
     opens com.example.bty.Entities to javafx.base;
     requires javafx.web;
+    requires com.google.zxing;
+    requires com.google.zxing.javase;
 
     opens com.example.bty to javafx.fxml;
     exports com.example.bty;

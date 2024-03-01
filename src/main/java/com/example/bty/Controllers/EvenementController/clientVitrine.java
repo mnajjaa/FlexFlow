@@ -1,4 +1,5 @@
 package com.example.bty.Controllers.EvenementController;
+import static com.example.bty.Controllers.EvenementController.DetailsEvenementWindow.createDetailsCard;
 
 import com.example.bty.Entities.Evenement;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
@@ -11,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -29,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 public class clientVitrine extends Application {
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/pidevgym";
     private static final String USERNAME = "root";
@@ -37,6 +40,7 @@ public class clientVitrine extends Application {
     private Map<Evenement, VBox> detailsMap = new HashMap<>();
 
     private Map<Integer, Boolean> popupOpenMap = new HashMap<>(); // Track open popups for each event
+
 
 
     @Override
@@ -302,6 +306,9 @@ public class clientVitrine extends Application {
     private VBox createEventCard(Evenement evenement) {
 //        VBox carte = new VBox(10);
 //        carte.setPadding(new Insets(10));
+        DetailsEvenementWindow detailsWindow = new DetailsEvenementWindow(); // Créer une instance de DetailsEvenementWindow
+      //  VBox detailsCard = detailsWindow.createDetailsCard(evenement);
+
         VBox card = new VBox();
         card.getStyleClass().add("product-card");
         card.setAlignment(Pos.TOP_CENTER);
@@ -331,7 +338,7 @@ public class clientVitrine extends Application {
 
         SeeButton.setOnAction(e -> {
             // Retrieve or create the details card for the specific event
-            VBox detailsCard = detailsMap.computeIfAbsent(evenement, k -> DetailsEvenementWindow.createDetailsCard(k));
+            VBox detailsCard = detailsMap.computeIfAbsent(evenement, k -> createDetailsCard(k));
 
             // Create a new Popup
             Popup popup = new Popup();
@@ -361,6 +368,8 @@ public class clientVitrine extends Application {
         // Ajouter les éléments à la carte
         card.getChildren().addAll(imageView, nomLabel, SeeButton);
 
+
+
         return card;
     }
 
@@ -369,7 +378,7 @@ public class clientVitrine extends Application {
     private void SeeMoreEvenement(Evenement evenement) {
         // Implémentez le code pour afficher plus de détails sur l'événement
         // Vous pouvez utiliser une nouvelle fenêtre ou un panneau pour afficher les détails
-      DetailsEvenementWindow.createDetailsCard(evenement);
+      createDetailsCard(evenement);
 
     }
 

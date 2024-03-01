@@ -9,6 +9,7 @@ public class Reservation {
     Evenement evenement;
     User membre;
 
+
     public Reservation() {
     }
 
@@ -61,6 +62,10 @@ public class Reservation {
 
     public void setMembre(User membre) {
         this.membre = membre;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     @Override
