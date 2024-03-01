@@ -163,6 +163,14 @@ public class DashboardController implements Initializable {
     @FXML
     public TextField profil_telephone;
     public TextField new_password;
+    public AnchorPane membres_list;
+    public TableView membres_tableView;
+    public TableColumn membres_col_ID;
+    public TableColumn membres_col_nom;
+    public TableColumn membres_col_email;
+    public TableColumn membres_col_telephone;
+    public TableColumn membres_col_action;
+    public TableColumn membres_col_etat;
     Session session = Session.getInstance();
     User u=session.getLoggedInUser();
     User user ;
@@ -181,11 +189,81 @@ public class DashboardController implements Initializable {
         members_tableView.getItems().clear();
 
         // Define how to populate the columns
-        members_col_customerID.setCellValueFactory(new PropertyValueFactory<>("id"));
-        members_col_name.setCellValueFactory(new PropertyValueFactory<>("name"));
-        members_col_phoneNum.setCellValueFactory(new PropertyValueFactory<>("telephone"));
-        members_col_status.setCellValueFactory(new PropertyValueFactory<>("etat"));
-        members_col_email.setCellValueFactory(new PropertyValueFactory<>("email"));
+        membres_col_ID.setCellValueFactory(new PropertyValueFactory<>("id"));
+        membres_col_nom.setCellValueFactory(new PropertyValueFactory<>("name"));
+        membres_col_email.setCellValueFactory(new PropertyValueFactory<>("email"));
+        membres_col_telephone.setCellValueFactory(new PropertyValueFactory<>("telephone"));
+        membres_col_etat.setCellFactory(tc -> new TableCell<User, Boolean>() {
+            private CheckBox checkBox = new CheckBox();
+            private Label label = new Label();
+
+            @Override
+            protected void updateItem(Boolean item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    checkBox.setSelected(item);
+                    checkBox.setOnAction(e -> {
+                        User member = getTableView().getItems().get(getIndex());
+                        member.setEtat(checkBox.isSelected());
+                        serviceUser00.update(member); // Assuming update() method updates the member in the database
+                        label.setText(checkBox.isSelected() ? "Actif" : "Inactif");
+                        label.getStyleClass().clear();
+                        label.getStyleClass().add(checkBox.isSelected() ? "label-active" : "label-inactive");
+                    });
+                    label.setText(item ? "Actif" : "Inactif");
+                    label.getStyleClass().add(item ? "label-active" : "label-inactive");
+                    HBox hBox = new HBox(checkBox, label);
+                    hBox.setSpacing(10);
+                    setGraphic(hBox);
+                }
+            }
+        });
+
+        membres_col_etat.setCellValueFactory(new PropertyValueFactory<>("etat"));
+        membres_col_action.setCellFactory(param -> new TableCell<User, Void>() {
+            //**********
+                final FontAwesomeIconView deleteIcon = new FontAwesomeIconView(FontAwesomeIcon.TRASH);
+                final HBox pane = new HBox(deleteIcon);
+
+                {
+                    deleteIcon.getStyleClass().add("delete-icon");
+
+                    deleteIcon.setOnMouseClicked(event -> {
+                        User selectedMember = (User) members_tableView.getSelectionModel().getSelectedItem();
+                        // Create a confirmation dialog
+                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                        alert.setTitle("Confirmation Dialog");
+                        alert.setHeaderText("Delete Coach");
+                        alert.setContentText("Are you sure you want to delete this coach?");
+
+                        // Show the dialog and wait for user's response
+                        alert.showAndWait().ifPresent(response -> {
+                            if (response == ButtonType.OK) {
+                                // If user confirmed, delete the coach
+                                serviceUser00.delete(selectedMember.getId());
+
+                                // Refresh the table
+                                consulterMembers();
+                            }
+                        });
+                    });
+                }
+                @Override
+                protected void updateItem(Void item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        setGraphic(null);
+                    } else {
+                        setGraphic(pane);
+                    }
+                }
+
+            //**********
+
+        });
+
 
         // Add fetched members to the table
         members_tableView.getItems().addAll(members);
@@ -235,6 +313,8 @@ public class DashboardController implements Initializable {
             }
         });
         coaches_col_etat.setCellValueFactory(new PropertyValueFactory<>("etat"));
+
+ //*************************************************************************************
         coaches_col_action.setCellFactory(param -> new TableCell<User, Void>() {
             final FontAwesomeIconView updateIcon = new FontAwesomeIconView(FontAwesomeIcon.PENCIL_SQUARE);
             final FontAwesomeIconView deleteIcon = new FontAwesomeIconView(FontAwesomeIcon.TRASH);
@@ -258,7 +338,6 @@ public class DashboardController implements Initializable {
                         coaches_form.setManaged(true);
 
                         // Populate the form fields with the selected coach's details
-
 
                         coaches_name.setText(selectedCoach.getName());
                         coaches_email.setText(selectedCoach.getEmail());
@@ -295,8 +374,6 @@ public class DashboardController implements Initializable {
                     });
                 });
             }
-
-
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
@@ -315,19 +392,16 @@ public class DashboardController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-
         this.user = session.getLoggedInUser();
         System.out.println("Image"+user.getImage());
 
-        profil_name.setText(user.getName());
-        profil_email.setText(user.getEmail());
-        profil_telephone.setText(user.getTelephone());
+        profil_name.setText(session.getLoggedInUser().getName());
+        profil_email.setText(session.getLoggedInUser().getEmail());
+        profil_telephone.setText(session.getLoggedInUser().getTelephone());
         if(user.getImage()!=null){
             Image img = new Image("file:"+user.getImage());
             profile_img.setImage(img);
         }
-
-
 
 
         if(user.getRole().equals(Role.ADMIN)){
@@ -338,7 +412,7 @@ public class DashboardController implements Initializable {
             dashboard_membre.setVisible(false);
             dashboard_membre.setManaged(false);
             usernameAdmin.setText(u.getName());
-            consulterCoaches();
+          //  consulterCoaches();
         }
         else if(user.getRole().equals(Role.COACH)){
             dashboard_coach.setVisible(true);
@@ -357,7 +431,7 @@ public class DashboardController implements Initializable {
             System.out.println("user not found");
         }
 
-    // consulterMembers();
+     consulterMembers();
     }
 
     public void switchForm(ActionEvent actionEvent) {
@@ -411,8 +485,8 @@ public class DashboardController implements Initializable {
 
     User coach=new User(id,coaches_name.getText(),coaches_email.getText(),coaches_telephone.getText(),Role.COACH,true,null);
     serviceUser00.update(coach);
-       // coaches_list.setVisible(true);
-        ///coaches_list.setManaged(true);
+        coaches_list.setVisible(true);
+        coaches_list.setManaged(true);
 
         coaches_form.setVisible(false);
         coaches_form.setManaged(false);
@@ -435,6 +509,7 @@ public class DashboardController implements Initializable {
     }
 
     public void goToMembre(ActionEvent actionEvent) {
+        consulterMembers();
     }
 
     public void goToEvents(ActionEvent actionEvent) {
@@ -482,6 +557,8 @@ public class DashboardController implements Initializable {
         user_profil.setVisible(true);
         coaches_list.setManaged(false);
         coaches_list.setVisible(false);
+        coaches_form.setManaged(false);
+        coaches_form.setVisible(false);
 
 
     }
@@ -507,6 +584,9 @@ public class DashboardController implements Initializable {
         user_profil.setVisible(true);
         coaches_list.setManaged(false);
         coaches_list.setVisible(false);
+        coaches_form.setManaged(false);
+        coaches_form.setVisible(false);
+
     }
 
     public void updatePassword(ActionEvent event) {
@@ -519,6 +599,13 @@ public class DashboardController implements Initializable {
        }
        else{
            serviceUser00.updatePassword(new_password.getText(),Session.getInstance().getLoggedInUser().getId());
+           Alert alert = new Alert(Alert.AlertType.INFORMATION);
+              alert.setTitle("Password");
+                alert.setHeaderText(null);
+                alert.setContentText("Password updated");
+                alert.showAndWait();
+                new_password.clear();
+                confirm_password.clear();
        }
     }
 

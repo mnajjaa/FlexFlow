@@ -172,3 +172,14 @@ and open the template in the editor.
 .delete-icon {
     -fx-fill: red; /* Change the color of the delete icon to red */
 }
+
+.label-active {
+    -fx-text-fill: green;
+    -fx-font-size: 14px;
+
+}
+
+.label-inactive {
+    -fx-text-fill: red;
+    -fx-font-size: 14px;
+}
