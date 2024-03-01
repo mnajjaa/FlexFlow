@@ -17,9 +17,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import com.example.bty.Entities.Cours;
-
+import com.example.bty.Entities.Rating;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
@@ -51,32 +52,6 @@ public class CourMembre extends Application {
 
     @Override
     public void start(Stage primaryStage)  {
-     /*   Scanner scanner = new Scanner(System.in);
-        System.out.print("Veuillez saisir votre email : ");
-        String email = scanner.nextLine();
-        System.out.print("Veuillez saisir votre mot de passe : ");
-        String password = scanner.nextLine();
-
-        IServiceUser serviceUser = new ServiceUser();
-        int status = serviceUser.Authentification(email, password);
-      switch (status) {
-            case 0:
-                System.out.println("Invalid user credentials");
-                break;
-            case 1:
-                System.out.println("Logged in successfully");
-                break;
-            case 2:
-                System.out.println("User is desactiver");
-                break;
-        }
-
-        Session s= Session.getInstance();
-        System.out.println(s.getLoggedInUser());
-       // s.logout();
-*/
-
-
 
         primaryStage.setTitle("Affichage des cours");
 
@@ -196,6 +171,8 @@ public class CourMembre extends Application {
         dashboardAdmin.setTranslateY(-112);
         dashboardAdmin.setPrefSize(234, 1600);
         dashboardAdmin.getStyleClass().add("border-pane");
+
+
 
 
         FontAwesomeIconView usernameAdmin = createFontAwesomeIconView("USER", "WHITE", 50, 82, 91);
@@ -392,7 +369,6 @@ public class CourMembre extends Application {
         Button participerButton = new Button("Participer");
         participerButton.getStyleClass().add("add-to-cart-button");
 
-
         // Vérifier la capacité restante avant de permettre la participation
         participerButton.setOnAction(e -> participerAuCours(cours, participerButton));
 
@@ -401,75 +377,163 @@ public class CourMembre extends Application {
         participerHBox.setSpacing(10);
         card.getChildren().add(participerHBox);
 
+        // Obtenir le total de likes et de dislikes à partir de la base de données
+        int totalLikes = getTotalLikes(cours.getNom());
+        int totalDislikes = getTotalDislikes(cours.getNom());
+
+        // Créer des ImageView pour les icônes de pouces vers le haut et vers le bas
+        ImageView thumbsUpIcon = new ImageView(new Image(getClass().getResourceAsStream("/com/example/bty/imagesModuleCours/like.png")));
+        ImageView thumbsDownIcon = new ImageView(new Image(getClass().getResourceAsStream("/com/example/bty/imagesModuleCours/dislikes.png")));
+// Définir la taille des icônes de pouces
+        thumbsUpIcon.setFitWidth(25); // Largeur souhaitée
+        thumbsUpIcon.setFitHeight(25); // Hauteur souhaitée
+        thumbsDownIcon.setFitWidth(30); // Largeur souhaitée
+        thumbsDownIcon.setFitHeight(30); // Hauteur souhaitée
+        // Ajouter les ImageView à la carte
+        HBox likesDislikesBox = new HBox(thumbsUpIcon, new Label(String.valueOf(totalLikes)), thumbsDownIcon, new Label(String.valueOf(totalDislikes)));
+        likesDislikesBox.setAlignment(Pos.CENTER);
+        likesDislikesBox.setSpacing(5);
+        card.getChildren().add(likesDislikesBox);
+
         return card;
     }
 
-  /*  private void participerAuCours(Cours cours, Button participerButton) {
+
+
+    public int getTotalLikes(String nomCour) {
+        int totalLikes = 0;
         try {
-            String username = "dridi"; // Remplacez par le nom d'utilisateur de l'utilisateur connecté
-            User utilisateurConnecte = getUtilisateurConnecte(username);
-
-            if (utilisateurConnecte != null) {
-                if (cours.getCapacite() > 0) {
-                    // Enregistrez la participation dans la base de données
-                    String queryInsert = "INSERT INTO participation (id_user, nomCour) VALUES (?, ?)";
-                    PreparedStatement statementInsert = connection.prepareStatement(queryInsert);
-                    statementInsert.setInt(1, utilisateurConnecte.getId());
-                    statementInsert.setString(2, cours.getNom());
-                    statementInsert.executeUpdate();
-
-                    System.out.println("Vous avez participé au cours: " + cours.getNom());
-                    cours.setCapacite(cours.getCapacite() - 1); // Diminuer la capacité du cours
-
-                    // Mettre à jour la capacité dans la table cours
-                    String queryUpdate = "UPDATE cours SET capacite = ? WHERE nomCour = ?";
-                    PreparedStatement statementUpdate = connection.prepareStatement(queryUpdate);
-                    statementUpdate.setInt(1, cours.getCapacite());
-                    statementUpdate.setString(2, cours.getNom());
-                    statementUpdate.executeUpdate();
-
-                    if (cours.getCapacite() == 0) {
-                        // Désactiver le bouton participer si la capacité est épuisée
-                        participerButton.setDisable(true);
-                        participerButton.setText("Complet");
-                    }
-                } else {
-                    System.out.println("La capacité de ce cours est épuisée. Vous ne pouvez plus participer.");
-                }
-            } else {
-                System.out.println("Veuillez vous connecter pour participer au cours.");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("Erreur lors de la participation au cours.");
-        }
-    }*/
-
-  /*  private User getUtilisateurConnecte(String username) {
-        User utilisateurConnecte = null;
-        try {
-            String query = "SELECT * FROM user WHERE nom = ? AND role = 'MEMBRE'";
+            String query = "SELECT COUNT(*) FROM rating WHERE nomCour = ? AND liked = true";
             PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, username);
+            statement.setString(1, nomCour);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                String nom = resultSet.getString("nom");
-                String email = resultSet.getString("email");
-                String password = resultSet.getString("password");
-                String telephone = resultSet.getString("telephone");
-                Role role = Role.valueOf(resultSet.getString("role"));
-
-                utilisateurConnecte = new User(id, nom, email, password, telephone, role );
-
+                totalLikes = resultSet.getInt(1);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return utilisateurConnecte;
-    }*/
+        return totalLikes;
+    }
 
 
+    public int getTotalDislikes(String nomCour) {
+        int totalDislikes = 0;
+        try {
+            String query = "SELECT COUNT(*) FROM rating WHERE nomCour = ? AND disliked = true";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, nomCour);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                totalDislikes = resultSet.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return totalDislikes;
+    }
+
+
+    // Ajouter une méthode pour afficher la fenêtre d'évaluation
+    private void afficherFenetreEvaluation(Cours cours) {
+        Stage evaluationStage = new Stage();
+        evaluationStage.initModality(Modality.APPLICATION_MODAL);
+        evaluationStage.setTitle("Évaluation du cours");
+
+        VBox evaluationBox = new VBox(10);
+        evaluationBox.setPadding(new Insets(10));
+        evaluationBox.setAlignment(Pos.CENTER);
+        evaluationBox.setStyle("-fx-background-color: #f0f0f0;");
+
+        Label titleLabel = new Label("Évaluez ce cours : " + cours.getNom());
+        titleLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;");
+
+        // Images pour l'icône vide
+        ImageView thumbsUpEmptyIcon = new ImageView(new Image(getClass().getResourceAsStream("/com/example/bty/imagesModuleCours/like.png")));
+        ImageView thumbsDownEmptyIcon = new ImageView(new Image(getClass().getResourceAsStream("/com/example/bty/imagesModuleCours/disEmpty.png")));
+
+        // Images pour l'icône pleine
+        ImageView thumbsUpFilledIcon = new ImageView(new Image(getClass().getResourceAsStream("/com/example/bty/imagesModuleCours/likeFilled.png")));
+        ImageView thumbsDownFilledIcon = new ImageView(new Image(getClass().getResourceAsStream("/com/example/bty/imagesModuleCours/dislikes.png")));
+
+        // Définir la taille des icônes de pouces
+        thumbsUpEmptyIcon.setFitWidth(45);
+        thumbsUpEmptyIcon.setFitHeight(45);
+        thumbsDownEmptyIcon.setFitWidth(45);
+        thumbsDownEmptyIcon.setFitHeight(45);
+        thumbsUpFilledIcon.setFitWidth(45);
+        thumbsUpFilledIcon.setFitHeight(45);
+        thumbsDownFilledIcon.setFitWidth(45);
+        thumbsDownFilledIcon.setFitHeight(45);
+
+        // Gestionnaire d'événements pour l'icône de like
+        thumbsUpEmptyIcon.setOnMouseClicked(event -> {
+            enregistrerEvaluation(cours, "J'aime");
+            thumbsUpEmptyIcon.setImage(thumbsUpFilledIcon.getImage());
+            thumbsDownEmptyIcon.setDisable(true);
+
+        });
+
+        // Gestionnaire d'événements pour l'icône de dislike
+        thumbsDownEmptyIcon.setOnMouseClicked(event -> {
+            enregistrerEvaluation(cours, "Je n'aime pas");
+            thumbsDownEmptyIcon.setImage(thumbsDownFilledIcon.getImage());
+            thumbsUpEmptyIcon.setDisable(true);
+
+        });
+
+        HBox iconBox = new HBox(20, thumbsUpEmptyIcon, thumbsDownEmptyIcon);
+        iconBox.setAlignment(Pos.CENTER);
+
+        evaluationBox.getChildren().addAll(titleLabel, iconBox);
+
+        Scene scene = new Scene(evaluationBox, 250, 150);
+        evaluationStage.setScene(scene);
+        evaluationStage.showAndWait();
+    }
+
+
+    // Mettre à jour la méthode enregistrerEvaluation pour créer et enregistrer un objet Rating
+    private void enregistrerEvaluation(Cours cours, String rating) {
+        User loggedInUser = Session.getInstance().getLoggedInUser();
+        try {
+            int ratingValue;
+            boolean liked = false;
+            boolean disliked = false;
+
+            // Vérifier si la valeur de rating est valide et définir liked et disliked en conséquence
+            if (rating.equals("J'aime")) {
+                ratingValue = 1;
+                liked = true;
+            } else if (rating.equals("Je n'aime pas")) {
+                ratingValue = -1;
+                disliked = true;
+            } else {
+                ratingValue = 0; // Par défaut, si aucune des deux options n'est sélectionnée
+            }
+
+            // Créer un objet Rating avec les données
+            Rating newRating = new Rating(cours.getNom(), loggedInUser.getId(), ratingValue, liked, disliked);
+
+            // Insérer le nouvel objet Rating dans la base de données
+            String query = "INSERT INTO rating (nomCour, id_user, rating, liked, disliked) VALUES (?, ?, ?, ?, ?)";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, newRating.getNomCour());
+            statement.setInt(2, newRating.getUserId());
+            statement.setInt(3, newRating.getRating());
+            statement.setBoolean(4, newRating.isLiked());
+            statement.setBoolean(5, newRating.isDisliked());
+            int rowsInserted = statement.executeUpdate();
+
+            if (rowsInserted > 0) {
+                System.out.println("Évaluation enregistrée avec succès !");
+            } else {
+                System.out.println("Erreur lors de l'enregistrement de l'évaluation.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     private void sendConfirmationEmail(User loggedInUser, Cours cours) {
         // Récupérer l'adresse e-mail de l'utilisateur connecté
@@ -508,10 +572,10 @@ public class CourMembre extends Application {
                     "Vous êtes inscrit au cours : " + cours.getNom() + ".\n\n" +
                     "Détails du cours :\n" +
                     "- Intensité : " + cours.getIntensite() + "\n" +
-                    "- Durée : " + cours.getDuree() + "\n" + "minutes" +
+                    "- Durée : " + cours.getDuree() +  "minutes" +"\n"+
                     "- Catégorie : " + cours.getCategorie() + "\n\n" +
                     "Recommandations :\n" +
-                    "- Pensez à ramener une serviette et une bouteille d’eau.\n" +".\n\n"+
+                    "- Pensez à ramener une serviette et une bouteille d’eau.\n" +".\n"+
                     "Tenue recommandée :\n" +
                     "- Vêtements confortables\n\n" +
                     "Cordialement,\nFlex Flow";
@@ -612,6 +676,8 @@ public class CourMembre extends Application {
                         statementUpdate.setInt(1, cours.getCapacite());
                         statementUpdate.setInt(2, cours.getId());
                         statementUpdate.executeUpdate();
+
+                        afficherFenetreEvaluation(cours);
 
                         // Vérifier si la capacité est épuisée
                         if (cours.getCapacite() == 0) {
