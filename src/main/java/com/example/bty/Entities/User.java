@@ -13,6 +13,17 @@ public class User {
    private  boolean etat =false;    // 0 = desactiver , 1 = activer
     private String image;
 
+    public User(int id, String name, String email, String telephone, Role role, boolean b,String image) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.telephone = telephone;
+        this.role = role;
+        this.etat = b;
+        this.image = image;
+
+    }
+
     public String getImage() {
         return image;
     }
@@ -39,6 +50,18 @@ public class User {
         this.telephone=telephone;
         this.role=role;
         this.image=image;
+        this.etat=etat;
+        this.image=image;
+
+    }
+
+    public User( String name, String email, String password, String telephone, Role role,Boolean etat,String image) {
+
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.telephone=telephone;
+        this.role=role;
         this.etat=etat;
         this.image=image;
 

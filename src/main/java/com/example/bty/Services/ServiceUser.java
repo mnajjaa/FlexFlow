@@ -4,24 +4,11 @@ import com.example.bty.Entities.Role;
 import com.example.bty.Entities.User;
 import com.example.bty.Utils.ConnexionDB;
 import com.example.bty.Utils.Session;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
-import javafx.application.Application;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import org.mindrot.jbcrypt.BCrypt;
 
-import java.net.URL;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -270,6 +257,32 @@ public class ServiceUser implements IServiceUser{
             Logger.getLogger(ServiceUser.class.getName()).log(Level.SEVERE, null, ex);
         }
         return U;
+    }
+    @Override
+    public void updateImage(String image, int id)
+    {
+        String req = "UPDATE user SET image = ? WHERE id = ?";
+        try {
+            pste = cnx.prepareStatement(req);
+            pste.setString(1, image);
+            pste.setInt(2, id);
+            pste.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(ServiceUser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Override
+    public void updatePassword(String text, Integer id) {
+        String req = "UPDATE user SET password = ? WHERE id = ?";
+        try {
+            pste = cnx.prepareStatement(req);
+            pste.setString(1, BCrypt.hashpw(text, BCrypt.gensalt()));
+            pste.setInt(2, id);
+            pste.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(ServiceUser.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 

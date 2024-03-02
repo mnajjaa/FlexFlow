@@ -44,20 +44,20 @@ public class App extends Application {
 //        IServiceUser serviceUser = new ServiceUser();
 //        Role userRole = Role.ADMIN;
 //
-//        User u=new User("farah","farah@gmail.com","ibtihel1234","12345678",userRole,null);
-//
-//         //User u=new User("ibtihel","ibtihel.mnaja123@gmail.com","ibtihel1234");
+//        User u=new User("houssine","houssine@gmail.com","ibtihel1234","12345678",userRole,null);
+
+//         //User u=new User("mnajja","mnajja@gmail.com","ibtihel1234");
 //
 //        //**tester la methode register
-// /*  if(serviceUser.emailExists(u.getEmail()))
+//   if(serviceUser.emailExists(u.getEmail()))
 //        {
 //            System.out.println("User already exist");
 //        }
 //        else
-//            serviceUser.register(u);*/
+//            serviceUser.register(u);
 //
-//        //**tester la methode Authentification
-//        int status = serviceUser.Authentification("mnajjaibtihel@gmail.com", "ibtihel1234");
+////        //**tester la methode Authentification
+//        int status = serviceUser.Authentification("houssine@gmail.com", "ibtihel1234");
 //      switch (status) {
 //            case 0:
 //                System.out.println("Invalid user credentials");
