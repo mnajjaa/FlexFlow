@@ -97,3 +97,13 @@
     -fx-padding: 8 16;
     -fx-background-radius: 10;
 }
+.reset-button {
+    -fx-font-size: 13px;
+    -fx-padding: 10 16;
+    -fx-min-width: 100;
+    -fx-min-height: -5;
+    -fx-background-radius: 10;
+    -fx-background-color: white;
+    -fx-text-fill: #A62609;
+    -fx-translate-x: 750px;
+}

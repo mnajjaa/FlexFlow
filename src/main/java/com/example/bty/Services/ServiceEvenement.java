@@ -116,5 +116,31 @@ Boolean etat=true;
     }
 
 
+    public List<Evenement> rechercherEvenementParNOom(String nom) {
+        List<Evenement> evenements = new ArrayList<>();
+        //try (Connection connection = ConnexionDB.obtenirConnexion()) {
+        String query = "SELECT * FROM evenement WHERE nomEvenement = ?";
+        try (PreparedStatement statement = connexion.prepareStatement(query)) {
+            statement.setString(1, nom);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    Evenement E = new Evenement();
+                    E.setId(resultSet.getInt("id_evenement"));
+                    E.setNom(resultSet.getString("nomEvenement"));
+                    E.setCategorie(resultSet.getString("categorie"));
+                    E.setObjectif(resultSet.getString("Objectif"));
+                    E.setNbre_place(resultSet.getInt("nbrPlace"));
+                    E.setDate(resultSet.getDate("Date"));
+                    E.setTime(resultSet.getTime("Time"));
+                    int coachId = resultSet.getInt("id_user");
+                    evenements.add(E);
+                }
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return evenements;
+    }
 
 }

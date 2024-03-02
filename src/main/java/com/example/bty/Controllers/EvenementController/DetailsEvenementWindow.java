@@ -33,20 +33,27 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 
 public class DetailsEvenementWindow extends Stage {
-    //private  ToggleButton scannerButton;
     private static ToggleButton scannerButton;
     private ImageView qrCodeImageView;
     private static Connection connection;
     private PreparedStatement statementInsert;
+
+
+    private long countdownTime;
     private Timeline countdownTimeline;
+    private static Label countdownLabel;
 
     private static Map<Evenement, VBox> detailsMap = new HashMap<>();
 
     public DetailsEvenementWindow() {
         connection = ConnexionDB.getInstance().getConnexion();
+        countdownTimeline = new Timeline();
+        countdownLabel = new Label();
+
     }
 
     public static void display(Evenement evenement) {
+        DetailsEvenementWindow instance = new DetailsEvenementWindow(); // Create an instance
 
 
         Stage detailsStage = new Stage();
@@ -54,6 +61,7 @@ public class DetailsEvenementWindow extends Stage {
         detailsStage.initModality(Modality.APPLICATION_MODAL);
         detailsStage.setResizable(false);
         VBox detailsCard = createDetailsCard(evenement);
+        instance.countdownTimeline.play();
 
         Scene scene = new Scene(detailsCard, 400, 300);
         scene.getStylesheets().add(DetailsEvenementWindow.class.getResource("/com/example/bty/CSSmoduleEvenement/VitrineClient.css").toExternalForm());
@@ -102,12 +110,19 @@ public class DetailsEvenementWindow extends Stage {
                     System.out.println("Scanner Code désactivé");
                 }
             });
+            instance.countdownLabel = new Label(); // Initialize countdownLabel here
 
             boolean userHasReserved = hasUserReservedEvent(loggedInUser.getId(), evenement.getNom());
             instance.scannerButton.setDisable(!userHasReserved);
             scannerButton = instance.scannerButton; // Add this line to initialize scannerButton correctly
 
-            detailsCard.getChildren().addAll(dateLabel, timeLabel, categorieLabel, objectifLabel, placeLabel, ReserverButton, instance.scannerButton);
+            if (userHasReserved) {
+                instance.countdownLabel = new Label(); // Initialize countdownLabel only for reserved events
+                detailsCard.getChildren().addAll( instance.countdownLabel);
+            } else {
+                detailsCard.getChildren().addAll(dateLabel, timeLabel, categorieLabel, objectifLabel, placeLabel, ReserverButton, instance.scannerButton);
+            }
+
             detailsMap.put(evenement, detailsCard);
         }
         return detailsCard;
@@ -189,7 +204,7 @@ public class DetailsEvenementWindow extends Stage {
                 statementInsert.setInt(1, userID);
                 statementInsert.setString(2, evenement.getNom());
                 statementInsert.setString(3, userName);
-                statementInsert.setDate(4, new java.sql.Date(System.currentTimeMillis()));
+                statementInsert.setTimestamp(4, new java.sql.Timestamp(System.currentTimeMillis()));
                 int rowsInserted = statementInsert.executeUpdate();
 
                 if (rowsInserted > 0) {
@@ -207,12 +222,18 @@ public class DetailsEvenementWindow extends Stage {
                         ReserverButton.setText("Complet");
                         ReserverButton.setStyle("-fx-opacity: 0.5");
                     }
+                    long eventDateTime = evenement.getDate().getTime() + evenement.getTime().getTime();
+                    long currentTime = System.currentTimeMillis();
+                    countdownTime = eventDateTime - currentTime;
+                    updateCountdownLabel();
 
-                    Date evenementDate = evenement.getDate();
-                    Time evenementTime = evenement.getTime();
 
-                    long timeDifference = evenementDate.getTime() + evenementTime.getTime() - System.currentTimeMillis();
-                    startCountdown(timeDifference);
+                    // Set up the countdown timeline to update the countdown label every second
+                    countdownTimeline.getKeyFrames().add(new KeyFrame(Duration.seconds(1), event -> updateCountdown(evenement)));
+                    countdownTimeline.setCycleCount(Timeline.INDEFINITE);
+                    countdownTimeline.play();
+
+
                     scannerButton.setDisable(false);
                 } else {
                     afficherMessage("Échec", "Erreur lors de la participation à l'evenement.");
@@ -222,6 +243,42 @@ public class DetailsEvenementWindow extends Stage {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+
+
+    private void updateCountdown(Evenement evenement) {
+        countdownTime -= 1000; // Subtract one second
+        updateCountdownLabel();
+
+        if (countdownTime <= 0) {
+            countdownTimeline.stop();
+            // Trigger the buzzer sound here
+            System.out.println("Buzzer sound triggered!");
+        }
+
+    }
+    private void updateCountdownLabel() {
+        long seconds = Math.max(0, countdownTime / 1000);
+        long minutes = seconds / 60;
+        long hours = minutes / 60;
+
+        seconds %= 60;
+        minutes %= 60;
+        String countdownString = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+
+        System.out.println("Temps restant : " + countdownString);  // Ajout de la sortie dans la console
+
+        countdownLabel.setText(countdownString);
+
+
+
+    }
+
+    private void stopCountdown() {
+        if (countdownTimeline != null) {
+            countdownTimeline.stop();
         }
     }
 
@@ -261,25 +318,6 @@ public class DetailsEvenementWindow extends Stage {
         alert.showAndWait();
     }
 
-    private void startCountdown(long timeDifference) {
-        countdownTimeline = new Timeline(
-                new KeyFrame(
-                        Duration.millis(1000),
-                        event -> {
-                            long seconds = timeDifference / 1000;
-                            System.out.println("Temps restant : " + seconds + " secondes");
-                        }
-                )
-        );
 
-        countdownTimeline.setCycleCount(Animation.INDEFINITE);
-        countdownTimeline.play();
-    }
 
-    public void stopCountdown() {
-        if (countdownTimeline != null) {
-            countdownTimeline.stop();
-        }
-    }
 }
-

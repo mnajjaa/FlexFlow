@@ -1,7 +1,10 @@
+
+
 package com.example.bty.Controllers.EvenementController;
 import static com.example.bty.Controllers.EvenementController.DetailsEvenementWindow.createDetailsCard;
 
 import com.example.bty.Entities.Evenement;
+import com.example.bty.Utils.ConnexionDB;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.application.Application;
 import javafx.geometry.Bounds;
@@ -9,10 +12,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -38,9 +38,13 @@ public class clientVitrine extends Application {
     private static final String PASSWORD = "";
     private Connection connection;
     private Map<Evenement, VBox> detailsMap = new HashMap<>();
+    private FlowPane flowPane = new FlowPane();
 
     private Map<Integer, Boolean> popupOpenMap = new HashMap<>(); // Track open popups for each event
+public clientVitrine(){
+    connection = ConnexionDB.getInstance().getConnexion();
 
+}
 
 
     @Override
@@ -64,8 +68,53 @@ public class clientVitrine extends Application {
                 " -fx-background-insets: 0 0 0 232;"
 
         );
-       // topBar.setSpacing(5);
+        // topBar.setSpacing(5);
+        TextField rechercheTextField = new TextField();
+        rechercheTextField.setPromptText("Rechercher par nom");
+        rechercheTextField.getStyleClass().add("search-text-field");
 
+        Button rechercherButton = new Button("Rechercher");
+        rechercherButton.getStyleClass().add("search-button");
+
+        rechercherButton.setOnAction(e -> {
+            String typeRecherche = rechercheTextField.getText();
+            List<Evenement> produitsRecherches = rechercherEvenement(typeRecherche);
+
+            // Clear the existing content in the flow pane
+            this.flowPane.getChildren().clear();
+
+            // Display the searched events
+            for (Evenement evenement : produitsRecherches) {
+                VBox carte = createEventCard(evenement);
+                this.flowPane.getChildren().add(carte);
+            }
+
+        });
+        rechercheTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.isEmpty()) {
+                // If the search text is empty, reset the FlowPane
+                resetFlowPane();
+            } else {
+                // Otherwise, perform the search
+                String typeRecherche = rechercheTextField.getText();
+                List<Evenement> produitsRecherches = rechercherEvenement(typeRecherche);
+
+                // Clear the existing content in the flow pane
+                flowPane.getChildren().clear();
+
+                // Display the searched events
+                for (Evenement evenement : produitsRecherches) {
+                    VBox carte = createEventCard(evenement);
+                    flowPane.getChildren().add(carte);
+                }
+            }
+        });
+
+        HBox searchBox = new HBox(rechercheTextField, rechercherButton);
+        searchBox.setAlignment(Pos.CENTER);
+        searchBox.setSpacing(10);
+
+        topBar.getChildren().addAll(searchBox);
         root.setTop(topBar);
 
 
@@ -78,20 +127,19 @@ public class clientVitrine extends Application {
 
 
 
-        FlowPane flowPane = new FlowPane();
-        flowPane.setAlignment(Pos.TOP_CENTER);
-        flowPane.setPadding(new Insets(20));
+        this.flowPane.setAlignment(Pos.TOP_CENTER);
+        this.flowPane.setPadding(new Insets(20));
 
-        flowPane.setHgap(30);
-        flowPane.setVgap(30);
-
+        this.flowPane.setHgap(30);
+        this.flowPane.setVgap(30);
 
 
 
 
 
 
-        scrollPane.setContent(flowPane);
+
+        scrollPane.setContent(this.flowPane);
         root.setCenter(scrollPane);
 
 
@@ -116,7 +164,7 @@ public class clientVitrine extends Application {
         for (Evenement evenement : evenements) {
 
             VBox carte = createEventCard(evenement);
-            flowPane.getChildren().add(carte);
+            this.flowPane.getChildren().add(carte);
         }
     }
     private AnchorPane createLeftDashboard(Stage primaryStage) {
@@ -245,7 +293,14 @@ public class clientVitrine extends Application {
 
 
     }
-
+    private void resetFlowPane() {
+        flowPane.getChildren().clear();
+        List<Evenement> evenements = getListeEvenements();
+        for (Evenement evenement : evenements) {
+            VBox carte = createEventCard(evenement);
+            flowPane.getChildren().add(carte);
+        }
+    }
 
 
     private FontAwesomeIconView createFontAwesomeIconView(String glyphName, String fill, double size, double layoutX, double layoutY) {
@@ -307,7 +362,7 @@ public class clientVitrine extends Application {
 //        VBox carte = new VBox(10);
 //        carte.setPadding(new Insets(10));
         DetailsEvenementWindow detailsWindow = new DetailsEvenementWindow(); // Créer une instance de DetailsEvenementWindow
-      //  VBox detailsCard = detailsWindow.createDetailsCard(evenement);
+        //  VBox detailsCard = detailsWindow.createDetailsCard(evenement);
 
         VBox card = new VBox();
         card.getStyleClass().add("product-card");
@@ -378,7 +433,7 @@ public class clientVitrine extends Application {
     private void SeeMoreEvenement(Evenement evenement) {
         // Implémentez le code pour afficher plus de détails sur l'événement
         // Vous pouvez utiliser une nouvelle fenêtre ou un panneau pour afficher les détails
-      createDetailsCard(evenement);
+        createDetailsCard(evenement);
 
     }
 
@@ -417,7 +472,36 @@ public class clientVitrine extends Application {
         return evenements;
     }
 
+    private List<Evenement> rechercherEvenement(String typeRecherche) {
+        List<Evenement> produitsRecherches = new ArrayList<>();
 
+        String query = "SELECT * FROM evenement WHERE nomEvenement LIKE ?";
+
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, "%" + typeRecherche + "%");
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    Evenement E = new Evenement();
+                    E.setId(resultSet.getInt("id_evenement"));
+                    E.setNom(resultSet.getString("nomEvenement"));
+                    E.setCategorie(resultSet.getString("categorie"));
+                    E.setObjectif(resultSet.getString("Objectif"));
+                    E.setNbre_place(resultSet.getInt("nbrPlace"));
+                    E.setDate(resultSet.getDate("Date"));
+                    E.setTime(resultSet.getTime("Time"));
+                    int coachId = resultSet.getInt("id_user");
+                    E.setImage(resultSet.getBytes("image"));
+
+                    produitsRecherches.add(E);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return produitsRecherches;
+    }
     public static void main(String[] args) {
         launch(args);
     }

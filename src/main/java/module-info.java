@@ -10,6 +10,7 @@ module com.example.bty {
     requires javafx.web;
     requires com.google.zxing;
     requires com.google.zxing.javase;
+    requires java.prefs;
 
     opens com.example.bty to javafx.fxml;
     exports com.example.bty;
