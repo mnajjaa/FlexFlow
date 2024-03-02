@@ -48,6 +48,11 @@ and open the template in the editor.
     -fx-border-color: #000;
     -fx-border-width: 0px .2px .4px .4px;
 }
+.nav-vbox{
+    -fx-background-color: linear-gradient(to top right, #2c2c57, #392b78);
+    -fx-border-color: #000;
+    -fx-border-width: 0px .2px .4px .4px;
+}
 
 .nav-vbox{
     -fx-background-color: linear-gradient(to top right, #2c2c57, #2c3e50);
@@ -92,7 +97,6 @@ and open the template in the editor.
     -fx-background-color: #efefef;
     -fx-background-radius: 4px;
     -fx-border-color: linear-gradient(to top right, #2c2c57, #392b78);
-    -fx-border-color: linear-gradient(to top right, #2c2c57, #2c3e50);
     -fx-border-radius: 4px;
     -fx-border-width: .5px;
     -fx-font-family: Tahoma;

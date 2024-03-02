@@ -8,17 +8,27 @@ import com.example.bty.Services.ServiceUser;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.IOException;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
@@ -63,16 +73,25 @@ public LoginGymController() {
     public void initialize(URL url, ResourceBundle resourceBundle) {
     }
     @FXML
-    private void login() {
+    private void login(ActionEvent event) throws IOException {
 
         String email = si_email.getText(); // Récupérer l'email depuis le champ de texte
         String password = si_password.getText(); // Récupérer le mot de passe depuis le champ de texte
-        System.out.println(email+" "+password);
+        System.out.println(email + " " + password);
 
         // Appeler la méthode de connexion avec les valeurs récupérées
-        int i= serviceUser.Authentification(email, password);
-        if(i==1){
+        int i = serviceUser.Authentification(email, password);
+        if (i == 1) {
             System.out.println("login success");
+            Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("dashboard.fxml"));
+            Scene scene = new Scene(root);
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(scene);
+            stage.show();
+
+    }
+        else{
+            System.out.println("login failed");
         }
     private void login(ActionEvent event) throws IOException {
 
@@ -212,7 +231,7 @@ public LoginGymController() {
                 // Appeler la méthode d'inscription avec les valeurs récupérées
                 serviceUser.register(u);
         Role defaultRole = Role.MEMBRE; // Définissez le rôle par défaut ici
-        User u = new User(username,email,password,telehone, defaultRole);
+        User u = new User(username,email,password,telehone, defaultRole,null);
         // Appeler la méthode d'inscription avec les valeurs récupérées
          serviceUser.register(u);
         User u = new User(username,email,password,telehone, defaultRole,null);
@@ -222,6 +241,8 @@ public LoginGymController() {
                 System.out.println("signup success");
             }
         }
+
+        System.out.println("signup success");
 
     }
 

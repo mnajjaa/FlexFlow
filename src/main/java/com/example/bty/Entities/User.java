@@ -31,12 +31,14 @@ public class User {
 
     public User(int id, String name, String email, String password, String telephone, Role role) {
     public User(int id, String name, String email, String password, String telephone, Role role,String image) {
+    public User(int id, String name, String email, String password, String telephone, Role role,String image) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
         this.telephone=telephone;
         this.role=role;
+        this.image=image;
         this.etat=etat;
         this.image=image;
 
@@ -47,18 +49,21 @@ public class User {
 
     public User(String name, String email, String password,String telephone,Role role) {
     public User(String name, String email, String password,String telephone,Role role,String image) {
+    public User(String name, String email, String password,String telephone,Role role,String image) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.telephone = telephone;
         this.role=role;
         this.etat=etat;
+        this.image=image;
     }
 
     public int getId() {
         this.image=image;
     }
 
+    public Integer getId() {
     public Integer getId() {
         return id;
     }

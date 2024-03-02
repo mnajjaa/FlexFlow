@@ -102,6 +102,7 @@ public class ServiceUser implements IServiceUser{
                    Role userRole = Role.valueOf(rs.getString("role"));
                    User u =new User(rs.getInt("id"),rs.getString("nom"),rs.getString("email"),rs.getString("password"),rs.getString("telephone"),userRole);
                    User u =new User(rs.getInt("id"),rs.getString("nom"),rs.getString("email"),rs.getString("password"),rs.getString("telephone"),userRole,rs.getString("image"));
+                   User u =new User(rs.getInt("id"),rs.getString("nom"),rs.getString("email"),rs.getString("password"),rs.getString("telephone"),userRole,rs.getString("image"));
 
                    Session s=Session.getInstance();
                    s.setLoggedInUser(u);
@@ -200,12 +201,13 @@ public class ServiceUser implements IServiceUser{
                 user.setId(rs.getInt("id"));
                 user.setName(rs.getString("nom"));
                 user.setEmail(rs.getString("email"));
-                user.setPassword(rs.getString("password"));
+                //user.setPassword(rs.getString("password"));
                 user.setTelephone(rs.getString("telephone"));
                 user.setRole(Role.valueOf(rs.getString("role")));
                 //user.setPassword(rs.getString("password"));
                 user.setTelephone(rs.getString("telephone"));
                 user.setRole(Role.valueOf(rs.getString("role")));
+                user.setEtat(rs.getBoolean("etat"));
                 user.setEtat(rs.getBoolean("etat"));
                 users.add(user);
             }
@@ -228,9 +230,10 @@ public class ServiceUser implements IServiceUser{
                 coach.setId(rs.getInt("id"));
                 coach.setName(rs.getString("nom"));
                 coach.setEmail(rs.getString("email"));
-                coach.setPassword(rs.getString("password"));
+                // Removed the line that fetches the password
                 coach.setTelephone(rs.getString("telephone"));
                 coach.setRole(Role.valueOf(rs.getString("role")));
+                coach.setEtat(rs.getBoolean("etat"));
                 // Removed the line that fetches the password
                 coach.setTelephone(rs.getString("telephone"));
                 coach.setRole(Role.valueOf(rs.getString("role")));
