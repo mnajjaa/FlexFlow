@@ -29,7 +29,7 @@ public class ConsultationOffre extends Application {
         tableView = new TableView<>();
 
         // Création du TableView et de ses colonnes
-        TableColumn<OffreItem, String> nomCol = new TableColumn<>("Nom");
+        TableColumn<OffreItem, String> nomCol = new TableColumn<>("Nom coach");
         nomCol.setCellValueFactory(new PropertyValueFactory<>("nom"));
 
         TableColumn<OffreItem, String> specialiteCol = new TableColumn<>("Spécialité");

@@ -36,7 +36,7 @@ public class App extends Application {
 //
 //        User u=new User("farah","farah@gmail.com","ibtihel1234","12345678",userRole,null);
 //
-//         //User u=new User("ibtihel","ibtihel.mnaja123@gmail.com","ibtihel1234");
+       //         //User u=new User("ibtihel","ibtihel.mnaja123@gmail.com","ibtihel1234");
 //
 //        //**tester la methode register
 // /*  if(serviceUser.emailExists(u.getEmail()))

@@ -5,12 +5,17 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.sql.*;
-import java.util.Optional;
+import java.util.Objects;
 
 public class FD extends Application {
 
@@ -24,6 +29,7 @@ public class FD extends Application {
     private TextField lesjoursFiled;
     private TextField horaireFiled;
     private TextField nomField;
+    private ImageView backgroundImag;
 
     @Override
     public void start(Stage primaryStage) {
@@ -41,7 +47,7 @@ public class FD extends Application {
         GridPane grid = new GridPane();
         grid.setVgap(15);
         grid.setHgap(15);
-        grid.setStyle("-fx-background-color: rgba(241,211,166,0.82); -fx-padding: 25; -fx-border-radius: 10; -fx-background-radius: 10; -fx-alignment: center;");
+        grid.setStyle("-fx-background-color: rgb(250,247,221); -fx-padding: 25; -fx-border-radius: 10; -fx-background-radius: 10; -fx-alignment: center;");
 
         Label formTitle = new Label("Formulaire d'ajout d'une demande");
         formTitle.getStyleClass().add("form-title");
@@ -176,6 +182,7 @@ public class FD extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
+
 
     private boolean validateFields() {
         if (ageField.getText().isEmpty() || butField.getText().isEmpty() || niveauPhysiqueField.getText().isEmpty()

@@ -1,5 +1,7 @@
 package com.example.bty.Controllers.graphiqueGCP;
 
+import com.example.bty.Entities.Role;
+import com.example.bty.Utils.Session;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -11,6 +13,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import com.example.bty.Services.ServiceUser;
+import com.example.bty.Entities.User;
 
 import java.sql.*;
 import java.util.Optional;
@@ -22,6 +26,9 @@ public class Formoffre extends Application {
     private TextField tarifField;
     private TextField coachField;
     private Label nomLabel;
+    Session session = Session.getInstance();
+    User u=session.getLoggedInUser();
+    User user ;
 
 
     @Override
@@ -47,7 +54,7 @@ public class Formoffre extends Application {
         // Label et champ de texte pour l'ID
 
 
-        Label nomLabel = new Label("Nom de L'offre:");
+        Label nomLabel = new Label("Nom coach:");
         nomField = new TextField();
         grid.add(nomLabel, 0, 0);
         grid.add(nomField, 1, 0);
@@ -119,12 +126,16 @@ public class Formoffre extends Application {
     }
 
     private void insertOffre() {
+        this.user = session.getLoggedInUser();
+
         String url = "jdbc:mysql://localhost:3306/pidevgym";
         String username = "root";
         String password = "";
 
         try (Connection conn = DriverManager.getConnection(url, username, password)) {
-            String id = nomField.getText();
+            if(user.getRole().equals(Role.COACH)){
+                System.out.println("coach connected !!");
+                String id = nomField.getText();
             // Vérifier si l'ID existe déjà
             if (offreExists(conn, id)) {
                 // Afficher un message à l'utilisateur dans l'interface
@@ -144,6 +155,9 @@ public class Formoffre extends Application {
             int rowsInserted = statement.executeUpdate();
             if (rowsInserted > 0) {
                 showAlert("Succès", "Offre insérée avec succès !");
+            }
+            }else {
+                System.out.println("t as pas le droit you are not a coach !");
             }
         } catch (SQLException e) {
             System.out.println("Erreur lors de l'insertion de l'offre: " + e.getMessage());

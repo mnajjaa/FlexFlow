@@ -83,7 +83,7 @@
 .grid-pane {
     -fx-background-color: rgb(3, 21, 89); /* Couleur de fond de la grille avec transparence */
     -fx-background-radius: 20px; /* Rayon des coins de la grille */
-    -fx-padding: 25px; /* Espacement intérieur de la grille */
+    -fx-padding: 40px; /* Espacement intérieur de la grille */
     -fx-alignment: center; /* Centrer les éléments horizontalement */
 }
 
@@ -115,7 +115,21 @@
     -fx-background-color: rgba(101, 5, 21, 0.89); /* Couleur de fond du bouton lorsqu'il est survolé */
 }
 
+/* Styles for the image */
+.image-style {
+    -fx-fit-width: 200px; /* Largeur souhaitée */
+    -fx-fit-height: 200px; /* Hauteur souhaitée */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 0, 0); /* Ombre portée */
+    -fx-opacity: 0.8; /* Opacité de l'image */
+}
+
 /* Style des boutons lorsqu'ils sont enfoncés */
 .button:pressed {
     -fx-background-color: rgba(54, 124, 57, 0); /* Couleur de fond du bouton lorsqu'il est enfoncé */
+}
+.root {
+    -fx-background-image: url('images/form.png');
+    -fx-background-size: cover;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
 }
