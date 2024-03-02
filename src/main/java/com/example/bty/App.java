@@ -21,10 +21,10 @@ public class App extends Application {
 //        Scene scene = new Scene(fxmlLoader.load());
 //        stage.setScene(scene);
 //        stage.show();
-       FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/LoginGym.fxml"));
-       Scene scene = new Scene(fxmlLoader.load());
-       stage.setScene(scene);
-        stage.show();
+//       FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/LoginGym.fxml"));
+//       Scene scene = new Scene(fxmlLoader.load());
+//       stage.setScene(scene);
+//        stage.show();
        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/LoginGym.fxml"));
        Scene scene = new Scene(fxmlLoader.load());
        stage.setScene(scene);
@@ -136,7 +136,7 @@ public class App extends Application {
         IServiceUser serviceUser = new ServiceUser();
         Role userRole = Role.ADMIN;
 
-        User u=new User("farah","farah@gmail.com","ibtihel1234","12345678",userRole);
+       // User u=new User("farah","farah@gmail.com","ibtihel1234","12345678",userRole);
 
          //User u=new User("ibtihel","ibtihel.mnaja123@gmail.com","ibtihel1234");
 
