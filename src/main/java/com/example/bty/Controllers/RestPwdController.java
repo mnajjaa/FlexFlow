@@ -27,8 +27,16 @@ IServiceValidation serviceValidation = new ServiceValidation(); //sna3et instanc
 IServiceUser serviceUser = new ServiceUser(); // sna3et instance mel user Service
     User user = new User();
  MailerService mailerService = new MailerService();
+
+    public RestPwdController(User user) {
+        this.user = user;
+    }
+    public RestPwdController() {
+    }
+
+
     public void resetPWD(ActionEvent event) {
-       // String email = userEmail_txtfd.getText().trim();
+        // String email = userEmail_txtfd.getText().trim();
         String newPwd = newPwd_txtfd.getText().trim();
         String confrmPwd = confrmPwd_txtfd1.getText().trim();
 
@@ -41,6 +49,7 @@ IServiceUser serviceUser = new ServiceUser(); // sna3et instance mel user Servic
         }else {
             System.out.println("passwords match");
             serviceUser.updatePassword(newPwd,user.getId());
+            System.out.println(user);
             System.out.println("password updated");
         }
 

@@ -31,7 +31,7 @@ public class VerifCodeResetController {
         }
         int code = Integer.parseInt(codeStr);
         ServiceValidation serviceValidation = new ServiceValidation();
-        Validation validation = serviceValidation.findByCode(code);
+        Validation validation = serviceValidation.findByCode(code); //bch njib lvalidation(feha id_user forgien key) eli andou lcode adheka mel validation table
         IServiceUser serviceUser = new ServiceUser();
 
         if (validation != null) {
@@ -39,6 +39,7 @@ public class VerifCodeResetController {
                 error_lbl.setText("Code is valid!");
                 User uservalid = validation.getUser(); //bch njib luser eli aandou lcode adheka mel validation table
                 // load resetPwd.fxml
+                System.out.println(uservalid);
                 serviceValidation.deleteValidation(validation.getCode());
                 try {
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/resetPwd.fxml"));
