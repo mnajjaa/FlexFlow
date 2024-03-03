@@ -1,5 +1,6 @@
 package com.example.bty.Controllers;
 
+import com.example.bty.Entities.User;
 import com.example.bty.Entities.Validation;
 import com.example.bty.Services.*;
 import javafx.event.ActionEvent;
@@ -28,26 +29,32 @@ public class CheckEmailController {
             return;
         }
         // check if email exists in the database
-        if (serviceUser.emailExists(email)) {
-            System.out.println("User exist");
-            Random random = new Random();
-            random.nextInt(9999); // code bin 0 w 8999 [0,9999[
-            Validation v = new Validation(random.nextInt(9999), Instant.now(), Instant.now().plusSeconds(600), serviceUser.findByEmail(email));
-            serviceValidation.ajouterValidation(v);
-            String message = "Your code is : " + v.getCode();
-            String subject = "Rénitialisation mot de passe";
-            mailerService.sendMail(email, message, subject);
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/verifCodeReset.fxml"));
-                Parent root = loader.load();
-                Scene scene = new Scene(root);
-                Stage stage = (Stage) checkEmail_btn.getScene().getWindow();
-                stage.setScene(scene);
-                stage.show();
-            } catch (Exception e) {
-                e.printStackTrace();
+        User user = serviceUser.findByEmail(email);
+        if (user!=null) {
+            if (!user.isEtat()) {
+                error_lbl.setText("Account is disabled!");
+                return;
+            } else {
+                System.out.println("User exist");
+                Random random = new Random();
+                random.nextInt(9999); // code bin 0 w 8999 [0,9999[
+                Validation v = new Validation(random.nextInt(9999), Instant.now(), Instant.now().plusSeconds(600), serviceUser.findByEmail(email));
+                serviceValidation.ajouterValidation(v);
+                String message = "Your code is : " + v.getCode();
+                String subject = "Rénitialisation mot de passe";
+                mailerService.sendMail(email, message, subject);
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/verifCodeReset.fxml"));
+                    Parent root = loader.load();
+                    Scene scene = new Scene(root);
+                    Stage stage = (Stage) checkEmail_btn.getScene().getWindow();
+                    stage.setScene(scene);
+                    stage.show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-        } else {
+        }else {
             System.out.println("User not exist");
             error_lbl.setText("Email does not exist!");
         }

@@ -43,9 +43,10 @@ public class VerifCodeResetController {
                 serviceValidation.deleteValidation(validation.getCode());
                 try {
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/resetPwd.fxml"));
-                    RestPwdController restPwdController = new RestPwdController();
-                    restPwdController.setUser(uservalid);
                     Parent root = fxmlLoader.load();
+                    RestPwdController restPwdController = fxmlLoader.getController();
+                    restPwdController.setUser(uservalid);
+
                     Scene scene = new Scene(root);
                     Stage stage = (Stage) enterCode_btn.getScene().getWindow();
                     stage.setScene(scene);
