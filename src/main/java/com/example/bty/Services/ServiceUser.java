@@ -12,13 +12,11 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ServiceUser implements IServiceUser{
+public class ServiceUser implements IServiceUser {
 
 
     private PreparedStatement pste;
     Connection cnx = ConnexionDB.getInstance().getConnexion();
-
-
 
 
     //** Register a new user
@@ -30,8 +28,8 @@ public class ServiceUser implements IServiceUser{
             pste.setString(1, u.getName());
             pste.setString(2, u.getEmail());
             pste.setString(3, BCrypt.hashpw(u.getPassword(), BCrypt.gensalt()));
-            pste.setString(4,u.getTelephone());
-            pste.setString(5,u.getRole().toString());
+            pste.setString(4, u.getTelephone());
+            pste.setString(5, u.getRole().toString());
 
 
             pste.executeUpdate();
@@ -63,7 +61,7 @@ public class ServiceUser implements IServiceUser{
 
     //** Authenticate a user
     @Override
-    public int Authentification(String email,String password) {
+    public int Authentification(String email, String password) {
         int status = 0;
         try {
             String req = "select * from user where email=? ";
@@ -74,26 +72,25 @@ public class ServiceUser implements IServiceUser{
             while (rs.next()) //l9a une ligne fi wosset lbase de donnee
             {
                 //User u = this.findByEmail(email);
-                if(rs.getString("etat").equals("0"))
-                {
+                if (rs.getString("etat").equals("0")) {
 
-                    return 2 ;
+                    return 2;
                 }
 
-               if( BCrypt.checkpw(password, rs.getString("password"))) {
-                   System.out.println("Im here");
-                   //if logged in successfully yemchy yasnaalou session w y7ottou fiha les informations mte3ou
+                if (BCrypt.checkpw(password, rs.getString("password"))) {
+                    System.out.println("Im here");
+                    //if logged in successfully yemchy yasnaalou session w y7ottou fiha les informations mte3ou
 
-                   //explain : f session bch y7ott le vrai role du user connecté khater 9bal ken y7ott role.ADMIN ou role.COACH meme si
-                   // user connecté est un coach ou un membre
-                   Role userRole = Role.valueOf(rs.getString("role"));
-                   User u =new User(rs.getInt("id"),rs.getString("nom"),rs.getString("email"),rs.getString("password"),rs.getString("telephone"),userRole,rs.getString("image"));
+                    //explain : f session bch y7ott le vrai role du user connecté khater 9bal ken y7ott role.ADMIN ou role.COACH meme si
+                    // user connecté est un coach ou un membre
+                    Role userRole = Role.valueOf(rs.getString("role"));
+                    User u = new User(rs.getInt("id"), rs.getString("nom"), rs.getString("email"), rs.getString("password"), rs.getString("telephone"), userRole, rs.getString("image"));
 
-                   Session s=Session.getInstance();
-                   s.setLoggedInUser(u);
-                   System.out.println("The connected is "+s.getLoggedInUser().getRole());
-                   return 1;
-               }
+                    Session s = Session.getInstance();
+                    s.setLoggedInUser(u);
+                    System.out.println("The connected is " + s.getLoggedInUser().getRole());
+                    return 1;
+                }
                 System.out.println("Invalid user credentials");
             }
         } catch (Exception ex) {
@@ -105,11 +102,10 @@ public class ServiceUser implements IServiceUser{
     @Override
     public void ActiverOrDesactiver(int id) {
 
-       //verifier si l'utilisateur connecté est un admin
-        Session s=Session.getInstance();
+        //verifier si l'utilisateur connecté est un admin
+        Session s = Session.getInstance();
         User u = s.getLoggedInUser();
-        if(u.getRole() != Role.ADMIN)
-        {
+        if (u.getRole() != Role.ADMIN) {
             System.out.println("You are not allowed to perform this action");
             return;
         }
@@ -124,6 +120,21 @@ public class ServiceUser implements IServiceUser{
             Logger.getLogger(ServiceUser.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    @Override
+    public void desactiverAcc(int id) {
+
+
+        String req = "UPDATE user SET etat =!etat  WHERE id = ?";
+        try {
+            pste = cnx.prepareStatement(req);
+            pste.setInt(1, id);
+            pste.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(ServiceUser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
 
     //** Update user information
     @Override
@@ -151,10 +162,9 @@ public class ServiceUser implements IServiceUser{
     @Override
     public void delete(int id) {
         //verifier si l'utilisateur connecté est un admin
-        Session s=Session.getInstance();
+        Session s = Session.getInstance();
         User u = s.getLoggedInUser();
-        if(u.getRole() != Role.ADMIN)
-        {
+        if (u.getRole() != Role.ADMIN) {
             System.out.println("You are not allowed to perform this action");
             return;
         }
@@ -225,32 +235,33 @@ public class ServiceUser implements IServiceUser{
 
 
     // Find a user by email
-    public User findByEmail(String email) throws SQLException {
+    @Override
+    public User findByEmail(String email) {
         User U = new User();
         String req = "SELECT * FROM user WHERE email = ?";
-        try (PreparedStatement pste=cnx.prepareStatement(req)) {
+        try (PreparedStatement pste = cnx.prepareStatement(req)) {
             pste.setString(1, email);
 
-
-            pste.setString(1,email);
-            ResultSet rs = pste.executeQuery(req);
-
+            ResultSet rs = pste.executeQuery();
             while (rs.next()) {
 
                 U.setId(rs.getInt("id"));
                 U.setName(rs.getString("nom"));
                 U.setEmail(rs.getString("email"));
+                U.setRole(Role.valueOf(rs.getString("role")));
                 U.setPassword(rs.getString("password"));
-
+                U.setImage(rs.getString("image"));
+                U.setTelephone(rs.getString("telephone"));
+                //  U.setPassword(rs.getString("password"));
             }
         } catch (SQLException ex) {
             Logger.getLogger(ServiceUser.class.getName()).log(Level.SEVERE, null, ex);
         }
         return U;
     }
+
     @Override
-    public void updateImage(String image, int id)
-    {
+    public void updateImage(String image, int id) {
         String req = "UPDATE user SET image = ? WHERE id = ?";
         try {
             pste = cnx.prepareStatement(req);
@@ -275,5 +286,30 @@ public class ServiceUser implements IServiceUser{
         }
     }
 
+    @Override
+    public User findByID(int idUser) {
+        User user = new User();
+        String req = "SELECT * FROM user WHERE id = ?";
+        try {
+            pste = cnx.prepareStatement(req);
+            pste.setInt(1, idUser);
+            ResultSet rs = pste.executeQuery();
+            while (rs.next()) {
 
+                user.setId(rs.getInt("id"));
+                user.setName(rs.getString("nom"));
+                user.setEmail(rs.getString("email"));
+                user.setRole(Role.valueOf(rs.getString("role")));
+                user.setEtat(rs.getBoolean("etat"));
+                user.setPassword(rs.getString("password"));
+                user.setTelephone(rs.getString("telephone"));
+                user.setImage(rs.getString("image"));
+                return user;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ServiceUser.class.getName());
+        }
+
+      return user;
+    }
 }

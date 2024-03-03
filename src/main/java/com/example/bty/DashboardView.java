@@ -18,4 +18,6 @@ public class DashboardView extends Application {
         stage.setResizable(true);
         stage.show();
     }
+
+
 }

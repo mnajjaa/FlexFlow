@@ -183,3 +183,7 @@ and open the template in the editor.
     -fx-text-fill: red;
     -fx-font-size: 14px;
 }
+
+.border-radius{
+    -fx-background-radius: 10;
+}

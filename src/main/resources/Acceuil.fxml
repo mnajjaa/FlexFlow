@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import java.lang.String?>
+<?import javafx.scene.chart.AreaChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bty.Controllers.AcceuillController">
+    <AnchorPane fx:id="main_form" layoutX="220.0" layoutY="14.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="880.0" AnchorPane.topAnchor="0.0">
+        <!--  atheya l borderPane eli feh atop wl left wl center  -->
+        <AnchorPane layoutX="30.0" layoutY="55.0" styleClass="border-pane" stylesheets="dashboardDesign.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+
+            <AnchorPane fx:id="dashboard_form" layoutX="143.0" layoutY="126.0" prefHeight="555.0" prefWidth="880.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <children>
+                    <AnchorPane layoutX="269.0" layoutY="386.0" prefHeight="335.0" prefWidth="704.0" stylesheets="dashboardDesign.css">
+                        <styleClass>
+                            <String fx:value="white-bg" />
+                            <String fx:value="shadow" />
+                        </styleClass>
+                        <children>
+                            <AnchorPane prefHeight="335.0" prefWidth="781.0">
+                                <children>
+                                    <AreaChart fx:id="dashboard_incomeChart" prefHeight="335.0" prefWidth="781.0" title="Income Data Chart" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                        <xAxis>
+                                            <CategoryAxis side="BOTTOM" />
+                                        </xAxis>
+                                        <yAxis>
+                                            <NumberAxis side="LEFT" />
+                                        </yAxis>
+                                    </AreaChart>
+                                </children>
+                            </AnchorPane>
+                        </children>
+                    </AnchorPane>
+                </children>
+
+            </AnchorPane>
+
+
+
+
+
+
+
+
+
+        </AnchorPane>
+    </AnchorPane>
+        <AnchorPane layoutX="244.0" layoutY="79.0" prefHeight="153.0" prefWidth="854.0" stylesheets="dashboardDesign.css">
+            <styleClass>
+                <String fx:value="white-bg" />
+                <String fx:value="shadow" />
+            </styleClass>
+            <children>
+                <AnchorPane layoutX="14.0" layoutY="9.0" prefHeight="135.0" prefWidth="246.0" styleClass="nav" stylesheets="dashboardDesign.css">
+                    <children>
+                        <FontAwesomeIconView fill="WHITE" glyphName="USERS" layoutX="14.0" layoutY="88.0" size="5em" />
+                        <Label fx:id="dashboard_NM" alignment="CENTER_RIGHT" layoutX="84.0" layoutY="14.0" prefHeight="17.0" prefWidth="148.0" text="0" textFill="WHITE">
+                            <font>
+                                <Font name="Tahoma" size="17.0" />
+                            </font>
+                        </Label>
+                        <Label alignment="CENTER" layoutX="84.0" layoutY="97.0" prefHeight="17.0" prefWidth="148.0" text="Number of Members" textFill="WHITE">
+                            <font>
+                                <Font name="Tahoma" size="15.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </AnchorPane>
+                <AnchorPane layoutX="304.0" layoutY="10.0" prefHeight="135.0" prefWidth="246.0" styleClass="nav" stylesheets="dashboardDesign.css">
+                    <children>
+                        <FontAwesomeIconView fill="WHITE" glyphName="USER" layoutX="14.0" layoutY="91.0" size="5em" />
+                        <Label fx:id="dashboard_NC" alignment="CENTER_RIGHT" layoutX="84.0" layoutY="17.0" prefHeight="17.0" prefWidth="148.0" text="0" textFill="WHITE">
+                            <font>
+                                <Font name="Tahoma" size="17.0" />
+                            </font>
+                        </Label>
+                        <Label alignment="CENTER" layoutX="84.0" layoutY="100.0" prefHeight="17.0" prefWidth="148.0" text="Number of Coaches" textFill="WHITE">
+                            <font>
+                                <Font name="Tahoma" size="15.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </AnchorPane>
+                <AnchorPane layoutX="594.0" layoutY="9.0" prefHeight="135.0" prefWidth="246.0" styleClass="nav" stylesheets="dashboardDesign.css">
+                    <children>
+                        <FontAwesomeIconView fill="WHITE" glyphName="MONEY" layoutX="14.0" layoutY="91.0" size="5em" />
+                        <Label fx:id="dashboard_TI" alignment="CENTER_RIGHT" layoutX="84.0" layoutY="17.0" prefHeight="17.0" prefWidth="148.0" text="\$0.0" textFill="WHITE">
+                            <font>
+                                <Font name="Tahoma" size="17.0" />
+                            </font>
+                        </Label>
+                        <Label alignment="CENTER" layoutX="84.0" layoutY="100.0" prefHeight="17.0" prefWidth="148.0" text="Total Income" textFill="WHITE">
+                            <font>
+                                <Font name="Tahoma" size="15.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </AnchorPane>
+            </children>
+        </AnchorPane>
+        <Separator layoutX="244.0" layoutY="244.0" prefHeight="5.0" prefWidth="856.0" />
+</AnchorPane>

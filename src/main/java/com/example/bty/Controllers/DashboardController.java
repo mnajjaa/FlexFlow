@@ -3,6 +3,7 @@ package com.example.bty.Controllers;
 import com.example.bty.Entities.Role;
 import com.example.bty.Entities.User;
 import com.example.bty.Services.IServiceUser;
+import com.example.bty.Services.MailerService;
 import com.example.bty.Services.ServiceUser;
 import com.example.bty.Utils.Session;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
@@ -29,9 +30,7 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
 import java.net.URL;
-import java.util.List;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class DashboardController implements Initializable {
 
@@ -174,6 +173,7 @@ public class DashboardController implements Initializable {
     Session session = Session.getInstance();
     User u=session.getLoggedInUser();
     User user ;
+    MailerService mailerService = new MailerService();
     public static String pathImage ;
 
 
@@ -226,7 +226,6 @@ public class DashboardController implements Initializable {
             //**********
                 final FontAwesomeIconView deleteIcon = new FontAwesomeIconView(FontAwesomeIcon.TRASH);
                 final HBox pane = new HBox(deleteIcon);
-
                 {
                     deleteIcon.getStyleClass().add("delete-icon");
 
@@ -284,7 +283,7 @@ public class DashboardController implements Initializable {
     public void consulterCoaches() {
         // Fetch all coaches
         List<User> coaches = serviceUser00.getAllCoaches();
-
+        System.out.println("fetching coaches");
         // Clear the table
         coaches_tableView.getItems().clear();
 
@@ -294,21 +293,29 @@ public class DashboardController implements Initializable {
         coaches_col_email.setCellValueFactory(new PropertyValueFactory<>("email"));
         coaches_col_telephone.setCellValueFactory(new PropertyValueFactory<>("telephone"));
         coaches_col_etat.setCellFactory(tc -> new TableCell<User, Boolean>() {
+            private CheckBox checkBox = new CheckBox();
+            private Label label = new Label();
+
             @Override
             protected void updateItem(Boolean item, boolean empty) {
                 super.updateItem(item, empty);
-                if (item == null) {
+                if (empty) {
                     setGraphic(null);
                 } else {
-                    Label label = new Label();
-                    if (item) {
-                        label.setText("Actif");
-                        label.setStyle("-fx-text-fill: green;");
-                    } else {
-                        label.setText("Inactif");
-                        label.setStyle("-fx-text-fill: red;");
-                    }
-                    setGraphic(label);
+                    checkBox.setSelected(item);
+                    checkBox.setOnAction(e -> {
+                        User coach = getTableView().getItems().get(getIndex());
+                        coach.setEtat(checkBox.isSelected());
+                        serviceUser00.update(coach); // Assuming update() method updates the member in the database
+                        label.setText(checkBox.isSelected() ? "Actif" : "Inactif");
+                        label.getStyleClass().clear();
+                        label.getStyleClass().add(checkBox.isSelected() ? "label-active" : "label-inactive");
+                    });
+                    label.setText(item ? "Actif" : "Inactif");
+                    label.getStyleClass().add(item ? "label-active" : "label-inactive");
+                    HBox hBox = new HBox(checkBox, label);
+                    hBox.setSpacing(10);
+                    setGraphic(hBox);
                 }
             }
         });
@@ -384,14 +391,12 @@ public class DashboardController implements Initializable {
                 }
             }
         });
-
         // Add fetched coaches to the table
         coaches_tableView.getItems().addAll(coaches);
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
         this.user = session.getLoggedInUser();
         System.out.println("Image"+user.getImage());
 
@@ -402,8 +407,6 @@ public class DashboardController implements Initializable {
             Image img = new Image("file:"+user.getImage());
             profile_img.setImage(img);
         }
-
-
         if(user.getRole().equals(Role.ADMIN)){
             dashboard_Admin.setVisible(true);
             dashboard_Admin.setManaged(true);
@@ -412,7 +415,7 @@ public class DashboardController implements Initializable {
             dashboard_membre.setVisible(false);
             dashboard_membre.setManaged(false);
             usernameAdmin.setText(u.getName());
-          //  consulterCoaches();
+            consulterCoaches();
         }
         else if(user.getRole().equals(Role.COACH)){
             dashboard_coach.setVisible(true);
@@ -430,10 +433,8 @@ public class DashboardController implements Initializable {
         else{
             System.out.println("user not found");
         }
-
-     consulterMembers();
+    // consulterMembers();
     }
-
     public void switchForm(ActionEvent actionEvent) {
  if (actionEvent.getSource().equals(dashboard_btn)) {
             main_form.setVisible(true);
@@ -453,15 +454,13 @@ public class DashboardController implements Initializable {
 
     public void logout(ActionEvent actionEvent) {
     }
-
     //*********** COACHES  METHODS ***********
-
 
     public void coachesCreateBtn(ActionEvent actionEvent) {
         // Gather data from form fields
         String name = coaches_name.getText();
         String email = coaches_email.getText();
-        String password = coaches_password.getText();
+        //String password = coaches_password.getText();
         String telephone = coaches_telephone.getText();
         Role defaultRole = Role.COACH; // Définissez le rôle par défaut ici
 
@@ -473,16 +472,51 @@ public class DashboardController implements Initializable {
             alert.setContentText("Email already exists. Please use a different email.");
             alert.showAndWait();
         } else {
+            List<Object> element=new ArrayList<>();
+            for(char c = 'a'; c <= 'z'; ++c){
+                element.add(c);
+            }
+            for(int i = 0; i < 10; ++i){
+                element.add(i);
+            }
+            Collections.shuffle(element,new Random());
+            StringBuilder sb = new StringBuilder();
+            for(int i = 0; i < 8; i++){
+                sb.append(element.get(i).toString());
+            }
+            String password = sb.toString();
+
+            System.out.println("Password: "+password);
+            String subject = "Welcome to our platform";
+            String message = "<html>"
+                    + "<body>"
+                    + "<h1 style='color:green;'>Welcome to Flex FLow </h1>"
+                    + "<p>Your account has been created successfully. Your password is: <strong>" + password + "</strong></p>"
+                    + "<p>For security reasons, please change your password after your first login.</p>"
+                    + "<p>Best regards,</p>"
+                    + "<p><strong>Your FlexFLow Team</strong></p>"
+                    + "</body>"
+                    + "</html>";
+            String recipient = email;
+            mailerService.sendMail(recipient,message,subject);
+            System.out.println("Email sent successfully!");
+
             User newCoach = new User(name, email, password, telephone, defaultRole,true,null);
             // Appeler la méthode d'inscription avec les valeurs récupérées
             serviceUser00.register(newCoach);
-            // serviceUser00.ActiverOrDesactiver(newCoach.getId());
+            serviceUser00.ActiverOrDesactiver(newCoach.getId());
             System.out.println("Coach created successfully! and activated ");
+            // after creating the coach, redirect to the list of coaches
+            coaches_list.setVisible(true);
+            coaches_list.setManaged(true);
+
+            coaches_form.setVisible(false);
+            coaches_form.setManaged(false);
+            consulterCoaches();
         }
     }
 
     public void coachesUpdateBtn(ActionEvent actionEvent) {
-
     User coach=new User(id,coaches_name.getText(),coaches_email.getText(),coaches_telephone.getText(),Role.COACH,true,null);
     serviceUser00.update(coach);
         coaches_list.setVisible(true);
@@ -492,15 +526,10 @@ public class DashboardController implements Initializable {
         coaches_form.setManaged(false);
         consulterCoaches();
     }
-
     public void coachesDeleteBtn(ActionEvent actionEvent) {
     }
-
     public void coachesSelect(MouseEvent mouseEvent) {
-
     }
-
-
     public void goToDashbordAdmin(ActionEvent actionEvent) {
     }
 
@@ -511,10 +540,8 @@ public class DashboardController implements Initializable {
     public void goToMembre(ActionEvent actionEvent) {
         consulterMembers();
     }
-
     public void goToEvents(ActionEvent actionEvent) {
     }
-
     public void goToCoachs(ActionEvent actionEvent) {
     }
 
@@ -544,10 +571,6 @@ public class DashboardController implements Initializable {
 
     public void coachesUpdateImage(ActionEvent event) {
 
-
-
-
-
     }
 
     @FXML
@@ -559,7 +582,6 @@ public class DashboardController implements Initializable {
         coaches_list.setVisible(false);
         coaches_form.setManaged(false);
         coaches_form.setVisible(false);
-
 
     }
 
@@ -609,4 +631,17 @@ public class DashboardController implements Initializable {
        }
     }
 
+    public void goToAddForm(ActionEvent event) {
+        // Make coaches_form visible and managed
+        coaches_form.setVisible(true);
+        coaches_form.setManaged(true);
+
+        // Make other forms invisible and unmanaged
+        coaches_list.setVisible(false);
+        coaches_list.setManaged(false);
+
+
+        user_profil.setVisible(false);
+        user_profil.setManaged(false);
+    }
 }
