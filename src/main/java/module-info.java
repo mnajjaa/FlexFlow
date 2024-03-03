@@ -13,12 +13,9 @@ module com.example.bty {
     opens com.example.bty to javafx.fxml;
     exports com.example.bty;
     exports com.example.bty.Controllers;
-    exports com.example.bty.Controllers.Admin;
-    exports com.example.bty.Controllers.Coach;
+
     exports com.example.bty.Entities;
     exports com.example.bty.Services;
     opens com.example.bty.Controllers to javafx.fxml;
-    exports com.example.bty.Views;
-    opens com.example.bty.Views to javafx.fxml;
 
 }

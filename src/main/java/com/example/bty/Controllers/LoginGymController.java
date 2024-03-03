@@ -350,7 +350,7 @@ public class LoginGymController implements Initializable {
 
     public void restPwd(MouseEvent mouseEvent) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/resetPwd.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/checkEmail.fxml"));
             Parent root = loader.load();
             Scene scene = new Scene(root);
             Stage stage = (Stage) restPwd_btn.getScene().getWindow();

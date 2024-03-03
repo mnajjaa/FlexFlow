@@ -25,48 +25,28 @@ public class RestPwdController {
 
 IServiceValidation serviceValidation = new ServiceValidation(); //sna3et instance mel validation Service
 IServiceUser serviceUser = new ServiceUser(); // sna3et instance mel user Service
-        MailerService mailerService = new MailerService();
+    User user = new User();
+ MailerService mailerService = new MailerService();
     public void resetPWD(ActionEvent event) {
-        String email = userEmail_txtfd.getText().trim();
+       // String email = userEmail_txtfd.getText().trim();
         String newPwd = newPwd_txtfd.getText().trim();
         String confrmPwd = confrmPwd_txtfd1.getText().trim();
-
-        if (email.isEmpty() || newPwd.isEmpty() || confrmPwd.isEmpty()) {
-            error_lbl.setText("All fields are required!");
-            return;
-        }
 
         if (!newPwd.equals(confrmPwd)) {
             error_lbl.setText("Passwords do not match!");
             return;
+        }else if (newPwd.isEmpty() || confrmPwd.isEmpty()) {
+            error_lbl.setText("Password cannot be empty!");
+            return;
+        }else {
+            System.out.println("passwords match");
+            serviceUser.updatePassword(newPwd,user.getId());
+            System.out.println("password updated");
         }
-
-
-        if (serviceUser.emailExists(email)) {
-            System.out.println("User already exist");
-            Random random = new Random();
-            random.nextInt(9999); // code bin 0 w 8999 [0,9999[
-            Validation v = new Validation(random.nextInt(9999), Instant.now(), Instant.now().plusSeconds(600), serviceUser.findByEmail(email));
-            serviceValidation.ajouterValidation(v);
-            String message = "Your code is : " + v.getCode();
-            String subject = "Rénitialisation mot de passe";
-            mailerService.sendMail(email, message, subject);
-
-//            User user = serviceUser.findByEmail(email); // jebet user eli aandou adresse :
-//            Validation validation = serviceValidation.findByIdUser(user.getId());
-
-
-        } else {
-            System.out.println("User not exist");
-        }
-
-
-
-
 
         //redirect to code verification page
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/verifCode.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/loginGym.fxml"));
             Parent root = loader.load();
             Scene scene = new Scene(root);
             Stage stage = (Stage) resetpwd_btn.getScene().getWindow();
@@ -75,5 +55,10 @@ IServiceUser serviceUser = new ServiceUser(); // sna3et instance mel user Servic
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void setUser(User uservalid) {
+        this.user = uservalid;
+
     }
 }
