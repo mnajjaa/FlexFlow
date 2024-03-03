@@ -31,7 +31,9 @@ import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
-
+import com.twilio.Twilio;
+import com.twilio.rest.api.v2010.account.Message;
+import com.twilio.type.PhoneNumber;
 public class DetailsEvenementWindow extends Stage {
     private static ToggleButton scannerButton;
     private ImageView qrCodeImageView;
@@ -39,16 +41,16 @@ public class DetailsEvenementWindow extends Stage {
     private PreparedStatement statementInsert;
 
 
-    private long countdownTime;
-    private Timeline countdownTimeline;
-    private static Label countdownLabel;
 
     private static Map<Evenement, VBox> detailsMap = new HashMap<>();
+    private static final String TWILIO_ACCOUNT_SID = "AC8802c2e9768e4876ace30c6beb9ba980";
+    private static final String TWILIO_AUTH_TOKEN = "3c4c76aba0311dc8cfa7be9e240fdd6e";
+    private static final String TWILIO_PHONE_NUMBER = "+19497102963";
 
     public DetailsEvenementWindow() {
         connection = ConnexionDB.getInstance().getConnexion();
-        countdownTimeline = new Timeline();
-        countdownLabel = new Label();
+
+
 
     }
 
@@ -61,7 +63,7 @@ public class DetailsEvenementWindow extends Stage {
         detailsStage.initModality(Modality.APPLICATION_MODAL);
         detailsStage.setResizable(false);
         VBox detailsCard = createDetailsCard(evenement);
-        instance.countdownTimeline.play();
+
 
         Scene scene = new Scene(detailsCard, 400, 300);
         scene.getStylesheets().add(DetailsEvenementWindow.class.getResource("/com/example/bty/CSSmoduleEvenement/VitrineClient.css").toExternalForm());
@@ -110,18 +112,15 @@ public class DetailsEvenementWindow extends Stage {
                     System.out.println("Scanner Code désactivé");
                 }
             });
-            instance.countdownLabel = new Label(); // Initialize countdownLabel here
+        //    instance.countdownLabel = new Label(); // Initialize countdownLabel here
 
             boolean userHasReserved = hasUserReservedEvent(loggedInUser.getId(), evenement.getNom());
             instance.scannerButton.setDisable(!userHasReserved);
             scannerButton = instance.scannerButton; // Add this line to initialize scannerButton correctly
 
-            if (userHasReserved) {
-                instance.countdownLabel = new Label(); // Initialize countdownLabel only for reserved events
-                detailsCard.getChildren().addAll( instance.countdownLabel);
-            } else {
+
                 detailsCard.getChildren().addAll(dateLabel, timeLabel, categorieLabel, objectifLabel, placeLabel, ReserverButton, instance.scannerButton);
-            }
+
 
             detailsMap.put(evenement, detailsCard);
         }
@@ -222,19 +221,11 @@ public class DetailsEvenementWindow extends Stage {
                         ReserverButton.setText("Complet");
                         ReserverButton.setStyle("-fx-opacity: 0.5");
                     }
-                    long eventDateTime = evenement.getDate().getTime() + evenement.getTime().getTime();
-                    long currentTime = System.currentTimeMillis();
-                    countdownTime = eventDateTime - currentTime;
-                    updateCountdownLabel();
-
-
-                    // Set up the countdown timeline to update the countdown label every second
-                    countdownTimeline.getKeyFrames().add(new KeyFrame(Duration.seconds(1), event -> updateCountdown(evenement)));
-                    countdownTimeline.setCycleCount(Timeline.INDEFINITE);
-                    countdownTimeline.play();
 
 
                     scannerButton.setDisable(false);
+                    sendReservationConfirmationSMS(loggedInUser.getName(), evenement.getNom());
+
                 } else {
                     afficherMessage("Échec", "Erreur lors de la participation à l'evenement.");
                 }
@@ -246,41 +237,25 @@ public class DetailsEvenementWindow extends Stage {
         }
     }
 
+    private void sendReservationConfirmationSMS(String participantName, String eventName) {
+        Twilio.init(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 
+        // Replace "toPhoneNumber" with the recipient's phone number
+        // Format: "+1234567890"
+        String toPhoneNumber = "+21653602680";  // Remplacez par le numéro de téléphone réel du participant
 
-    private void updateCountdown(Evenement evenement) {
-        countdownTime -= 1000; // Subtract one second
-        updateCountdownLabel();
+        String smsBody = "Bienvenue " + participantName + " à l'événement " + eventName;
 
-        if (countdownTime <= 0) {
-            countdownTimeline.stop();
-            // Trigger the buzzer sound here
-            System.out.println("Buzzer sound triggered!");
-        }
+        Message message = Message.creator(
+                new PhoneNumber(toPhoneNumber),
+                new PhoneNumber(TWILIO_PHONE_NUMBER),
+                smsBody
+        ).create();
 
-    }
-    private void updateCountdownLabel() {
-        long seconds = Math.max(0, countdownTime / 1000);
-        long minutes = seconds / 60;
-        long hours = minutes / 60;
-
-        seconds %= 60;
-        minutes %= 60;
-        String countdownString = String.format("%02d:%02d:%02d", hours, minutes, seconds);
-
-        System.out.println("Temps restant : " + countdownString);  // Ajout de la sortie dans la console
-
-        countdownLabel.setText(countdownString);
-
-
-
+        System.out.println("SMS sent with SID: " + message.getSid());
     }
 
-    private void stopCountdown() {
-        if (countdownTimeline != null) {
-            countdownTimeline.stop();
-        }
-    }
+
 
     private void afficherMessage(String titre, String contenu) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
