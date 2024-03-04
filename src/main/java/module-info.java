@@ -9,6 +9,7 @@ module com.example.bty {
     requires java.desktop;
 exports com.example.bty.Controllers.graphiqueGCP;
     requires javafx.web;
+    requires twilio;
 
     opens com.example.bty to javafx.fxml;
     exports com.example.bty;
