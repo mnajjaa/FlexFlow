@@ -162,7 +162,9 @@ public class DashboardProduit {
         String produitMoinsVendu = null;
 
         try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgym", "root", "")) {
-            String sql = "SELECT nom FROM produit ORDER BY prix * quantite ASC LIMIT 1";
+//            String sql = "SELECT nom FROM produit ORDER BY prix * quantite ASC LIMIT 1";
+            String sql = "SELECT nom FROM produit ORDER BY quantiteVendues ASC LIMIT 1";
+
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql);
                  ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -188,7 +190,9 @@ public class DashboardProduit {
         try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgym", "root", "")) {
 
             // Requête SQL pour obtenir le produit le plus acheté
-            String sql = "SELECT nom FROM produit ORDER BY prix * quantite DESC LIMIT 1";
+//            String sql = "SELECT nom FROM produit ORDER BY prix * quantite DESC LIMIT 1";
+            String sql = "SELECT nom FROM produit ORDER BY quantiteVendues DESC LIMIT 1";
+
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql);
                  ResultSet resultSet = preparedStatement.executeQuery()) {
 
@@ -276,73 +280,189 @@ public class DashboardProduit {
         return produits;
     }
     private void openEditForm(Produit produit) {
-        Dialog<Produit> editDialog = new Dialog<>();
-        editDialog.setTitle("Modifier le produit");
-        editDialog.setHeaderText(null);
-
-        // Créer des champs de formulaire pour les attributs du produit
-        TextField nomField = new TextField(produit.getNom());
-        TextField descriptionField = new TextField(produit.getDescription());
-        TextField prixField = new TextField(String.valueOf(produit.getPrix()));
-        TextField typeField = new TextField(produit.getType());
-        TextField quantiteField = new TextField(String.valueOf(produit.getQuantite()));
-        TextField quantiteVenduesField = new TextField(String.valueOf(produit.getQuantiteVendues()));
 
 
+            Dialog<Produit> editDialog = new Dialog<>();
+            editDialog.setTitle("Modifier le produit");
+            editDialog.setHeaderText(null);
+
+            // Créer des champs de formulaire pour les attributs du produit
+            TextField nomField = new TextField(produit.getNom());
+            TextField descriptionField = new TextField(produit.getDescription());
+            TextField prixField = new TextField(String.valueOf(produit.getPrix()));
+            TextField typeField = new TextField(produit.getType());
+            TextField quantiteField = new TextField(String.valueOf(produit.getQuantite()));
+            TextField quantiteVenduesField = new TextField(String.valueOf(produit.getQuantiteVendues()));
 
 
+            // Créer le contenu du dialogue
+            VBox content = new VBox();
+            content.setSpacing(10);
+            content.getChildren().addAll(
+                    new Label("Nom: "), nomField,
+                    new Label("Description: "), descriptionField,
+                    new Label("Prix: "), prixField,
+                    new Label("Type: "), typeField,
+                    new Label("Quantité: "), quantiteField,
+                    new Label("Quantité Vendue: "), quantiteVenduesField
+            );
+
+            // Ajouter les boutons au dialogue :
+            ButtonType modifierButton = new ButtonType("Modifier", ButtonBar.ButtonData.OK_DONE);
+            ButtonType cancelButton = new ButtonType("Annuler", ButtonBar.ButtonData.CANCEL_CLOSE);
+            editDialog.getDialogPane().getButtonTypes().addAll(modifierButton, cancelButton);
+
+            // editDialog.getDialogPane().getButtonTypes().addAll(modifierButton, ButtonType.CANCEL);
+
+            Node modifierButtonNode = editDialog.getDialogPane().lookupButton(modifierButton);
+            Node cancelButtonNode = editDialog.getDialogPane().lookupButton(cancelButton);
 
 
-        // Créer le contenu du dialogue
-        VBox content = new VBox();
-        content.setSpacing(10);
-        content.getChildren().addAll(
-                new Label("Nom: "), nomField,
-                new Label("Description: "), descriptionField,
-                new Label("Prix: "), prixField,
-                new Label("Type: "), typeField,
-                new Label("Quantité: "), quantiteField,
-                new Label("Quantité Vendue: "), quantiteVenduesField
-        );
+            editDialog.getDialogPane().setContent(content);
 
-        // Ajouter les boutons au dialogue :
-        ButtonType modifierButton = new ButtonType("Modifier", ButtonBar.ButtonData.OK_DONE);
-        ButtonType cancelButton = new ButtonType("Annuler", ButtonBar.ButtonData.CANCEL_CLOSE);
-        editDialog.getDialogPane().getButtonTypes().addAll(modifierButton, cancelButton);
+            // Définir la logique de conversion du résultat du dialogue
+            editDialog.setResultConverter(dialogButton -> {
+                if (dialogButton == modifierButton) {
+                    Produit editedProduit = new Produit();
+                    editedProduit.setIdProduit(produit.getIdProduit());
+                    editedProduit.setNom(nomField.getText());
+                    editedProduit.setDescription(descriptionField.getText());
+                    editedProduit.setPrix(Double.parseDouble(prixField.getText()));
+                    editedProduit.setType(typeField.getText());
+                    editedProduit.setQuantite(Integer.parseInt(quantiteField.getText()));
+                    editedProduit.setQuantiteVendues(Integer.parseInt(quantiteVenduesField.getText()));
+                    return editedProduit;
+                }
+                return null;
+            });
 
-        // editDialog.getDialogPane().getButtonTypes().addAll(modifierButton, ButtonType.CANCEL);
-
-        Node modifierButtonNode = editDialog.getDialogPane().lookupButton(modifierButton);
-        Node cancelButtonNode = editDialog.getDialogPane().lookupButton(cancelButton);
+            final String ERROR_STYLE = "-fx-border-color: red;";
 
 
+            prixField.textProperty().addListener((observable, oldValue, newValue) -> {
+                if (!newValue.matches("\\d*|\\d+\\.\\d*")) {
+                    prixField.setStyle(ERROR_STYLE);
+                } else {
+                    prixField.setStyle(null);
+                }
+            });
 
-        editDialog.getDialogPane().setContent(content);
+            quantiteField.textProperty().addListener((observable, oldValue, newValue) -> {
+                if (!newValue.matches("\\d*")) {
+                    quantiteField.setStyle(ERROR_STYLE);
+                } else {
+                    quantiteField.setStyle(null);
+                }
+            });
 
-        // Définir la logique de conversion du résultat du dialogue
-        editDialog.setResultConverter(dialogButton -> {
-            if (dialogButton == modifierButton) {
-                Produit editedProduit = new Produit();
-                editedProduit.setIdProduit(produit.getIdProduit());
-                editedProduit.setNom(nomField.getText());
-                editedProduit.setDescription(descriptionField.getText());
-                editedProduit.setPrix(Double.parseDouble(prixField.getText()));
-                editedProduit.setType(typeField.getText());
-                editedProduit.setQuantite(Integer.parseInt(quantiteField.getText()));
-                editedProduit.setQuantiteVendues(Integer.parseInt(quantiteVenduesField.getText()));
-                return editedProduit;
+            quantiteVenduesField.textProperty().addListener((observable, oldValue, newValue) -> {
+                if (!newValue.matches("\\d*")) {
+                    quantiteVenduesField.setStyle(ERROR_STYLE);
+                } else {
+                    quantiteVenduesField.setStyle(null);
+                }
+            });
+
+
+            editDialog.setResultConverter(dialogButton -> {
+                if (dialogButton == modifierButton) {
+                    if (nomField.getText().isEmpty() || descriptionField.getText().isEmpty()
+                            || prixField.getText().isEmpty() || quantiteField.getText().isEmpty()
+                            || quantiteVenduesField.getText().isEmpty()) {
+                        afficherMessage("Erreur de saisie", "Veuillez remplir tous les champs.");
+                        return null;
+                    }
+
+                    if (validateNumericFields(prixField, quantiteField, quantiteVenduesField)) {
+                        Produit editedProduit = new Produit();
+                        editedProduit.setIdProduit(produit.getIdProduit());
+                        editedProduit.setNom(nomField.getText());
+                        editedProduit.setDescription(descriptionField.getText());
+                        editedProduit.setPrix(Double.parseDouble(prixField.getText()));
+                        editedProduit.setType(typeField.getText());
+                        editedProduit.setQuantite(Integer.parseInt(quantiteField.getText()));
+                        editedProduit.setQuantiteVendues(Integer.parseInt(quantiteVenduesField.getText()));
+                        return editedProduit;
+                    }
+                    else {
+                        afficherMessage("Erreur de saisie", "Veuillez saisir des valeurs numériques valides pour les champs numériques (ID, Prix, Quantité, Quantité Vendues).");
+                        return null;
+                    }
+                }
+                return null;
+            });
+
+
+            // Afficher le dialogue et traiter le résultat
+            Optional<Produit> result = editDialog.showAndWait();
+            result.ifPresent(editedProduit -> {
+                // Mettre à jour le produit dans la base de données
+                modifierProduit(editedProduit);
+                actualiserTable();
+            });
+        }
+
+
+    private boolean validateNumericFields(TextField... fields) {
+        for (TextField field : fields) {
+            if (!field.getText().matches("\\d+(\\.\\d+)?")) {
+                field.setStyle("-fx-border-color: red;");
+                return false;
+            } else {
+                field.setStyle(null);
             }
-            return null;
-        });
-
-        // Afficher le dialogue et traiter le résultat
-        Optional<Produit> result = editDialog.showAndWait();
-        result.ifPresent(editedProduit -> {
-            // Mettre à jour le produit dans la base de données
-            modifierProduit(editedProduit);
-            actualiserTable();
-        });
+        }
+        return true;
     }
+
+    private void afficherMessage(String titre, String contenu) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(titre);
+        alert.setHeaderText(null);
+        alert.setContentText(contenu);
+        alert.showAndWait();
+    }
+
+    private void afficherMessage1(String titre, String contenu) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(titre);
+        alert.setHeaderText(null);
+        alert.setContentText(contenu);
+        alert.showAndWait();
+    }
+
+
+
+
+    private boolean validateFields(TextField... fields) {
+        // Check if all fields are non-empty
+        for (TextField field : fields) {
+            if (field.getText().isEmpty()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+
+
+    private void showAlert1(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+
+        // Ajoute un bouton OK personnalisé qui ne ferme pas la boîte de dialogue parente
+        ButtonType okButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+        alert.getButtonTypes().setAll(okButton);
+
+        // Affiche l'alerte
+        alert.showAndWait();
+    }
+
+
+
 
 
     private void modifierProduit(Produit produit) {

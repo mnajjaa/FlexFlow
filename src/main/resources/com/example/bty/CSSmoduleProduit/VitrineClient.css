@@ -36,7 +36,7 @@
     -fx-font-size: 15px;
     -fx-padding: 8 16;
     -fx-background-radius: 12;
-    -fx-translate-x: 230px;
+    -fx-translate-x: 235px;
 }
 
 .search-text-field {
@@ -48,7 +48,7 @@
     -fx-min-width: 320px;
     -fx-min-height: 35px;
     -fx-font-size: 15px;
-    -fx-translate-x: 220px;
+    -fx-translate-x: 235px;
 }
 
 

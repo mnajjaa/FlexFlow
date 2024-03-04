@@ -4,9 +4,9 @@ public class Commande {
     private int idProduit;
     private String nomProduit;
     private int quantite;
-    private double montantTotale;
+    private int montantTotale;
 
-    public Commande(int idProduit, String nomProduit, int quantite, double montantTotale) {
+    public Commande(int idProduit, String nomProduit, int quantite, int montantTotale) {
         this.idProduit = idProduit;
         this.nomProduit = nomProduit;
         this.quantite = quantite;
@@ -25,7 +25,7 @@ public class Commande {
         return quantite;
     }
 
-    public double getMontantTotale() {
+    public int getMontantTotale() {
         return montantTotale;
     }
 }

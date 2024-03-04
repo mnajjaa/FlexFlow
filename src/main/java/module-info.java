@@ -8,6 +8,12 @@ module com.example.bty {
     requires jbcrypt;
     requires javafx.web;
     requires itextpdf;
+    requires stripe.java;
+    requires java.desktop;
+    requires java.mail;
+
+
+
 
     opens com.example.bty to javafx.fxml;
     exports com.example.bty;
@@ -19,9 +25,13 @@ module com.example.bty {
     opens com.example.bty.Controllers to javafx.fxml;
     exports com.example.bty.Controllers.ProduitController;
     opens com.example.bty.Controllers.ProduitController to javafx.fxml;
-
+    exports com.example.bty.Controllers.CourController;
+    opens com.example.bty.Controllers.CourController to javafx.fxml;
 
     exports com.example.bty.Views;
     opens com.example.bty.Views to javafx.fxml;
+
+    exports com.example.bty.Controllers.graphiqueGCP;
+    opens com.example.bty.Controllers.graphiqueGCP to javafx.fxml;
 
 }

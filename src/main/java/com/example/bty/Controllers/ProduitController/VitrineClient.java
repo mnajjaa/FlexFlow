@@ -1,30 +1,45 @@
 package com.example.bty.Controllers.ProduitController;
 
+import com.example.bty.Controllers.CourController.CourMembre;
+import com.example.bty.Controllers.graphiqueGCP.FD;
+import com.example.bty.Controllers.graphiqueGCP.Formoffre;
 import com.example.bty.Entities.Commande;
 import com.example.bty.Entities.Produit;
+import com.example.bty.Entities.User;
+import com.example.bty.Utils.Session;
 import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.PdfDocument;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.stripe.Stripe;
+import com.stripe.exception.StripeException;
+import com.stripe.model.PaymentIntent;
+import com.stripe.param.PaymentIntentCreateParams;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Line;
+import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.io.ByteArrayInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import java.io.*;
+
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -42,15 +57,20 @@ public class VitrineClient extends Application {
     private Connection connection;
 
     private Stage panierStage;
+    private static String userName;
+    private static int userId;
+    Session session = Session.getInstance();
+    User u=session.getLoggedInUser();
+    User user ;
 
     private List<Commande> panier; // Panier du client
-
+payer p = new payer();
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Affichage des produits");
 
         BorderPane root = new BorderPane();
-        root.setPadding(new Insets(10));
+        //root.setPadding(new Insets(10));
 
         VBox topBar = new VBox();
         topBar.setAlignment(Pos.CENTER_LEFT);
@@ -78,6 +98,10 @@ public class VitrineClient extends Application {
             afficherProduits(produitsRecherches, root);
         });
 
+
+
+
+
         HBox searchBox = new HBox(rechercheTextField, rechercherButton);
         searchBox.setAlignment(Pos.CENTER_LEFT);
         searchBox.setSpacing(10);
@@ -96,16 +120,16 @@ public class VitrineClient extends Application {
         root.setCenter(scrollPane);
 
 
-
-        AnchorPane leftDashboard = createLeftDashboard();
-        leftDashboard.setMinHeight(250);
+        // f west methode start
+        AnchorPane leftDashboard = createLeftDashboard(primaryStage);
         root.setLeft(leftDashboard);
 
-        Scene scene = new Scene(root, 1200, 690); // Ajustez la largeur selon vos besoins
+        Scene scene = new Scene(root, 1366, 700); // Ajustez la largeur selon vos besoins
         primaryStage.setScene(scene);
         primaryStage.show();
         scene.getStylesheets().add(getClass().getResource("/com/example/bty/CSSmoduleProduit/VitrineClient.css").toExternalForm());
         scene.getStylesheets().add(getClass().getResource("/dashboardDesign.css").toExternalForm());
+       // scene.getStylesheets().add(getClass().getResource("/com/example/bty/CSSmoduleProduit/style.css").toExternalForm());
 
         try {
             connection = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
@@ -117,162 +141,234 @@ public class VitrineClient extends Application {
         panier = new ArrayList<>(); // Initialiser le panier
 
         afficherProduits(produits, root);
+
+       // ServiceProduit.printUserDetails();
+
     }
 
+
+
+
+
+
+//Methode de SideBar a gauche
+
+    private AnchorPane createLeftDashboard(Stage primaryStage) {
+        User loggedInUser = Session.getInstance().getLoggedInUser();
+          AnchorPane mainForm = new AnchorPane();
+        mainForm.setPrefSize(1100, 900);
+
+        //AnchorPane dashboardAdmin = new AnchorPane();
+
+
+
+        AnchorPane dashboardAdmin = new AnchorPane();
+        //leftAnchorPane.setTranslateY(-80);
+        dashboardAdmin.setTranslateX(0);
+        //leftAnchorPane.setPrefSize(70, 280);
+//        dashboardAdmin.setBottomAnchor(mainForm, 40.0);
+//        dashboardAdmin.setLeftAnchor(mainForm, 40.0);
+        dashboardAdmin.setTranslateY(-112);
+        dashboardAdmin.setPrefSize(234, 1500);
+        dashboardAdmin.getStyleClass().add("border-pane");
+
+
+        FontAwesomeIconView usernameAdmin = createFontAwesomeIconView("USER", "WHITE", 50, 82, 91);
+        Label welcomeLabel = createLabel("Welcome, " + loggedInUser.getName(), "Arial Bold", 15, 78, 101, "WHITE");
+        Label usernameLabel = createLabel("MarcoMan", "Arial Bold", 20, 11, 120,"WHITE");
+        // Line line = createLine(-100, 152, 100, 152, 111);
+        Line line = createColoredLine(-100, 152, 100, 152, 111, "WHITE");
+
+        Button DashboardBtn = createButton("Dashboard", 22, 186);
+        Button CoursBtn = createButton("Cours", 22, 234);
+        Button eventsBtn = createButton("Evenements", 22, 276);
+        Button demandeBtn = createButton("Demande Coahing", 22, 319);
+        Button offreAdminBtn = createButton("Offre", 22, 361);
+        Button storeAdminBtn = createButton("Store", 22, 405);
+
+        CoursBtn.setOnAction(event -> {
+            // Instancier et afficher la vue DashboardVitrineController
+            CourMembre c = new CourMembre();
+            c.start(primaryStage);
+        });
+
+
+        eventsBtn.setOnAction(event -> {
+            // Instancier et afficher la vue DashboardVitrineController
+
+        });
+
+
+        demandeBtn.setOnAction(event -> {
+            // Instancier et afficher la vue DashboardVitrineController
+           FD f = new FD();
+            f.start(primaryStage);
+        });
+
+
+        offreAdminBtn.setOnAction(event -> {
+            Formoffre o = new Formoffre();
+            o.start(primaryStage);
+
+        });
+
+
+        storeAdminBtn.setOnAction(event -> {
+            // Instancier et afficher la vue DashboardVitrineController
+VitrineClient v = new VitrineClient();
+v.start(primaryStage);
+        });
+
+
+
+        Line line2 = createColoredLine(-100, 449, 100, 449, 112, "WHITE");
+
+        Button profileAdminBtn = createButton("Profile", 22, 462);
+        Button logoutBtn = createButton("Logout", 22, 503);
+
+// Add event handler to logoutBtn
+
+// Add event handler to logoutBtn
+        logoutBtn.setOnAction(event -> {
+            // Close all open interfaces
+            Stage primaryStage1 = (Stage) logoutBtn.getScene().getWindow(); // Assuming logoutBtn is in the same scene as the primaryStage
+            primaryStage1.close();
+
+            // Open the LoginGYM.fxml interface
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/LoginGym.fxml"));
+            Parent root;
+            try {
+                root = loader.load();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+
+            Scene scene = new Scene(root);
+            primaryStage.setScene(scene);
+            primaryStage.show();
+        });
+
+
+        FontAwesomeIconView[] icons = {
+                createFontAwesomeIconView("HOME", "WHITE", 20, 38, 212),
+                createFontAwesomeIconView("USER", "WHITE", 20, 38, 258),
+                createFontAwesomeIconView("USERS", "WHITE", 20, 38, 300),
+                createFontAwesomeIconView("BOOK", "WHITE", 20, 38, 343),
+                createFontAwesomeIconView("CALENDAR", "WHITE", 20, 38, 385),
+
+                createFontAwesomeIconView("SHOPPING_CART", "WHITE", 20, 38, 429),
+
+                createFontAwesomeIconView("ID_CARD", "WHITE", 20, 38, 486),
+                createFontAwesomeIconView("EXTERNAL_LINK", "WHITE", 20, 38, 529)
+        };
+
+        VBox reportContainer = new VBox();
+        reportContainer.setLayoutX(13);
+        reportContainer.setLayoutY(608);
+        reportContainer.setPrefSize(180, 91);
+        reportContainer.getStyleClass().add("report_container");
+
+
+        Text reportText = new Text("Report Suggestion/Bug?");
+        reportText.getStyleClass().add("report_text");
+
+        Label reportLabel = new Label("Use this to report any errors or suggestions.");
+        reportLabel.getStyleClass().add("report_label");
+
+        Button reportButton = createButton("Report", 0, 0);
+        reportButton.getStyleClass().add("report_button");
+
+
+
+        reportContainer.getChildren().addAll(reportText, reportLabel, reportButton);
+
+        StackPane contentPlaceholder = new StackPane();
+        contentPlaceholder.setLayoutX(220);
+        contentPlaceholder.setLayoutY(0);
+
+        dashboardAdmin.getChildren().addAll(
+                usernameAdmin, welcomeLabel, usernameLabel, line,
+                DashboardBtn,CoursBtn, eventsBtn, demandeBtn, offreAdminBtn,
+                storeAdminBtn, line2, profileAdminBtn,
+                logoutBtn, icons[0], icons[1], icons[2], icons[3],
+                icons[4], icons[5], icons[6],icons[7], reportContainer,
+                contentPlaceholder
+        );
+
+        mainForm.getChildren().addAll(dashboardAdmin);
+        return dashboardAdmin;
+
+
+    }
+
+
+
+
+    private FontAwesomeIconView createFontAwesomeIconView(String glyphName, String fill, double size, double layoutX, double layoutY) {
+        FontAwesomeIconView iconView = new FontAwesomeIconView();
+        iconView.setGlyphName(glyphName);
+
+        // Définir la couleur de remplissage ici
+        iconView.setFill(javafx.scene.paint.Paint.valueOf(fill));
+
+        iconView.setSize(String.valueOf(size));
+
+        iconView.setLayoutX(layoutX);
+        iconView.setLayoutY(layoutY);
+        return iconView;
+    }
+
+
+    private Label createLabel(String text, String fontName, double fontSize, double layoutX, double layoutY, String textFill) {
+        Label label = new Label(text);
+        label.setFont(new javafx.scene.text.Font(fontName, fontSize));
+        label.setLayoutX(layoutX);
+        label.setLayoutY(layoutY);
+
+        // Définir la couleur du texte ici
+        label.setTextFill(javafx.scene.paint.Paint.valueOf(textFill));
+
+        return label;
+    }
+
+
+    private Line createLine(double startX, double startY, double endX, double endY, double layoutX) {
+        Line line = new Line(startX, startY, endX, endY);
+        line.setLayoutX(layoutX);
+        return line;
+    }
+
+
+    private Line createColoredLine(double startX, double startY, double endX, double endY, double layoutX, String strokeColor) {
+        Line line = new Line(startX, startY, endX, endY);
+        line.setLayoutX(layoutX);
+
+        // Définir la couleur de la ligne ici
+        line.setStroke(javafx.scene.paint.Paint.valueOf(strokeColor));
+
+        return line;
+    }
+
+    private Button createButton(String text, double layoutX, double layoutY) {
+        Button button = new Button(text);
+        button.setLayoutX(layoutX);
+        button.setLayoutY(layoutY);
+        button.setMnemonicParsing(false);
+        button.getStyleClass().add("nav-btn");
+        button.setPrefSize(180, 35);
+        return button;
+    }
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static void main(String[] args) {
         launch(args);
     }
 
 
-    private AnchorPane createLeftDashboard() {
-        StackPane stackPane = new StackPane();
-        stackPane.setPrefSize(800, 680);
 
-        AnchorPane anchorPane = new AnchorPane();
-        stackPane.getChildren().add(anchorPane);
-
-
-        BorderPane borderPane = new BorderPane();
-        borderPane.setPrefSize(800, 680);
-        borderPane.getStyleClass().add("border-pane");
-
-        AnchorPane.setBottomAnchor(borderPane, 0.0);
-        AnchorPane.setTopAnchor(borderPane, 0.0);
-        AnchorPane.setRightAnchor(borderPane, 0.0);
-        AnchorPane.setLeftAnchor(borderPane, 0.0);
-
-        AnchorPane leftAnchorPane = new AnchorPane();
-        //leftAnchorPane.setTranslateY(-80);
-        leftAnchorPane.setTranslateX(-10);
-        //leftAnchorPane.setPrefSize(70, 280);
-        AnchorPane.setTopAnchor(leftAnchorPane, 0.0);
-        AnchorPane.setLeftAnchor(leftAnchorPane, 0.0);
-        leftAnchorPane.setTranslateY(-112);
-        AnchorPane innerAnchorPane = new AnchorPane();
-        innerAnchorPane.getStyleClass().addAll("nav", "nav-border");
-        innerAnchorPane.setPrefSize(229, 700);
-
-        FontAwesomeIconView userIcon = new FontAwesomeIconView();
-        userIcon.setFill(javafx.scene.paint.Color.WHITE);
-        userIcon.setGlyphName("USER");
-        userIcon.setLayoutX(82);
-        userIcon.setLayoutY(91);
-        userIcon.setSize("6em");
-
-        Label welcomeLabel = new Label("Welcome,");
-        welcomeLabel.setLayoutX(78);
-        welcomeLabel.setLayoutY(101);
-        welcomeLabel.setTextFill(javafx.scene.paint.Color.WHITE);
-        welcomeLabel.setFont(new javafx.scene.text.Font("Tahoma", 15));
-
-        Label usernameLabel = new Label("MarcoMan");
-        usernameLabel.setId("username");
-        usernameLabel.setAlignment(javafx.geometry.Pos.CENTER);
-        usernameLabel.setLayoutX(11);
-        usernameLabel.setLayoutY(120);
-        usernameLabel.setPrefSize(201, 23);
-        usernameLabel.setTextFill(javafx.scene.paint.Color.WHITE);
-        usernameLabel.setFont(new javafx.scene.text.Font("Arial Bold", 20));
-
-        Line line = new Line();
-        line.setEndX(100);
-        line.setLayoutX(111);
-        line.setLayoutY(152);
-        line.setStartX(-100);
-        line.setStroke(javafx.scene.paint.Color.WHITE);
-
-
-
-
-        Button dashboardBtn = new Button("Dashboard");
-        dashboardBtn.setId("dashboard_btn");
-        dashboardBtn.setLayoutX(21);
-        dashboardBtn.setLayoutY(170);
-        dashboardBtn.setMnemonicParsing(false);
-        dashboardBtn.setPrefSize(180, 35);
-        dashboardBtn.getStyleClass().addAll("nav-btn", "dashboard-btn");
-        dashboardBtn.setText("Dashboard");
-
-        Button userBtn = new Button("Utilisateurs");
-        userBtn.setId("user_btn");
-        userBtn.setLayoutX(21);
-        userBtn.setLayoutY(220);
-        userBtn.setMnemonicParsing(false);
-        userBtn.setPrefSize(180, 35);
-        userBtn.getStyleClass().addAll("nav-btn");
-
-        Button coursBtn = new Button("Cours");
-        coursBtn.setId("cours_btn");
-        coursBtn.setLayoutX(21);
-        coursBtn.setLayoutY(270);
-        coursBtn.setMnemonicParsing(false);
-        coursBtn.setPrefSize(180, 35);
-        coursBtn.getStyleClass().addAll("nav-btn");
-
-        Button evenementBtn = new Button("Evenement");
-        evenementBtn.setId("evenement_btn");
-        evenementBtn.setLayoutX(21);
-        evenementBtn.setLayoutY(320);
-        evenementBtn.setMnemonicParsing(false);
-        evenementBtn.setPrefSize(180, 35);
-        evenementBtn.getStyleClass().addAll("nav-btn");
-
-        Button produitBtn = new Button("Produits");
-        produitBtn.setId("produit_btn");
-        produitBtn.setLayoutX(21);
-        produitBtn.setLayoutY(370);
-        produitBtn.setMnemonicParsing(false);
-        produitBtn.setPrefSize(180, 35);
-        produitBtn.getStyleClass().addAll("nav-btn");
-
-        Button coachBtn = new Button("Coaching privé");
-        coachBtn.setId("coach_btn");
-        coachBtn.setLayoutX(21);
-        coachBtn.setLayoutY(420);
-        coachBtn.setMnemonicParsing(false);
-        coachBtn.setPrefSize(180, 35);
-        coachBtn.getStyleClass().addAll("nav-btn");
-
-        Button reclamationBtn = new Button("Réclamation");
-        reclamationBtn.setId("reclamation_btn");
-        reclamationBtn.setLayoutX(21);
-        reclamationBtn.setLayoutY(470);
-        reclamationBtn.setMnemonicParsing(false);
-        reclamationBtn.setPrefSize(180, 35);
-        reclamationBtn.getStyleClass().addAll("nav-btn");
-
-        Button logoutBtn = new Button();
-        logoutBtn.setId("logout");
-        logoutBtn.setLayoutX(14);
-        logoutBtn.setLayoutY(545);
-        logoutBtn.setMnemonicParsing(false);
-        logoutBtn.getStyleClass().addAll("logout", "shadow");
-
-
-        FontAwesomeIconView logoutIcon = new FontAwesomeIconView();
-        logoutIcon.setFill(javafx.scene.paint.Color.WHITE);
-        logoutIcon.setGlyphName("SIGN_OUT");
-        logoutIcon.setSize("2em");
-
-        logoutBtn.setGraphic(logoutIcon);
-
-        Label logoutLabel = new Label("Logout");
-        logoutLabel.setLayoutX(58);
-        logoutLabel.setLayoutY(551);
-        logoutLabel.setTextFill(javafx.scene.paint.Color.WHITE);
-        logoutLabel.setFont(new javafx.scene.text.Font(15));
-
-        innerAnchorPane.getChildren().addAll(userIcon, welcomeLabel, usernameLabel, line, dashboardBtn, userBtn, coursBtn, evenementBtn, produitBtn, coachBtn, reclamationBtn, logoutBtn, logoutLabel);
-
-        leftAnchorPane.getChildren().add(innerAnchorPane);
-
-
-
-        borderPane.setLeft(leftAnchorPane);
-        anchorPane.getChildren().add(borderPane);
-        return leftAnchorPane;
-    }
 
     private List<Produit> consulterProduits() {
         List<Produit> produits = new ArrayList<>();
@@ -298,6 +394,9 @@ public class VitrineClient extends Application {
         }
         return produits;
     }
+
+
+
 
     private List<Produit> rechercherProduits(String typeRecherche) {
         List<Produit> produitsRecherches = new ArrayList<>();
@@ -331,6 +430,7 @@ public class VitrineClient extends Application {
 
     private void afficherProduits(List<Produit> produits, BorderPane root) {
         FlowPane produitsPane = new FlowPane();
+        produitsPane.setMinHeight(1500);
         produitsPane.setAlignment(Pos.TOP_CENTER);
         produitsPane.setPadding(new Insets(10));
         produitsPane.setHgap(20);
@@ -344,8 +444,11 @@ public class VitrineClient extends Application {
         ((ScrollPane) root.getCenter()).setContent(produitsPane);
     }
 
+
+
     private VBox createProductCard(Produit produit) {
         VBox card = new VBox();
+
         card.getStyleClass().add("product-card");
         card.setAlignment(Pos.TOP_CENTER);
         card.setSpacing(6);
@@ -397,6 +500,10 @@ public class VitrineClient extends Application {
         return card;
     }
 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
     private void afficherDescriptionPrompt(Produit produit) {
         Stage descriptionStage = new Stage();
         descriptionStage.initModality(Modality.APPLICATION_MODAL);
@@ -416,11 +523,16 @@ public class VitrineClient extends Application {
     }
 
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private void ajouterAuPanier(Produit produit, int quantite) {
-        Commande commande = new Commande(produit.getIdProduit(), produit.getNom(), quantite, produit.getPrix() * quantite);
+        Commande commande = new Commande(produit.getIdProduit(), produit.getNom(), quantite, (int) (produit.getPrix() * quantite));
         panier.add(commande);
     }
+
+
+
+
 
     private void consulterPanier() {
         if (panier.isEmpty()) {
@@ -429,6 +541,9 @@ public class VitrineClient extends Application {
             afficherPanier();
         }
     }
+
+
+
 
     private void afficherPanier() {
         panierStage = new Stage();
@@ -447,10 +562,12 @@ public class VitrineClient extends Application {
             panierLayout.getChildren().addAll(produitLabel, quantiteLabel, montantLabel, separator);
         }
 
+
+
         Button confirmerAchatButton = new Button("Confirmer l'achat");
         Button annulerAchatButton = new Button("Annuler l'achat");
 
-        confirmerAchatButton.setOnAction(e -> confirmerAchat());
+        confirmerAchatButton.setOnAction(e -> confirmerAchat(calculerMontantTotal()));
         annulerAchatButton.setOnAction(e -> annulerAchat());
 
         HBox buttonsBox = new HBox(confirmerAchatButton, annulerAchatButton);
@@ -464,14 +581,49 @@ public class VitrineClient extends Application {
     }
 
 
-    private void confirmerAchat() {
-        // Enregistrer la commande dans la base de données
+
+    private long calculerMontantTotal() {
+        // Calculate the total amount from panier
+        long montantTotal = panier.stream().mapToLong(Commande::getMontantTotale).sum();
+
+        // Divide by 0.3 and multiply by 10
+        return (long) (montantTotal / 0.3 * 10);
+    }
+
+
+
+
+    private void confirmerAchat(long montantTotal) {
+        User loggedInUser = Session.getInstance().getLoggedInUser();
+//        loggedInUser.getId();
+//        System.out.println( loggedInUser.getId());
+
         for (Commande commande : panier) {
             enregistrerCommande(commande);
             mettreAJourQuantiteProduit(commande.getIdProduit(), commande.getQuantite());
         }
 
-        // Demander si l'utilisateur veut imprimer la facture
+        long montantTotal1 = calculerMontantTotal();
+        String nomFichierFacture = imprimerFacture(panier);
+
+        Stage paymentStage = new Stage();
+        paymentStage.setTitle("Paiement");
+
+        payer paymentController = new payer(montantTotal1);
+
+        AnchorPane paymentRoot = paymentController.createPaymentInterface();
+        Scene paymentScene = new Scene(paymentRoot, 800, 600);
+        paymentScene.getStylesheets().add(getClass().getResource("/com/example/bty/CSSmoduleProduit/style.css").toExternalForm());
+        paymentStage.setScene(paymentScene);
+        paymentStage.showAndWait();
+
+        boolean paymentSuccess = paymentController.isPaymentSuccessful();
+
+        if (!paymentSuccess) {
+            showAlert("Erreur", "Le paiement a échoué ou a été annulé. Veuillez réessayer.");
+            return;
+        }
+
         Alert confirmDialog = new Alert(Alert.AlertType.CONFIRMATION);
         confirmDialog.setTitle("Impression de la facture");
         confirmDialog.setHeaderText("Voulez-vous imprimer votre facture ?");
@@ -483,59 +635,139 @@ public class VitrineClient extends Application {
         confirmDialog.getButtonTypes().setAll(buttonTypeOui, buttonTypeNon);
 
         confirmDialog.showAndWait().ifPresent(buttonType -> {
+            boolean paymentSuccesss = processPayment(montantTotal);
+
             if (buttonType == buttonTypeOui) {
-                // L'utilisateur a choisi d'imprimer la facture
-                imprimerFacture(panier);
-
-                // Afficher une alerte
-                showAlert("Succès", "Facture téléchargée avec succès !");
-
-                // Fermer la fenêtre du panier
-                if (panierStage != null) {
-                    panierStage.hide();
+                if (paymentSuccesss) {
+                    String userEmail = loggedInUser.getEmail();
+                    sendConfirmationEmail(loggedInUser, nomFichierFacture, userEmail);
+                    showAlert("Succès", "Paiement et facture envoyés avec succès !");
+                } else {
+                    showAlert("Erreur", "Le paiement a échoué. Veuillez réessayer.");
                 }
-
-                // Vider le panier
-                viderPanier();
             } else {
-                // L'utilisateur a choisi de ne pas imprimer la facture
-                if (panierStage != null) {
-                    panierStage.hide();
-                    showAlert("Succès", "Achat confirmé");
+                if (paymentSuccesss) {
+                    String userEmail = loggedInUser.getEmail();
+                    sendConfirmationEmail(loggedInUser, nomFichierFacture, userEmail);
+                    showAlert("Succès", "Paiement confirmé, Vérifie votre email");
+                } else {
+                    showAlert("Erreur", "Le paiement a échoué. Veuillez réessayer.");
                 }
-
-                // Vider le panier
-                viderPanier();
             }
+
+            if (panierStage != null) {
+                panierStage.hide();
+            }
+
+            viderPanier();
         });
     }
 
 
-    private void imprimerFacture(List<Commande> panier) {
-        Document document = new Document();
+
+
+
+
+    private void sendConfirmationEmail(User loggedInUser, String nomFichierFacture, String userEmail) {
+        final String username = "bahaeddinedridi1@gmail.com";
+        final String password = "inxx lwuu tsis yane";
+
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+
+        javax.mail.Session session = javax.mail.Session.getInstance(props,
+                new javax.mail.Authenticator() {
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(username, password);
+                    }
+                });
 
         try {
-            // Utiliser la date et l'heure actuelles comme identifiant unique
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(username, "Flex Flow"));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(userEmail));
+            message.setSubject("Confirmation d'achat");
+
+            BodyPart textBodyPart = new MimeBodyPart();
+            textBodyPart.setText("Bonjour " + loggedInUser.getName() + ","
+                    + "\n\nVotre commande sera prête à être retirée. Vous pouvez venir la récupérer à tout moment."
+                    + "\n\nVotre commande est valable pendant une semaine à partir d'aujourd'hui (" + getCurrentDate() + ")."
+                    + "\n\nVous pouvez consulter votre facture dans la pièce jointe."
+                    + "\n\nCordialement,\nVotre application");
+
+            MimeBodyPart pdfAttachment = new MimeBodyPart();
+            pdfAttachment.attachFile(new File(nomFichierFacture));
+
+            Multipart multipart = new MimeMultipart();
+            multipart.addBodyPart(textBodyPart);
+            multipart.addBodyPart(pdfAttachment);
+
+            message.setContent(multipart);
+
+            Transport.send(message);
+
+            System.out.println("E-mail de confirmation envoyé avec succès à : " + userEmail);
+        } catch (MessagingException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private String getCurrentDate() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        return dateFormat.format(new Date());
+    }
+
+
+    private static boolean processPayment(long amount) {
+        try {
+            // Set your secret key here
+            Stripe.apiKey = "sk_test_51OopTSDtHS4Nu6kaTroMy6hwN1MKCBKitrzK3lm26xblje6CYwCiHccuY5VB1uNQppoCOSn6C6u92jn7i6zjLikl00zSebwoIU";
+
+            // Create a PaymentIntent with other payment details
+            PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
+                    .setAmount(amount)
+                    .setCurrency("usd")
+                    .build();
+
+            PaymentIntent intent = PaymentIntent.create(params);
+
+            // If the payment was successful, return true
+            System.out.println("Payment successful. PaymentIntent ID: " + intent.getId());
+            return true;
+        } catch (StripeException e) {
+            // If there was an error processing the payment, display the error message and return false
+            System.out.println("Payment failed. Error: " + e.getMessage());
+            return false;
+        }
+    }
+
+
+
+
+    private String imprimerFacture(List<Commande> panier) {
+        Document document = new Document();
+        String nomFichier = "";
+
+        try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
             String timestamp = dateFormat.format(new Date());
             String codeAchat1 = generateUniqueCode1();
             String codeAchat = generateUniqueCode();
 
-
-
-            String nomFichier = "facture_" + codeAchat + ".pdf";
+            nomFichier = "facture_" + codeAchat + ".pdf";
 
             PdfWriter.getInstance(document, new FileOutputStream(nomFichier));
             document.open();
 
-            // Ajouter en-tête
             Font fontEnTete = new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD);
             Paragraph enTete = new Paragraph("Facture d'achat - " + timestamp + " (Code d'achat: " + codeAchat1 + ")", fontEnTete);
             enTete.setAlignment(Paragraph.ALIGN_CENTER);
             document.add(enTete);
 
-            // Ajouter table des détails de la commande
-            PdfPTable table = new PdfPTable(3); // 3 colonnes pour Produit, Quantité et Montant
+            PdfPTable table = new PdfPTable(3);
             table.setWidthPercentage(100);
             table.setSpacingBefore(20f);
 
@@ -561,7 +793,14 @@ public class VitrineClient extends Application {
         } catch (DocumentException | IOException e) {
             e.printStackTrace();
         }
+
+        return nomFichier;
     }
+
+
+
+
+
 
     private String generateUniqueCode() {
         // Générer un code unique en utilisant la date et un identifiant aléatoire
@@ -574,6 +813,12 @@ public class VitrineClient extends Application {
         return datePart + randomPart;
     }
 
+
+
+
+
+
+
     private String generateUniqueCode1() {
         // Générer un code unique en utilisant la date et un identifiant aléatoire
        // SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS");
@@ -584,6 +829,7 @@ public class VitrineClient extends Application {
 
         return  randomPart;
     }
+
 
 
 

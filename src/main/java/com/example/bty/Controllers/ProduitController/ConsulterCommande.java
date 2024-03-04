@@ -5,6 +5,7 @@ import com.example.bty.Entities.Commmande;
 
 import com.example.bty.Services.ServiceProduit;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
@@ -61,9 +62,12 @@ public class ConsulterCommande extends Application {
     }
 
     private void actualiserTable() {
-        ObservableList<Commmande> commandes = FXCollections.observableArrayList(commandeServices.consulterCommandes());
-        tableView.setItems(commandes);
+        Platform.runLater(() -> {
+            ObservableList<Commmande> commandes = FXCollections.observableArrayList(commandeServices.consulterCommandes());
+            tableView.setItems(commandes);
+        });
     }
+
 
     private void showAlert(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);

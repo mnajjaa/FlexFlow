@@ -1,8 +1,8 @@
 package com.example.bty.Services;
-import com.example.bty.Entities.Commande;
 import com.example.bty.Entities.Commmande;
 import com.example.bty.Entities.Produit;
 import com.example.bty.Entities.User;
+import com.example.bty.Entities.paiment;
 import com.example.bty.Utils.ConnexionDB;
 import java.sql.*;
 import java.time.LocalDate;
@@ -17,7 +17,8 @@ public class ServiceProduit {
     public ServiceProduit() {
         connexion = ConnexionDB.getInstance().getConnexion();
     }
-
+    private static String userName;
+    private static int userId;
 
   public boolean ajouterProduit(Produit produit) {
       String query = "INSERT INTO produit (idProduit, nom, Description, Prix, Type, Quantite, quantiteVendues, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -72,26 +73,59 @@ public class ServiceProduit {
 
     public List<Commmande> consulterCommandes() {
         List<Commmande> commandes = new ArrayList<>();
-        String query = "SELECT * FROM commande"; // Assurez-vous que le nom de la table est correct
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgym", "root", "")) {
+            String query = "SELECT * FROM commande"; // Assurez-vous que le nom de la table est correct
 
-        try (Statement statement = connexion.createStatement();
-             ResultSet resultSet = statement.executeQuery(query)) {
+            try (Statement statement = connection.createStatement();
+                 ResultSet resultSet = statement.executeQuery(query)) {
 
-            while (resultSet.next()) {
-                Commmande commande = new Commmande();
+                while (resultSet.next()) {
+                    Commmande commande = new Commmande();
 
-                commande.setIdCommande(resultSet.getInt("idCommande"));
-                commande.setDateCommande(resultSet.getTimestamp("dateCommande"));
-                commande.setIdProduit(resultSet.getInt("idProduit"));
-                commande.setNom(resultSet.getString("nom"));
-                commande.setMontant(resultSet.getDouble("montant"));
+                    commande.setIdCommande(resultSet.getInt("idCommande"));
+                    commande.setDateCommande(resultSet.getTimestamp("dateCommande"));
+                    commande.setIdProduit(resultSet.getInt("idProduit"));
+                    commande.setNom(resultSet.getString("nom"));
+                    commande.setMontant(resultSet.getDouble("montant"));
 
-                commandes.add(commande);
+                    commandes.add(commande);
+                }
             }
-        } catch (SQLException e) {
+        }catch (SQLException e) {
             e.printStackTrace();
         }
         return commandes;
+    }
+
+
+    public List<paiment> consulterPaiment() {
+        List<paiment> paiments = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgym", "root", "")) {
+            String query = "SELECT * FROM  paiement"; // Assurez-vous que le nom de la table est correct
+
+            try (Statement statement = connection.createStatement();
+                 ResultSet resultSet = statement.executeQuery(query)) {
+
+                while (resultSet.next()) {
+                    paiment commande = new paiment();
+
+                    commande.setId(resultSet.getInt("id"));
+                    commande.setNom(resultSet.getString("name"));
+                    commande.setEmail(resultSet.getString("email"));
+                    commande.setCarte(resultSet.getString("card_info"));
+                    commande.setMm(resultSet.getInt("mm"));
+                    commande.setYy(resultSet.getInt("yy"));
+                    commande.setCvc(resultSet.getInt("cvc"));
+                    commande.setTotal(resultSet.getInt("total"));
+
+
+                    paiments.add(commande);
+                }
+            }
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return paiments;
     }
 
 
@@ -425,8 +459,49 @@ public class ServiceProduit {
     }
 
 
+   /* public static void setUserDetails(String name, int id) {
+        userName = name;
+        userId = id;
+    }
+
+    public static void printUserDetails() {
+        System.out.println("User Name: " + userName);
+        System.out.println("User ID: " + userId);
+    }*/
 
 
+
+    public static boolean insertPayment(String name, String email, String cardInfo, int mm, int yy, int cvc, double total) {
+        try {
+            String lastTwelveDigits = cardInfo.substring(Math.max(0, cardInfo.length() - 12));
+
+            // Créer une chaîne masquée avec des astérisques pour les 12 chiffres
+            String maskedLastTwelveDigits = "*".repeat(Math.min(12, lastTwelveDigits.length()));
+
+            // Concaténer les 4 premiers chiffres avec les 12 chiffres masqués
+            String maskedCardInfo = cardInfo.substring(0, Math.max(0, cardInfo.length() - 12)) + maskedLastTwelveDigits;
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgym", "root", "");
+            String query = "INSERT INTO paiement (name, email, card_info, mm, yy, cvc, total) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setString(1, name);
+                preparedStatement.setString(2, email);
+                preparedStatement.setString(3, maskedCardInfo);
+                preparedStatement.setInt(4, mm);
+                preparedStatement.setInt(5, yy);
+                preparedStatement.setInt(6, cvc);
+                preparedStatement.setDouble(7, total);
+
+                preparedStatement.executeUpdate();
+
+            }
+            connection.close();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+    }
 
 
 }

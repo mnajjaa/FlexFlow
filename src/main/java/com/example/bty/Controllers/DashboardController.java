@@ -1,280 +1,390 @@
 package com.example.bty.Controllers;
 
-import com.example.bty.Controllers.ProduitController.ActionButtonTableCell;
-import com.example.bty.Entities.Produit;
+import com.example.bty.Controllers.ProduitController.VitrineClient;
+import com.example.bty.Entities.Role;
+import com.example.bty.Entities.User;
+import com.example.bty.Services.IServiceUser;
 import com.example.bty.Services.ServiceProduit;
-import com.example.bty.Utils.ConnexionDB;
-import javafx.beans.property.SimpleDoubleProperty;
+import com.example.bty.Services.ServiceUser;
+import com.example.bty.Utils.Session;
+import javafx.application.Application;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 
 import java.io.IOException;
-import java.sql.*;
-import java.util.ArrayList;
+import java.net.URL;
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Consumer;
+import java.util.ResourceBundle;
 
-public class DashboardController {
+public class DashboardController implements Initializable {
 
+
+    // **************** MEMBERS ****************
+    @FXML
+    public AnchorPane members_form;
+    @FXML
+    public TextField members_customerId;
+    @FXML
+    public TextField members_name;
+    @FXML
+    public TextField members_phoneNum;
+    @FXML
+    public ComboBox members_status;
+    @FXML
+    public Button members_addBtn;
+    @FXML
+    public Button members_updateBtn;
+    @FXML
+    public Button members_deleteBtn;
+    @FXML
+    public TableView members_tableView;
+    @FXML
+    public TableColumn members_col_customerID;
+    @FXML
+    public TableColumn members_col_name;
+    @FXML
+    public TableColumn members_col_phoneNum;
+    @FXML
+    public TableColumn members_col_status;
+    @FXML
+    public TableColumn members_col_email;
+    @FXML
+    public AnchorPane main_form;
+    @FXML
+    public Label username;
+    @FXML
+    public Button dashboard_btn;
+    @FXML
+    public Button coaches_btn;
+    @FXML
+    public Button members_btn;
+    @FXML
+    public Button logout;
+    @FXML
+    public Button payment_btn;
+
+    // **************** COACHES *****************
+    @FXML
+    public AnchorPane coaches_form;
+    @FXML
+    public TextField coaches_coachID;
+    @FXML
+    public TextField coaches_name;
+    @FXML
+    public TextField coaches_phoneNum;
+    @FXML
+    public Button coaches_createBtn;
+    @FXML
+    public Button coaches_updateBtn;
+    @FXML
+    public Button coaches_deleteBtn;
+    @FXML
+    public TableView<User> coaches_tableView;
+    @FXML
+    public TableColumn<User, Integer> coaches_col_coachID;
+    @FXML
+    public TableColumn<User, String> coaches_col_nom;
+    @FXML
+    public TableColumn<User, String> coaches_col_email;
+    @FXML
+    public TableColumn<User, String> coaches_col_telephone;
+    @FXML
+    public TableColumn<User, Boolean> coaches_col_etat;
+    @FXML
+    public TextField coaches_password;
+    @FXML
+    public ComboBox coaches_etat;
+    @FXML
+    public TextField coaches_telephone;
+    @FXML
+    public TextField coaches_email;
+    public Button user_btn;
+    public Button cours_btn;
+    public Button evenement_btn;
     public Button produit_btn;
-    @FXML
-    private TableView<Produit> tableView;
+    public Button coach_btn;
+    public Button reclamation_btn;
+    public AnchorPane coaches_list;
+    public TableColumn coaches_col_action;
+    public AnchorPane dashboard_coach;
+    public AnchorPane dashboard_membre;
+    public AnchorPane dashboard_Admin;
+    public Label usernameAdmin;
+    public Label usernameMembre;
+    public Label usernameCoach;
+    public Button Events_btn;
+    public Button Produtcts_btn;
+    public Button Reclamations_btn;
+    public Button Cours_btn;
+    public Button logoutMembre;
+    public Button CoursCoach_btn;
+    public Button membreCoach_btn;
+    public Button logoutCoach;
+    public Button Produits_btn;
+    public Button eventsAdmin_btn;
+    public Button coursAdmin_btn;
+    public Button storeAdmin_btn;
+    public Button profileAdmin_btn;
+    public Button logout00_btn;
+    public Button report_btn;
+    public BorderPane mainBorderPane;
+    public BorderPane border;
+    public StackPane contentPlaceholder;
+    Session session = Session.getInstance();
+    User u=session.getLoggedInUser();
+    User user ;
 
-    @FXML
-    private TableColumn<Produit, Integer> idCol;
 
-    @FXML
-    private TableColumn<Produit, String> nomCol;
+    // ****************  //  fin MEMBERS ****************
 
-    @FXML
-    private TableColumn<Produit, String> descriptionCol;
+    IServiceUser serviceUser00=new ServiceUser();
 
-    @FXML
-    private TableColumn<Produit, Double> prixCol;
+    public void consulterMembers() {
+        // Fetch all members
+        List<User> members = serviceUser00.getAllMembers();
 
-    @FXML
-    private TableColumn<Produit, String> typeCol;
+        // Clear the table
+        members_tableView.getItems().clear();
 
-    @FXML
-    private TableColumn<Produit, Integer> quantiteCol;
+        // Define how to populate the columns
+        members_col_customerID.setCellValueFactory(new PropertyValueFactory<>("id"));
+        members_col_name.setCellValueFactory(new PropertyValueFactory<>("name"));
+        members_col_phoneNum.setCellValueFactory(new PropertyValueFactory<>("telephone"));
+        members_col_status.setCellValueFactory(new PropertyValueFactory<>("etat"));
+        members_col_email.setCellValueFactory(new PropertyValueFactory<>("email"));
 
-    @FXML
-    private TableColumn<Produit, Integer> quantiteVenduesCol;
-
-    @FXML
-    private TableColumn<Produit, Void> actionColumn;
-
-    // Autres déclarations
-    private Connection connexion;
-    private PreparedStatement pst;
-    private Statement ste ;
-    public DashboardController() {
-        connexion = ConnexionDB.getInstance().getConnexion();
+        // Add fetched members to the table
+        members_tableView.getItems().addAll(members);
     }
-    private ServiceProduit produitServices = new ServiceProduit();
-
-    @FXML
-    private void initialize() {
-        idCol.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getIdProduit()).asObject());
-        nomCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNom()));
-        descriptionCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDescription()));
-        prixCol.setCellValueFactory(cellData -> new SimpleDoubleProperty(cellData.getValue().getPrix()).asObject());
-        typeCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getType()));
-        quantiteCol.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getQuantite()).asObject());
-        quantiteVenduesCol.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getQuantiteVendues()).asObject());
-
-        // Ajout de la colonne Actions
-        actionColumn.setCellFactory(new ActionButtonTableCellFactory<>(
-                (Produit produit) -> {
-                    // Logique de suppression
-                    if (showConfirmationDialog("Suppression", "Voulez-vous supprimer ce produit ?")) {
-                        if (produitServices.supprimerProduit(produit.getIdProduit())) {
-                            showAlert("Success", "La suppression a réussi");
-                            actualiserTable();
-                        } else {
-                            showAlert("Échec", "La suppression a échoué");
-                        }
-                    }
-                },
-                (Produit produit) -> {
-                    // Logique d'édition
-                    openEditForm(produit);
-                }
-        ));
-
-        // Chargement initial des données dans la table
-        actualiserTable();
-        produit_btn.setOnAction(this::handleProduitBtnClick);
+    public void membersSelect(MouseEvent mouseEvent) {
+    }
 
 
+    public void membersAddBtn(ActionEvent actionEvent) {
 
     }
 
-    @FXML
-    private void handleProduitBtnClick(ActionEvent event) {
+    public void membersUpdate(ActionEvent actionEvent) {
+    }
+    public void membersDelete(ActionEvent actionEvent) {
+    }
+
+    public void consulterCoaches() {
+        // Fetch all coaches
+        List<User> coaches = serviceUser00.getAllCoaches();
+
+        // Clear the table
+        coaches_tableView.getItems().clear();
+
+        // Define how to populate the columns
+        coaches_col_coachID.setCellValueFactory(new PropertyValueFactory<>("id"));
+        coaches_col_nom.setCellValueFactory(new PropertyValueFactory<>("name"));
+        coaches_col_email.setCellValueFactory(new PropertyValueFactory<>("email"));
+        coaches_col_telephone.setCellValueFactory(new PropertyValueFactory<>("telephone"));
+        coaches_col_etat.setCellValueFactory(new PropertyValueFactory<>("etat"));
+
+        // Add fetched coaches to the table
+        coaches_tableView.getItems().addAll(coaches);
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+       // border.getStyleClass().add("border-pane");
+        this.user = session.getLoggedInUser();
+        if(user.getRole().equals(Role.ADMIN)){
+            dashboard_Admin.setVisible(true);
+            //dashboard_coach.setVisible(false);
+           // dashboard_membre.setVisible(false);
+            usernameAdmin.setText(u.getName());
+           /* String u1 = u.getName();
+            System.out.println(u1);
+            int id = u.getId();
+            System.out.println(id);
+            ServiceProduit.setUserDetails(u1, id);*/
+            //consulterCoaches();
+
+
+        }
+        else if(user.getRole().equals(Role.COACH)){
+            dashboard_coach.setVisible(true);
+            dashboard_Admin.setVisible(false);
+            dashboard_membre.setVisible(false);
+            usernameCoach.setText(u.getName());
+        }
+        else if(user.getRole().equals(Role.MEMBRE)){
+            System.out.println("membre found");
+            // Instancier la classe VitrineClient
+            VitrineClient vitrineClient = new VitrineClient();
+
+            // Appeler la méthode start (ou toute autre méthode pour démarrer l'interface)
+            vitrineClient.start(new Stage());
+            dashboard_coach.setVisible(false);
+            dashboard_Admin.setVisible(false);
+
+        }
+        else{
+            System.out.println("user not found");
+        }
+
+
+
+    // consulterMembers();
+    }
+
+
+
+
+    public void switchForm(ActionEvent actionEvent) {
+ if (actionEvent.getSource().equals(dashboard_btn)) {
+            main_form.setVisible(true);
+            members_form.setVisible(false);
+            coaches_form.setVisible(false);
+        } else if (actionEvent.getSource().equals(members_btn)) {
+            main_form.setVisible(false);
+            members_form.setVisible(true);
+            coaches_form.setVisible(false);
+        } else if (actionEvent.getSource().equals(coaches_btn)) {
+            main_form.setVisible(false);
+            members_form.setVisible(false);
+            coaches_form.setVisible(true);
+        }
+ //ne9ssa ***********
+    }
+
+    public void logout(ActionEvent actionEvent) {
+    }
+
+
+
+    //*********** COACHES  METHODS ***********
+
+
+    public void coachesCreateBtn(ActionEvent actionEvent) {
+        // Gather data from form fields
+        String name = coaches_name.getText();
+        String email = coaches_email.getText();
+        String password = coaches_password.getText();
+        String telephone = coaches_telephone.getText();
+        Role defaultRole = Role.COACH; // Définissez le rôle par défaut ici
+
+        // Check if the email already exists
+        if (serviceUser00.emailExists(email)) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Email Already Exists");
+            alert.setHeaderText(null);
+            alert.setContentText("Email already exists. Please use a different email.");
+            alert.showAndWait();
+        } else {
+            User newCoach = new User(name, email, password, telephone, defaultRole,null);
+            // Appeler la méthode d'inscription avec les valeurs récupérées
+            serviceUser00.register(newCoach);
+            // serviceUser00.ActiverOrDesactiver(newCoach.getId());
+            System.out.println("Coach created successfully! and activated ");
+        }
+    }
+
+    public void coachesUpdateBtn(ActionEvent actionEvent) {
+    }
+
+    public void coachesDeleteBtn(ActionEvent actionEvent) {
+    }
+
+    public void coachesSelect(MouseEvent mouseEvent) {
+    }
+
+
+    public void goToDashbordAdmin(ActionEvent actionEvent) {
+    }
+
+    public void goToCoach(ActionEvent actionEvent) {
+
+    }
+
+    public void goToMembre(ActionEvent actionEvent) {
+    }
+
+    public void goToEvents(ActionEvent actionEvent) {
+
+    }
+
+    public void goToStore(ActionEvent actionEvent) throws IOException {
+        // Charger le contenu de DashboardProduit.fxml
+        loadContent("/DashboardProduit.fxml");
+    }
+
+    public void goToCommande(ActionEvent actionEvent) throws IOException {
+        // Charger le contenu de DashboardProduit.fxml
+        loadContent("/DashboardCommande.fxml");
+    }
+
+    public void goToAccueil(ActionEvent actionEvent) throws IOException {
+        // Charger le contenu de DashboardProduit.fxml
+        loadContent("/Accueil.fxml");
+    }
+
+
+    public void goToPayment(ActionEvent actionEvent) throws IOException {
+        // Charger le contenu de DashboardProduit.fxml
+        loadContent("/paiment.fxml");
+    }
+
+    public void goToCours(ActionEvent actionEvent) throws IOException {
+        // Charger le contenu de DashboardProduit.fxml
+        loadContent("/consulterAdmin.fxml");
+    }
+
+
+
+    public void goToOffre
+            (ActionEvent actionEvent) throws IOException {
+        // Charger le contenu de DashboardProduit.fxml
+        loadContent("/DashboardAdminOffre.fxml");
+    }
+
+
+
+
+
+
+
+
+
+    private void loadContent(String fxmlFileName) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/DashboardProduit.fxml"));
-            Parent dashboardProduitView = loader.load();
-
-            // Si vous avez besoin d'accéder au contrôleur du tableau de bord produit, vous pouvez le faire ici
-            // DashboardProduitController dashboardProduitController = loader.getController();
-            // dashboardProduitController.initData();
-
-            Stage stage = new Stage();
-            stage.setTitle("Dashboard Produit");
-            stage.setScene(new Scene(dashboardProduitView));
-            stage.show();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFileName));
+            Parent content = loader.load();
+            contentPlaceholder.getChildren().clear();
+            contentPlaceholder.getChildren().add(content);
         } catch (IOException e) {
             e.printStackTrace();
-            // Gérer les erreurs de chargement de la vue
+            // Gérer l'erreur de chargement du fichier FXML
         }
     }
 
 
 
 
-
-
-
-
-
-
-    private void actualiserTable() {
-        // Appeler la méthode consulterProduits et charger les données dans la table
-        List<Produit> produits = consulterProduits();
-        tableView.getItems().setAll(produits);
+    public void goToReclamations(ActionEvent actionEvent) {
     }
 
-    // Autres méthodes
-
-    private List<Produit> consulterProduits() {
-        List<Produit> produits = new ArrayList<>();
-        String query = "SELECT * FROM produit";
-        try (Statement statement = connexion.createStatement();
-             ResultSet resultSet = statement.executeQuery(query)) {
-            while (resultSet.next()) {
-                Produit produit = new Produit();
-                produit.setIdProduit(resultSet.getInt("idProduit"));
-                produit.setNom(resultSet.getString("nom"));
-                produit.setDescription(resultSet.getString("Description"));
-                produit.setPrix(resultSet.getDouble("Prix"));
-                produit.setType(resultSet.getString("Type"));
-                produit.setQuantite(resultSet.getInt("Quantite"));
-                produit.setQuantiteVendues(resultSet.getInt("quantiteVendues"));
-                produits.add(produit);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return produits;
-    }
-    private void openEditForm(Produit produit) {
-        Dialog<Produit> editDialog = new Dialog<>();
-        editDialog.setTitle("Modifier le produit");
-        editDialog.setHeaderText(null);
-
-        // Créer des champs de formulaire pour les attributs du produit
-        TextField nomField = new TextField(produit.getNom());
-        TextField descriptionField = new TextField(produit.getDescription());
-        TextField prixField = new TextField(String.valueOf(produit.getPrix()));
-        TextField typeField = new TextField(produit.getType());
-        TextField quantiteField = new TextField(String.valueOf(produit.getQuantite()));
-        TextField quantiteVenduesField = new TextField(String.valueOf(produit.getQuantiteVendues()));
-
-
-
-
-
-
-        // Créer le contenu du dialogue
-        VBox content = new VBox();
-        content.setSpacing(10);
-        content.getChildren().addAll(
-                new Label("Nom: "), nomField,
-                new Label("Description: "), descriptionField,
-                new Label("Prix: "), prixField,
-                new Label("Type: "), typeField,
-                new Label("Quantité: "), quantiteField,
-                new Label("Quantité Vendue: "), quantiteVenduesField
-        );
-
-        // Ajouter les boutons au dialogue :
-        ButtonType modifierButton = new ButtonType("Modifier", ButtonBar.ButtonData.OK_DONE);
-        ButtonType cancelButton = new ButtonType("Annuler", ButtonBar.ButtonData.CANCEL_CLOSE);
-        editDialog.getDialogPane().getButtonTypes().addAll(modifierButton, cancelButton);
-
-        // editDialog.getDialogPane().getButtonTypes().addAll(modifierButton, ButtonType.CANCEL);
-
-        Node modifierButtonNode = editDialog.getDialogPane().lookupButton(modifierButton);
-        Node cancelButtonNode = editDialog.getDialogPane().lookupButton(cancelButton);
-
-
-
-        editDialog.getDialogPane().setContent(content);
-
-        // Définir la logique de conversion du résultat du dialogue
-        editDialog.setResultConverter(dialogButton -> {
-            if (dialogButton == modifierButton) {
-                Produit editedProduit = new Produit();
-                editedProduit.setIdProduit(produit.getIdProduit());
-                editedProduit.setNom(nomField.getText());
-                editedProduit.setDescription(descriptionField.getText());
-                editedProduit.setPrix(Double.parseDouble(prixField.getText()));
-                editedProduit.setType(typeField.getText());
-                editedProduit.setQuantite(Integer.parseInt(quantiteField.getText()));
-                editedProduit.setQuantiteVendues(Integer.parseInt(quantiteVenduesField.getText()));
-                return editedProduit;
-            }
-            return null;
-        });
-
-        // Afficher le dialogue et traiter le résultat
-        Optional<Produit> result = editDialog.showAndWait();
-        result.ifPresent(editedProduit -> {
-            // Mettre à jour le produit dans la base de données
-            modifierProduit(editedProduit);
-            actualiserTable();
-        });
+    public void goToCoursCoach(ActionEvent actionEvent) {
     }
 
-    private void modifierProduit(Produit produit) {
-        // Mettre à jour le produit dans la base de données en utilisant votre service
-        produitServices.modifierProduit(produit);
+    public void goToMembreCoach(ActionEvent actionEvent) {
     }
 
-    private void showAlert(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
-    }
-
-    /*private void actualiserTable() {
-        ObservableList<Produit> produits = FXCollections.observableArrayList(produitServices.consulterProduits());
-        tableView.setItems(produits);
-    }*/
-
-    private boolean showConfirmationDialog(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(content);
-
-        ButtonType yesButton = new ButtonType("Oui");
-        ButtonType noButton = new ButtonType("Non");
-
-        alert.getButtonTypes().setAll(yesButton, noButton);
-
-        Optional<ButtonType> result = alert.showAndWait();
-        return result.isPresent() && result.get() == yesButton;
-    }
-
-    public class ActionButtonTableCellFactory<S> implements Callback<TableColumn<S, Void>, TableCell<S, Void>> {
-        private final Consumer<S> deleteAction;
-        private final Consumer<S> editAction;
-
-        public ActionButtonTableCellFactory(Consumer<S> deleteAction, Consumer<S> editAction) {
-            this.deleteAction = deleteAction;
-            this.editAction = editAction;
-        }
-
-        @Override
-        public TableCell<S, Void> call(TableColumn<S, Void> param) {
-            return new ActionButtonTableCell<>(deleteAction, editAction);
-        }
+    public void goToStoreAdmin(ActionEvent event) {
     }
 }

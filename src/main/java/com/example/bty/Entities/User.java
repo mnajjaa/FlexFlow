@@ -4,13 +4,13 @@ package com.example.bty.Entities;
 
 public class User {
 
-    private int id;
-    private String name;
-    private String email;
-    private String password ;
-    private String telephone ;
-    private Role role;
-    private  boolean etat =false;    // 0 = desactiver , 1 = activer
+   private int id;
+   private String name;
+   private String email;
+   private String password ;
+   private String telephone ;
+   private Role role;
+   private  boolean etat =false;    // 0 = desactiver , 1 = activer
     private String image;
 
     public String getImage() {
@@ -104,15 +104,6 @@ public class User {
                 ", role=" + role +
                 ",image='"+image+'\''+
                 '}';
-    }
-
-    public User(String name, String email, String password, String telephone, Role role) {
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.telephone = telephone;
-        this.role = role;
-
     }
 
     public Role getRole() {

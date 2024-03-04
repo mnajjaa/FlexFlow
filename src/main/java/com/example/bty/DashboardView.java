@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 public class DashboardView extends Application {
     @Override
     public void start(Stage stage) throws Exception {
-        FXMLLoader fxmlLoader = new FXMLLoader(LoginView.class.getResource("/DashboardProduit.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(LoginView.class.getResource("/DashboardadminOffre.fxml"));
 
         Parent root = fxmlLoader.load();
         Scene scene = new Scene(root);

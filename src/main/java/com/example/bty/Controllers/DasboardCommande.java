@@ -97,7 +97,7 @@ public class DasboardCommande {
 
         // Appeler le service pour obtenir le chiffre d'affaires
 
-        chargerDonneesGraphique();
+      //  chargerDonneesGraphique();
         searchField.textProperty().addListener((observable, oldValue, newValue) -> filtrerParNom(newValue));
     }
 
@@ -114,33 +114,33 @@ public class DasboardCommande {
         tableView.setItems(filteredList);
     }
 
-    @FXML
-    private void chargerDonneesGraphique() {
-        XYChart.Series<String, Number> series = new XYChart.Series<>();
-        series.setName("Chiffre d'affaires par jour");
-
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgym", "root", "");
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery("SELECT dateCommande, SUM(montant) FROM commande GROUP BY dateCommande")) {
-
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
-            while (resultSet.next()) {
-                Timestamp timestamp = resultSet.getTimestamp("dateCommande");
-                Date date = new Date(timestamp.getTime());
-
-                double montant = resultSet.getDouble("SUM(montant)");
-
-                series.getData().add(new XYChart.Data<>(dateFormat.format(date), montant));
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        dashboardAnchorPane.getChildren().add(chart); // Ajoutez le graphique à l'AnchorPane
-        chart.getData().add(series);
-    }
+//    @FXML
+//    private void chargerDonneesGraphique() {
+//        XYChart.Series<String, Number> series = new XYChart.Series<>();
+//        series.setName("Chiffre d'affaires par jour");
+//
+//        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgym", "root", "");
+//             Statement statement = connection.createStatement();
+//             ResultSet resultSet = statement.executeQuery("SELECT dateCommande, SUM(montant) FROM commande GROUP BY dateCommande")) {
+//
+//            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//
+//            while (resultSet.next()) {
+//                Timestamp timestamp = resultSet.getTimestamp("dateCommande");
+//                Date date = new Date(timestamp.getTime());
+//
+//                double montant = resultSet.getDouble("SUM(montant)");
+//
+//                series.getData().add(new XYChart.Data<>(dateFormat.format(date), montant));
+//            }
+//
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//
+//        dashboardAnchorPane.getChildren().add(chart); // Ajoutez le graphique à l'AnchorPane
+//        chart.getData().add(series);
+//    }
 
 
 
