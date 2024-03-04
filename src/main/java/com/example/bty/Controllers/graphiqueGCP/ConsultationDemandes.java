@@ -146,8 +146,10 @@ public class ConsultationDemandes extends Application {
     }
 
     // Méthode pour récupérer les demandes depuis la base de données
-    private static List<DemandeItem> retrieveDemandesList() throws SQLException {
+    static List<DemandeItem> retrieveDemandesList() throws SQLException {
+
         List<DemandeItem> demandesList = new ArrayList<>();
+
         try {
             // Exécuter une requête pour récupérer les demandes du client depuis la base de données
             String query = "SELECT * FROM Demande ";

@@ -1,6 +1,7 @@
 package com.example.bty.Controllers.graphiqueGCP;
 
 import javafx.application.Application;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -26,6 +27,8 @@ public class ConsultationOffre1 extends Application {
 
         // Création de la table des offres sous forme de TableView
         tableView = new TableView<>();
+
+
 
         // Création du TableView et de ses colonnes
         TableColumn<OffreItem, String> nomCol = new TableColumn<>("Description d'offre");
@@ -80,6 +83,17 @@ public class ConsultationOffre1 extends Application {
             // Gérer les erreurs de connexion
         }
     }
+    public Node getView() {
+        // Retourner la vue de la consultation des offres (dans ce cas, le TableView)
+        return tableView;
+    }
+    public Node start() {
+        VBox vbox = new VBox();
+        vbox.setSpacing(20);
+        vbox.getChildren().add(tableView);
+
+        return vbox;
+    }
 
     // Méthode pour récupérer les offres depuis la base de données et les placer dans un tableau
     private List<OffreItem> retrieveOffreItemsArray() throws SQLException {
@@ -122,6 +136,8 @@ public class ConsultationOffre1 extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+
+
 
     // Classe interne représentant un élément d'offre
     public static class OffreItem {

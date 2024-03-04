@@ -13,7 +13,7 @@
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bty.Controllers.DashboardController">
     <AnchorPane fx:id="main_form" layoutX="6.0" layoutY="6.0" prefHeight="750.0" prefWidth="234.0">
         <!--  atheya l borderPane eli feh atop wl left wl center  -->
-        <AnchorPane prefHeight="744.0" prefWidth="235.0" styleClass="border-pane" stylesheets="Styles/dashboardDesign.css" AnchorPane.bottomAnchor="6.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <AnchorPane prefHeight="744.0" prefWidth="235.0" styleClass="border-pane" stylesheets="dashboardDesign.css" AnchorPane.bottomAnchor="6.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
                 <!--                                <top>-->
                 <!--                                    <AnchorPane prefHeight="45.0" prefWidth="1100.0" styleClass="semi-top"-->
@@ -57,7 +57,7 @@
        ************************************       SIdeBar ADMIN  *******************************************-->
 
                 <AnchorPane fx:id="dashboard_Admin" layoutX="-10.0" prefHeight="555.0" prefWidth="210.0" visible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                    <AnchorPane prefHeight="555.0" prefWidth="220.0" stylesheets="Styles/dashboardDesign.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <AnchorPane prefHeight="555.0" prefWidth="220.0" stylesheets="dashboardDesign.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                         <styleClass>
                             <String fx:value="nav" />
                             <String fx:value="nav-border" />
@@ -75,17 +75,17 @@
                             </font>
                         </Label>
                         <Line endX="100.0" layoutX="111.0" layoutY="152.0" startX="-100.0" stroke="WHITE" />
-                        <Button fx:id="dashboard_btn" layoutX="22.0" layoutY="159.0" mnemonicParsing="false" onAction="#goToDashbordAdmin" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="Styles/dashboardDesign.css" text="Dashboard" />
-                        <Button fx:id="coaches_btn" layoutX="22.0" layoutY="203.0" mnemonicParsing="false" onAction="#goToCoachs" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="Styles/dashboardDesign.css" text="Coachs" AnchorPane.bottomAnchor="505.8" />
-                        <Button fx:id="members_btn" layoutX="22.0" layoutY="254.0" mnemonicParsing="false" onAction="#goToMembre" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="Styles/dashboardDesign.css" text="Membres" />
-                        <Button fx:id="eventsAdmin_btn" layoutX="22.0" layoutY="304.0" mnemonicParsing="false" onAction="#goToCoachs" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="Styles/dashboardDesign.css" text="Evenements" />
-                        <Button fx:id="coursAdmin_btn" layoutX="22.0" layoutY="350.0" mnemonicParsing="false" onAction="#goToCoachs" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="Styles/dashboardDesign.css" text="Cours" />
-                        <Button fx:id="offre_btn" layoutX="22.0" layoutY="396.0" mnemonicParsing="false" onAction="#goToOffres" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="Styles/dashboardDesign.css" text="Offre Coaching" />
-                        <Button fx:id="storeAdmin_btn" layoutX="22.0" layoutY="443.0" mnemonicParsing="false" onAction="#goToCoachs" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="Styles/dashboardDesign.css" text="Store" />
-                        <Button fx:id="commande_btn" layoutX="21.0" layoutY="486.0" mnemonicParsing="false" onAction="#goToCommandes" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="Styles/dashboardDesign.css" text="Commande" />
+                        <Button fx:id="dashboard_btn" layoutX="22.0" layoutY="159.0" mnemonicParsing="false" onAction="#goToDashbordAdmin" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="dashboardDesign.css" text="Dashboard" />
+                        <Button fx:id="coaches_btn" layoutX="22.0" layoutY="203.0" mnemonicParsing="false" onAction="#goToCoachs" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="dashboardDesign.css" text="Coachs" AnchorPane.bottomAnchor="505.8" />
+                        <Button fx:id="members_btn" layoutX="22.0" layoutY="254.0" mnemonicParsing="false" onAction="#goToMembre" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="dashboardDesign.css" text="Membres" />
+                        <Button fx:id="eventsAdmin_btn" layoutX="22.0" layoutY="304.0" mnemonicParsing="false" onAction="#goToCoachs" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="dashboardDesign.css" text="Evenements" />
+                        <Button fx:id="coursAdmin_btn" layoutX="22.0" layoutY="350.0" mnemonicParsing="false" onAction="#goToCoachs" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="dashboardDesign.css" text="Cours" />
+                        <Button fx:id="offre_btn" layoutX="22.0" layoutY="396.0" mnemonicParsing="false" onAction="#goToOffres" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="dashboardDesign.css" text="Offre Coaching" />
+                        <Button fx:id="storeAdmin_btn" layoutX="22.0" layoutY="443.0" mnemonicParsing="false" onAction="#goToCoachs" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="dashboardDesign.css" text="Store" />
+                        <Button fx:id="commande_btn" layoutX="21.0" layoutY="486.0" mnemonicParsing="false" onAction="#goToCommandes" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="dashboardDesign.css" text="Commande" />
                         <Line endX="100.0" layoutX="117.0" layoutY="533.0" startX="-100.0" stroke="WHITE" />
-                        <Button fx:id="profileAdmin_btn" layoutX="22.0" layoutY="547.0" mnemonicParsing="false" onAction="#goToCoachs" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="Styles/dashboardDesign.css" text="Profile" />
-                        <Button fx:id="logout00_btn" layoutX="22.0" layoutY="588.0" mnemonicParsing="false" onAction="#goToCoachs" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="Styles/dashboardDesign.css" text="Logout" />
+                        <Button fx:id="profileAdmin_btn" layoutX="22.0" layoutY="547.0" mnemonicParsing="false" onAction="#goToCoachs" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="dashboardDesign.css" text="Profile" />
+                        <Button fx:id="logout00_btn" layoutX="22.0" layoutY="588.0" mnemonicParsing="false" onAction="#goToCoachs" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="dashboardDesign.css" text="Logout" />
                         <VBox layoutX="11.0" layoutY="664.0" prefHeight="72.0" prefWidth="180.0" styleClass="report_container">
                             <children>
                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Report Suggestion/Bug?" />
@@ -119,7 +119,7 @@
             <!--   ************************************       SIdeBar MEMBRE  *******************************************-->
 
             <AnchorPane fx:id="dashboard_membre" layoutX="14.0" layoutY="159.0" prefHeight="586.0" prefWidth="220.0" visible="false">
-                <AnchorPane prefHeight="555.0" prefWidth="220.0" stylesheets="Styles/dashboardDesign.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <AnchorPane prefHeight="555.0" prefWidth="220.0" stylesheets="dashboardDesign.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <styleClass>
                         <String fx:value="nav" />
                         <String fx:value="nav-border" />
@@ -137,11 +137,11 @@
                         </font>
                     </Label>
                     <Line endX="100.0" layoutX="111.0" layoutY="152.0" startX="-100.0" stroke="WHITE" />
-                    <Button fx:id="Events_btn" layoutX="21.0" layoutY="186.0" mnemonicParsing="false" onAction="#goToEvents" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="Styles/dashboardDesign.css" text="Dashboard" />
-                    <Button fx:id="Produits_btn" layoutX="21.0" layoutY="232.0" mnemonicParsing="false" onAction="#goToCoachs" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="Styles/dashboardDesign.css" text="Coaches" />
-                    <Button fx:id="Cours_btn" layoutX="21.0" layoutY="278.0" mnemonicParsing="false" onAction="#goToCours" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="Styles/dashboardDesign.css" text="Members" />
-                    <Button fx:id="Reclamations_btn" layoutX="21.0" layoutY="320.0" mnemonicParsing="false" onAction="#goToReclamations" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="Styles/dashboardDesign.css" text="Members" />
-                    <Button fx:id="logoutMembre" layoutX="21.0" layoutY="543.0" mnemonicParsing="false" onAction="#logout" stylesheets="Styles/dashboardDesign.css">
+                    <Button fx:id="Events_btn" layoutX="21.0" layoutY="186.0" mnemonicParsing="false" onAction="#goToEvents" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="dashboardDesign.css" text="Dashboard" />
+                    <Button fx:id="Produits_btn" layoutX="21.0" layoutY="232.0" mnemonicParsing="false" onAction="#goToCoachs" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="dashboardDesign.css" text="Coaches" />
+                    <Button fx:id="Cours_btn" layoutX="21.0" layoutY="278.0" mnemonicParsing="false" onAction="#goToCours" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="dashboardDesign.css" text="Members" />
+                    <Button fx:id="Reclamations_btn" layoutX="21.0" layoutY="320.0" mnemonicParsing="false" onAction="#goToReclamations" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="dashboardDesign.css" text="Members" />
+                    <Button fx:id="logoutMembre" layoutX="21.0" layoutY="543.0" mnemonicParsing="false" onAction="#logout" stylesheets="dashboardDesign.css">
                         <graphic>
                             <FontAwesomeIconView fill="WHITE" glyphName="SIGN_OUT" size="2em" />
                         </graphic>
@@ -163,7 +163,7 @@
             <!--    ************************************       SIdeBar COACH  *******************************************-->
 
             <AnchorPane fx:id="dashboard_coach" layoutX="14.0" layoutY="159.0" prefHeight="555.0" prefWidth="220.0" visible="false">
-                <AnchorPane prefHeight="555.0" prefWidth="220.0" stylesheets="Styles/dashboardDesign.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <AnchorPane prefHeight="555.0" prefWidth="220.0" stylesheets="dashboardDesign.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <styleClass>
                         <String fx:value="nav" />
                         <String fx:value="nav-border" />
@@ -181,11 +181,11 @@
                         </font>
                     </Label>
                     <Line endX="100.0" layoutX="111.0" layoutY="152.0" startX="-100.0" stroke="WHITE" />
-                    <Button fx:id="CoursCoach_btn" layoutX="21.0" layoutY="186.0" mnemonicParsing="false" onAction="#goToCoursCoach" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="Styles/dashboardDesign.css" text="Dashboard" />
-                    <Button fx:id="membreCoach_btn" layoutX="21.0" layoutY="232.0" mnemonicParsing="false" onAction="#goToMembreCoach" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="Styles/dashboardDesign.css" text="Coaches" />
+                    <Button fx:id="CoursCoach_btn" layoutX="21.0" layoutY="186.0" mnemonicParsing="false" onAction="#goToCoursCoach" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="dashboardDesign.css" text="Dashboard" />
+                    <Button fx:id="membreCoach_btn" layoutX="21.0" layoutY="232.0" mnemonicParsing="false" onAction="#goToMembreCoach" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="dashboardDesign.css" text="Coaches" />
                     <Line endX="98.99998474121094" layoutX="121.0" layoutY="162.0" startX="-100.0" stroke="WHITE" />
 
-                    <Button fx:id="logoutCoach" layoutX="20.0" layoutY="543.0" mnemonicParsing="false" onAction="#logout" stylesheets="Styles/dashboardDesign.css">
+                    <Button fx:id="logoutCoach" layoutX="20.0" layoutY="543.0" mnemonicParsing="false" onAction="#logout" stylesheets="dashboardDesign.css">
                         <graphic>
                             <FontAwesomeIconView fill="WHITE" glyphName="SIGN_OUT" size="2em" />
                         </graphic>
@@ -199,7 +199,7 @@
                             <Font size="15.0" />
                         </font>
                     </Label>
-                    <Button fx:id="payment_btn" layoutX="20.0" layoutY="324.0" mnemonicParsing="false" onAction="#switchForm" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="Styles/dashboardDesign.css" text="Payment" />
+                    <Button fx:id="payment_btn" layoutX="20.0" layoutY="324.0" mnemonicParsing="false" onAction="#switchForm" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="dashboardDesign.css" text="Payment" />
                 </AnchorPane>
             </AnchorPane>
 

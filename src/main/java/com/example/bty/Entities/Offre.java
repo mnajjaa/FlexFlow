@@ -4,6 +4,7 @@ import com.example.bty.Services.ServiceOffre;
 
 
 public class Offre {
+    private String nom;
     private int id;
     private Specialite specialite;
     private float tarif_heure;
@@ -14,13 +15,23 @@ public class Offre {
 //private byte[] image;
 
 
+    public String getNom() {
+        return nom;
+    }
+
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+
     public Offre(int id, String specialite, float tarifHeure, int idCoach, String etatOffre) {
+
         this.specialite = this.specialite;
         this.tarif_heure = tarif_heure;
         this.coach = coach;
     }
 
-    public Offre(int id, Specialite specialite, float tarif_heure, User coach) {
+    public Offre(int id, String nom,Specialite specialite, float tarif_heure, User coach) {
+        this.nom=nom;
         this.id = id;
         this.specialite = specialite;
         this.tarif_heure = tarif_heure;

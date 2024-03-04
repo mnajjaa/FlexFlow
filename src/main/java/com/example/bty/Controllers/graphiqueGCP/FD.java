@@ -1,4 +1,7 @@
 package com.example.bty.Controllers.graphiqueGCP;
+import com.example.bty.Entities.Role;
+import com.example.bty.Entities.User;
+import com.example.bty.Utils.Session;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.application.Application;
@@ -82,12 +85,12 @@ public class FD extends Application {
         nombreHeureField = new TextField();
         GridPane.setConstraints(nombreHeureField, 1, 5);
 
-        Label idUserLabel = new Label("ID Utilisateur:");
+        Label idUserLabel = new Label("Identifiant User:");
         GridPane.setConstraints(idUserLabel, 0, 6);
         idUserField = new TextField();
         GridPane.setConstraints(idUserField, 1, 6);
 
-        Label idOffreLabel = new Label("ID Offre:");
+        Label idOffreLabel = new Label("numéro d'Offre:");
         GridPane.setConstraints(idOffreLabel, 0, 7);
         idOffreField = new TextField();
         GridPane.setConstraints(idOffreField, 1, 7);
@@ -219,6 +222,19 @@ public class FD extends Application {
     }
 
     private void insertDemande() {
+        Session session = Session.getInstance();
+        User loggedInUser = session.getLoggedInUser();
+
+        if (loggedInUser == null) {
+            showAlert("Erreur", "Aucun utilisateur connecté !");
+            return;
+        }
+
+        // Vérifier si l'utilisateur connecté a le rôle de membre
+        if (!loggedInUser.getRole().equals(Role.MEMBRE)) {
+            showAlert("Erreur", "Vous devez être membre pour insérer une demande !");
+            return;
+        }
 
         if (!checkEmptyFields()) {
             showAlertt("Champs vides", "Veuillez remplir tous les champs !");
@@ -262,6 +278,7 @@ public class FD extends Application {
             setInvalidStyle();
         }
     }
+
 
     // Méthode pour vérifier si des champs sont vides
     private boolean checkEmptyFields() {

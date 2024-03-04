@@ -36,6 +36,7 @@ public class AdminInterface extends Application {
         VBox root = new VBox(10);
         root.getChildren().add(tableView);
 
+
         Scene scene = new Scene(root, 700, 400);
         scene.getStylesheets().add(getClass().getResource("/Styles/tableStyle.css").toExternalForm());
         primaryStage.setScene(scene);

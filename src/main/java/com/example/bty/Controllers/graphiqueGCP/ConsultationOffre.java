@@ -2,6 +2,7 @@ package com.example.bty.Controllers.graphiqueGCP;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -94,7 +95,10 @@ public class ConsultationOffre extends Application {
         // Création de la disposition verticale
         VBox vbox = new VBox();
         vbox.setSpacing(20);
+        vbox.setAlignment(Pos.CENTER_RIGHT); // Align to the center-right
         vbox.getChildren().add(tableView);
+
+
 
         Scene scene = new Scene(vbox, 800, 600);
         scene.getStylesheets().add(ConsultationDemandes.class.getResource("/Styles/tableStyle.css").toExternalForm());
@@ -273,7 +277,7 @@ public class ConsultationOffre extends Application {
 
 
     // Classe interne représentant un élément d'offre
-    public class OffreItem {
+    public static class OffreItem {
         private String nom;
         private String specialite;
         private String tarif;
@@ -285,6 +289,30 @@ public class ConsultationOffre extends Application {
             this.specialite = specialite;
             this.tarif = tarif;
             this.coach = coach;
+            this.etat = etat;
+        }
+
+        public OffreItem() {
+
+        }
+
+        public void setNom(String nom) {
+            this.nom = nom;
+        }
+
+        public void setSpecialite(String specialite) {
+            this.specialite = specialite;
+        }
+
+        public void setTarif(String tarif) {
+            this.tarif = tarif;
+        }
+
+        public void setCoach(String coach) {
+            this.coach = coach;
+        }
+
+        public void setEtat(String etat) {
             this.etat = etat;
         }
 

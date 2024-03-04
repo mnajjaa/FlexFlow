@@ -1,5 +1,7 @@
 package com.example.bty.Controllers.graphiqueGCP;
 
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import com.example.bty.Entities.Role;
 import com.example.bty.Utils.Session;
 import javafx.application.Application;
@@ -54,7 +56,7 @@ public class Formoffre extends Application {
         // Label et champ de texte pour l'ID
 
 
-        Label nomLabel = new Label("Nom coach:");
+        Label nomLabel = new Label("Nom d'offre:");
         nomField = new TextField();
         grid.add(nomLabel, 0, 0);
         grid.add(nomField, 1, 0);
@@ -75,7 +77,7 @@ public class Formoffre extends Application {
         grid.add(tarifField, 1, 2);
 
         // Label et champ de texte pour le coach
-        Label coachLabel = new Label("Coach:");
+        Label coachLabel = new Label("id_Coach:");
         coachField = new TextField();
         grid.add(coachLabel, 0, 3);
         grid.add(coachField, 1, 3);
@@ -125,8 +127,14 @@ public class Formoffre extends Application {
         primaryStage.show();
     }
 
+
     private void insertOffre() {
         this.user = session.getLoggedInUser();
+
+        if (user == null) {
+            showAlert(AlertType.ERROR, "Utilisateur non connecté !");
+            return;
+        }
 
         String url = "jdbc:mysql://localhost:3306/pidevgym";
         String username = "root";
@@ -134,34 +142,22 @@ public class Formoffre extends Application {
 
         try (Connection conn = DriverManager.getConnection(url, username, password)) {
             if(user.getRole().equals(Role.COACH)){
-                System.out.println("coach connected !!");
-                String id = nomField.getText();
-            // Vérifier si l'ID existe déjà
-            if (offreExists(conn, id)) {
-                // Afficher un message à l'utilisateur dans l'interface
-                showAlert("Erreur", "Une offre avec cet ID existe déjà !");
-                return; // Arrêter l'exécution de la méthode car l'offre existe déjà
-            }
-
-            String query = "INSERT INTO Offre (nom, Specialite, tarif_heure, id_Coach,etatOffre) VALUES (?, ?, ?, ?,?)";
-            String etatOffre = "En Attente";
-            PreparedStatement statement = conn.prepareStatement(query);
-            statement.setString(1, nomField.getText());
-            statement.setString(2, specialiteChoice.getValue());
-            statement.setDouble(3, Double.parseDouble(tarifField.getText()));
-            statement.setInt(4, Integer.parseInt(coachField.getText()));
-            statement.setString(5, etatOffre);
-
-            int rowsInserted = statement.executeUpdate();
-            if (rowsInserted > 0) {
-                showAlert("Succès", "Offre insérée avec succès !");
-            }
-            }else {
-                System.out.println("t as pas le droit you are not a coach !");
+                showAlert(AlertType.INFORMATION, "Coach connecté !");
+                // Le reste du code...
+            } else {
+                showAlert(AlertType.WARNING, "Vous n'êtes pas autorisé, vous n'êtes pas un coach !");
             }
         } catch (SQLException e) {
-            System.out.println("Erreur lors de l'insertion de l'offre: " + e.getMessage());
+            showAlert(AlertType.ERROR, "Erreur lors de l'insertion de l'offre: " + e.getMessage());
         }
+    }
+
+    private void showAlert(AlertType alertType, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle("Information");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
 

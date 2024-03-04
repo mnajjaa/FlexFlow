@@ -4,24 +4,11 @@ import com.example.bty.Entities.Role;
 import com.example.bty.Entities.User;
 import com.example.bty.Utils.ConnexionDB;
 import com.example.bty.Utils.Session;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
-import javafx.application.Application;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import org.mindrot.jbcrypt.BCrypt;
 
-import java.net.URL;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -100,7 +87,7 @@ public class ServiceUser implements IServiceUser{
                     //explain : f session bch y7ott le vrai role du user connecté khater 9bal ken y7ott role.ADMIN ou role.COACH meme si
                     // user connecté est un coach ou un membre
                     Role userRole = Role.valueOf(rs.getString("role"));
-                    User u =new User(rs.getInt("id"),rs.getString("nom"),rs.getString("email"),rs.getString("password"),rs.getString("telephone"),userRole,rs.getString("image"));
+                    User u =new User(rs.getString("nom"),rs.getString("email"),rs.getString("password"));
 
                     Session s=Session.getInstance();
                     s.setLoggedInUser(u);
@@ -238,29 +225,27 @@ public class ServiceUser implements IServiceUser{
 
 
     // Find a user by email
-    public User findByEmail(String email) throws SQLException {
+    public User findByEmail(String email) {
         User U = new User();
         String req = "SELECT * FROM user WHERE email = ?";
-        try (PreparedStatement pste=cnx.prepareStatement(req)) {
+        try (PreparedStatement pste = cnx.prepareStatement(req)) {
             pste.setString(1, email);
 
-
-            pste.setString(1,email);
-            ResultSet rs = pste.executeQuery(req);
-
+            ResultSet rs = pste.executeQuery();
             while (rs.next()) {
 
                 U.setId(rs.getInt("id"));
                 U.setName(rs.getString("nom"));
                 U.setEmail(rs.getString("email"));
+                U.setRole(Role.valueOf(rs.getString("role")));
                 U.setPassword(rs.getString("password"));
-
+                U.setImage(rs.getString("image"));
+                U.setTelephone(rs.getString("telephone"));
+                //  U.setPassword(rs.getString("password"));
             }
         } catch (SQLException ex) {
             Logger.getLogger(ServiceUser.class.getName()).log(Level.SEVERE, null, ex);
         }
         return U;
-    }
+    }}
 
-
-}

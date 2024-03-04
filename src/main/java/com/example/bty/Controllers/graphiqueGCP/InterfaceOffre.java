@@ -1,32 +1,39 @@
 package com.example.bty.Controllers.graphiqueGCP;
 
-import com.example.bty.Controllers.graphiqueGCP.ConsultationOffre;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.Polygon;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.sql.SQLException;
+import java.io.IOException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class InterfaceOffre extends Application {
     private ImageView backgroundImag;
 
     @Override
     public void start(Stage primaryStage) {
+
+
         Image image = null;
         try {
-            image = new Image(new FileInputStream("C:\\Users\\farah\\IdeaProjects\\FlexFlow\\src\\main\\Resources\\images\\aa.jpg"));
+            image = new Image(new FileInputStream("C:\\Users\\farah\\IdeaProjects\\FlexFlow\\src\\main\\Resources\\images\\y2.png"));
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -39,24 +46,20 @@ public class InterfaceOffre extends Application {
         consulterButton.setOnAction(event -> {
             consulterOffres();
         });
+
         // Création du titre
         Label titleLabel = new Label("FlexFlow");
-        titleLabel.setStyle("-fx-font-size: 25px; -fx-font-weight: bold; -fx-padding: 100px 0  0 0 2px;");
+        titleLabel.setStyle("-fx-font-size: 40px; -fx-font-weight: bold; -fx-padding: 50px 0  0  2px;");
 
-        HBox titleBox = new HBox();
-        titleBox.getChildren().add(titleLabel);
-        titleBox.setAlignment(Pos.CENTER);
-
-
+        // Intégration du système de like/dislike
         VBox vbox = new VBox(10);
-        vbox.getChildren().addAll(titleBox, consulterButton);
-        vbox.setStyle("-fx-padding: 140px;");
-        VBox.setVgrow(titleBox, javafx.scene.layout.Priority.ALWAYS);
-        vbox.setAlignment(javafx.geometry.Pos.CENTER); // Alignement du VBo
+        createLikeDislikeStars(vbox);
+        vbox.getChildren().addAll(titleLabel, consulterButton);
+        vbox.setAlignment(Pos.CENTER); // Alignement du VBo
 
         StackPane stackPane = new StackPane();
         stackPane.getChildren().addAll(backgroundImag, vbox);
-        StackPane.setAlignment(vbox, javafx.geometry.Pos.CENTER_RIGHT); // Alignement à droite
+        StackPane.setAlignment(vbox, Pos.CENTER); // Alignement au centre
 
         Scene scene = new Scene(stackPane, 700, 650);
         scene.getStylesheets().add(getClass().getResource("/Styles/StyleAR.css").toExternalForm());
@@ -64,9 +67,98 @@ public class InterfaceOffre extends Application {
         primaryStage.show();
     }
 
+
+
+
+
     private void consulterOffres() {
         ConsultationOffre1 consultationOffre = new ConsultationOffre1();
         consultationOffre.start(new Stage());
+    }
+
+    // Méthode pour créer et afficher le système de like/dislike
+    private void createLikeDislikeStars(VBox parentBox) {
+        AtomicInteger starsSelected = new AtomicInteger();
+        final int maxStars = 5;
+        Label selectionLabel = new Label("Selection: " + starsSelected + "/" + maxStars);
+
+        // Create star polygons
+        Polygon[] stars = new Polygon[maxStars];
+        for (int i = 0; i < maxStars; i++) {
+            stars[i] = createStar();
+            int index = i;
+            stars[i].setOnMouseClicked(e -> {
+                starsSelected.set(index + 1);
+                updateSelectionLabel(selectionLabel, starsSelected.get(), maxStars);
+                updateStarColors(stars, starsSelected.get(), maxStars);
+            });
+        }
+
+        HBox starBox = new HBox(5); // Utilisation de HBox pour les étoiles
+        starBox.getChildren().addAll(stars);
+        starBox.setAlignment(Pos.CENTER_RIGHT); // Aligner à droite
+
+        // Label pour indiquer "Combien vous aimez nos offres"
+        Label likeLabel = new Label("Combien vous aimez nos offres:");
+
+        // Création d'une boîte pour les étoiles et la section 0/5
+        HBox starAndSelectionBox = new HBox(5);
+        starAndSelectionBox.getChildren().addAll(starBox, selectionLabel);
+        starAndSelectionBox.setAlignment(Pos.BOTTOM_RIGHT); // Aligner en bas à droite
+
+        // Bouton pour soumettre la sélection
+        Button submitButton = new Button("Submit");
+        submitButton.setOnAction(e -> {
+            // Do something with the selected stars
+            System.out.println("User selected " + starsSelected + " stars.");
+            // Reset the selection
+            starsSelected.set(0);
+            updateSelectionLabel(selectionLabel, starsSelected.get(), maxStars);
+            updateStarColors(stars, starsSelected.get(), maxStars);
+        });
+
+        // Création d'une boîte pour le bouton Submit et la section 0/5
+        VBox submitBox = new VBox(5);
+        submitBox.getChildren().addAll(likeLabel, starAndSelectionBox, submitButton);
+        submitBox.setAlignment(Pos.BOTTOM_RIGHT); // Aligner en bas à droite
+
+        parentBox.getChildren().addAll(submitBox); // Ajouter cette boîte à la boîte principale
+        parentBox.setAlignment(Pos.CENTER); // Aligner au centre
+    }
+
+    // Method to create a star polygon
+    private Polygon createStar() {
+        Polygon star = new Polygon();
+        star.getPoints().addAll(
+                0.0, 0.0,
+                5.0, 15.0,
+                20.0, 20.0,
+                10.0, 35.0,
+                15.0, 50.0,
+                0.0, 40.0,
+                -15.0, 50.0,
+                -10.0, 35.0,
+                -20.0, 20.0,
+                -5.0, 15.0
+        );
+        star.setFill(Color.WHITE);
+        return star;
+    }
+
+    // Method to update the selection label
+    private void updateSelectionLabel(Label selectionLabel, int starsSelected, int maxStars) {
+        selectionLabel.setText("Selection: " + starsSelected + "/" + maxStars);
+    }
+
+    // Method to update the colors of the stars based on the selection
+    private void updateStarColors(Polygon[] stars, int selectedStars, int maxStars) {
+        for (int i = 0; i < maxStars; i++) {
+            if (i < selectedStars) {
+                stars[i].setFill(Color.YELLOW); // Colored star
+            } else {
+                stars[i].setFill(Color.WHITE); // White star
+            }
+        }
     }
 
     public static void main(String[] args) {

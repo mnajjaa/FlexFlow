@@ -29,7 +29,7 @@ public class User {
         this.etat = etat;
     }
 
-    public User(int id, String name, String email, String password, String telephone, Role role,String image) {
+    public User(String name, String email, String password) {
         this.id = id;
         this.name = name;
         this.email = email;

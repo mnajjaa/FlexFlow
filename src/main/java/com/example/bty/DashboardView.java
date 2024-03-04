@@ -10,7 +10,7 @@ public class DashboardView extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
-        FXMLLoader fxmlLoader = new FXMLLoader(DashboardView.class.getResource("/DashboardAOffre.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(DashboardView.class.getResource("/Dashbordadmin.fxml"));
 
         Parent root = fxmlLoader.load();
         Scene scene = new Scene(root);
