@@ -12,6 +12,10 @@ module com.example.bty {
     requires java.desktop;
     requires java.mail;
 
+    requires com.google.zxing;
+    requires com.google.zxing.javase;
+    requires java.prefs;
+    requires twilio;
 
 
 
@@ -33,5 +37,8 @@ module com.example.bty {
 
     exports com.example.bty.Controllers.graphiqueGCP;
     opens com.example.bty.Controllers.graphiqueGCP to javafx.fxml;
+
+    exports com.example.bty.Controllers.EvenementController;
+    opens com.example.bty.Controllers.EvenementController to javafx.fxml;
 
 }

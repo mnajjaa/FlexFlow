@@ -1,10 +1,13 @@
 package com.example.bty.Controllers.ProduitController;
 
 import com.example.bty.Controllers.CourController.CourMembre;
+import com.example.bty.Controllers.EvenementController.DashbordEvenement;
+import com.example.bty.Controllers.EvenementController.clientVitrine;
 import com.example.bty.Controllers.graphiqueGCP.FD;
 import com.example.bty.Controllers.graphiqueGCP.Formoffre;
 import com.example.bty.Entities.Commande;
 import com.example.bty.Entities.Produit;
+import com.example.bty.Entities.Role;
 import com.example.bty.Entities.User;
 import com.example.bty.Utils.Session;
 import com.itextpdf.text.*;
@@ -174,8 +177,8 @@ payer p = new payer();
 
 
         FontAwesomeIconView usernameAdmin = createFontAwesomeIconView("USER", "WHITE", 50, 82, 91);
-        Label welcomeLabel = createLabel("Welcome, " + loggedInUser.getName(), "Arial Bold", 15, 78, 101, "WHITE");
-        Label usernameLabel = createLabel("MarcoMan", "Arial Bold", 20, 11, 120,"WHITE");
+        Label welcomeLabel = createLabel("Welcome, " , "Arial Bold", 15, 78, 101, "WHITE");
+        Label usernameLabel = createLabel( loggedInUser.getName(), "Arial Bold", 20, 78, 120,"WHITE");
         // Line line = createLine(-100, 152, 100, 152, 111);
         Line line = createColoredLine(-100, 152, 100, 152, 111, "WHITE");
 
@@ -185,7 +188,7 @@ payer p = new payer();
         Button demandeBtn = createButton("Demande Coahing", 22, 319);
         Button offreAdminBtn = createButton("Offre", 22, 361);
         Button storeAdminBtn = createButton("Store", 22, 405);
-
+        Button lesOffresBtn = createButton("Les Offres", 22, 448);
         CoursBtn.setOnAction(event -> {
             // Instancier et afficher la vue DashboardVitrineController
             CourMembre c = new CourMembre();
@@ -194,38 +197,49 @@ payer p = new payer();
 
 
         eventsBtn.setOnAction(event -> {
-            // Instancier et afficher la vue DashboardVitrineController
+            /*DashbordEvenement e = new DashbordEvenement();
+            e.start(primaryStage);*/
+            clientVitrine e = new clientVitrine();
+            e.start(primaryStage);
 
         });
 
 
         demandeBtn.setOnAction(event -> {
             // Instancier et afficher la vue DashboardVitrineController
-           FD f = new FD();
+            FD f = new FD();
             f.start(primaryStage);
         });
 
 
         offreAdminBtn.setOnAction(event -> {
-            Formoffre o = new Formoffre();
-            o.start(primaryStage);
+
+
+
+                Formoffre o = new Formoffre();
+                o.start(primaryStage);
 
         });
 
 
         storeAdminBtn.setOnAction(event -> {
             // Instancier et afficher la vue DashboardVitrineController
-VitrineClient v = new VitrineClient();
-v.start(primaryStage);
+            VitrineClient v = new VitrineClient();
+            v.start(primaryStage);
+        });
+
+        lesOffresBtn.setOnAction(event -> {
+            // Instancier et afficher la vue DashboardVitrineController
+
         });
 
 
 
-        Line line2 = createColoredLine(-100, 449, 100, 449, 112, "WHITE");
+        Line line2 = createColoredLine(-100, 493, 100, 493, 112, "WHITE");
 
-        Button profileAdminBtn = createButton("Profile", 22, 462);
-        Button logoutBtn = createButton("Logout", 22, 503);
 
+        Button profileAdminBtn = createButton("Profile", 22, 506);
+        Button logoutBtn = createButton("Logout", 22, 547);
 // Add event handler to logoutBtn
 
 // Add event handler to logoutBtn
@@ -258,9 +272,10 @@ v.start(primaryStage);
                 createFontAwesomeIconView("CALENDAR", "WHITE", 20, 38, 385),
 
                 createFontAwesomeIconView("SHOPPING_CART", "WHITE", 20, 38, 429),
+                createFontAwesomeIconView("BOOK", "WHITE", 20, 38, 475),
 
-                createFontAwesomeIconView("ID_CARD", "WHITE", 20, 38, 486),
-                createFontAwesomeIconView("EXTERNAL_LINK", "WHITE", 20, 38, 529)
+                createFontAwesomeIconView("ID_CARD", "WHITE", 20, 38, 531),
+                createFontAwesomeIconView("EXTERNAL_LINK", "WHITE", 20, 38, 575)
         };
 
         VBox reportContainer = new VBox();
@@ -290,11 +305,12 @@ v.start(primaryStage);
         dashboardAdmin.getChildren().addAll(
                 usernameAdmin, welcomeLabel, usernameLabel, line,
                 DashboardBtn,CoursBtn, eventsBtn, demandeBtn, offreAdminBtn,
-                storeAdminBtn, line2, profileAdminBtn,
+                storeAdminBtn,lesOffresBtn, line2, profileAdminBtn,
                 logoutBtn, icons[0], icons[1], icons[2], icons[3],
-                icons[4], icons[5], icons[6],icons[7], reportContainer,
+                icons[4], icons[5], icons[6],icons[7],icons[8] ,reportContainer,
                 contentPlaceholder
         );
+
 
         mainForm.getChildren().addAll(dashboardAdmin);
         return dashboardAdmin;
@@ -302,6 +318,13 @@ v.start(primaryStage);
 
     }
 
+    private void showAlert1(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
 
 
 
@@ -328,6 +351,7 @@ v.start(primaryStage);
 
         // Définir la couleur du texte ici
         label.setTextFill(javafx.scene.paint.Paint.valueOf(textFill));
+
 
         return label;
     }

@@ -1,8 +1,7 @@
 package com.example.bty.Controllers.graphiqueGCP;
 
 import javafx.application.Application;
-import javafx.beans.property.SimpleFloatProperty;
-import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
@@ -35,6 +34,7 @@ public class AdminInterface extends Application {
 
         VBox root = new VBox(10);
         root.getChildren().add(tableView);
+
 
         Scene scene = new Scene(root, 700, 400);
         scene.getStylesheets().add(getClass().getResource("/Styles/tableStyle.css").toExternalForm());
@@ -77,10 +77,10 @@ public class AdminInterface extends Application {
 
         tableView.getColumns().addAll(idColumn, specialiteColumn, tarifHeureColumn, idCoachColumn, etatOffreColumn, actionColumn);
 
-        refreshOffresList();
+
     }
 
-    private static void refreshOffresList() {
+  /*  private static void refreshOffresList() {
         ObservableList<OffreItem> data = FXCollections.observableArrayList();
 
         try {
@@ -105,53 +105,19 @@ public class AdminInterface extends Application {
         }
 
         tableView.setItems(data);
-    }
+    }*/
 
     public static class OffreItem {
-        private SimpleStringProperty id;
-        private SimpleStringProperty specialite;
-        private  SimpleFloatProperty tarifHeure;
-        private SimpleStringProperty idCoach;
-        private SimpleStringProperty etatOffre;
 
-        public OffreItem(String id, String specialite, float tarifHeure, String idCoach, String etatOffre) {
-            this.id = new SimpleStringProperty(id);
-            this.specialite = new SimpleStringProperty(specialite);
-            this.tarifHeure = new SimpleFloatProperty(tarifHeure);
-            this.idCoach = new SimpleStringProperty(idCoach);
-            this.etatOffre = new SimpleStringProperty(etatOffre);
-        }
+
+        private final StringProperty id = new SimpleStringProperty();
+        private final StringProperty specialite = new SimpleStringProperty();
+        private final StringProperty tarifHeure = new SimpleStringProperty();
+        private final StringProperty idCoach = new SimpleStringProperty();
+        private final StringProperty etatOffre = new SimpleStringProperty();
 
         public OffreItem() {
-            this.id = new SimpleStringProperty("");
-            this.specialite = new SimpleStringProperty("");
-            this.tarifHeure = new SimpleFloatProperty(0.0f);
-            this.idCoach = new SimpleStringProperty("");
-            this.etatOffre = new SimpleStringProperty("");
-        }
 
-
-
-
-
-        public void setId(String id) {
-            this.id.set(id);
-        }
-
-        public void setSpecialite(String specialite) {
-            this.specialite.set(specialite);
-        }
-
-        public void setTarifHeure(float tarifHeure) {
-            this.tarifHeure.set(tarifHeure);
-        }
-
-        public void setIdCoach(String idCoach) {
-            this.idCoach.set(idCoach);
-        }
-
-        public void setEtatOffre(String etatOffre) {
-            this.etatOffre.set(etatOffre);
         }
 
         public String getId() {
@@ -162,7 +128,7 @@ public class AdminInterface extends Application {
             return specialite.get();
         }
 
-        public float getTarifHeure() {
+        public String getTarifHeure() {
             return tarifHeure.get();
         }
 
@@ -172,6 +138,49 @@ public class AdminInterface extends Application {
 
         public String getEtatOffre() {
             return etatOffre.get();
+        }
+
+
+
+
+        public StringProperty idProperty() {
+            return id;
+        }
+
+        public StringProperty specialiteProperty() {
+            return specialite;
+        }
+
+        public StringProperty tarifHeureProperty() {
+            return tarifHeure;
+        }
+
+        public StringProperty idCoachProperty() {
+            return idCoach;
+        }
+
+        public StringProperty etatOffreProperty() {
+            return etatOffre;
+        }
+
+        public void setId(String id) {
+            this.id.set(id);
+        }
+
+        public void setSpecialite(String specialite) {
+            this.specialite.set(specialite);
+        }
+
+        public void setTarifHeure(String tarifHeure) {
+            this.tarifHeure.set(tarifHeure);
+        }
+
+        public void setIdCoach(String idCoach) {
+            this.idCoach.set(idCoach);
+        }
+
+        public void setEtatOffre(String etatOffre) {
+            this.etatOffre.set(etatOffre);
         }
     }
 
@@ -208,7 +217,7 @@ public class AdminInterface extends Application {
             statement.setString(1, id);
             statement.executeUpdate();
             statement.close();
-            refreshOffresList();
+
         } catch (SQLException e) {
             e.printStackTrace();
             // Gérer les erreurs de base de données
@@ -221,7 +230,7 @@ public class AdminInterface extends Application {
             statement.setString(1, id);
             statement.executeUpdate();
             statement.close();
-            refreshOffresList();
+
         } catch (SQLException e) {
             e.printStackTrace();
             // Gérer les erreurs de base de données

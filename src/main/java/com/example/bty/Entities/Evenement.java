@@ -1,43 +1,83 @@
 package com.example.bty.Entities;
 
-import java.util.Date;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+
+import java.sql.Date;
+import java.sql.Time;
 
 public class Evenement {
     int id;
     String nom;
-    Date date;
-    int nbre_place;
-    String moderateur;
     String categorie;
     String objectif;
+    int nbre_place;
+    Date date;
+
+    Time Time;
+
+
     User coach;
     boolean etat;
+
+    private final ObjectProperty<byte[]> image = new SimpleObjectProperty<>();
+
+    public Evenement(int id, String nom, byte[] image, String categorie, String objectif, Date date, java.sql.Time time, int nbrPlace) {
+        this.id = id;
+        this.nom = nom;
+        this.image.set(image);
+        this.categorie=categorie;
+        this.objectif = objectif;
+        this.date = date;
+        this.Time = time;
+        this.nbre_place = nbrPlace;
+    }
+
+
+
+    public Evenement(String nom, String categorie, String objectif, int nbre_place, Date date, Time time, User coach, boolean etat, byte[] image) {
+        this.nom = nom;
+        this.categorie = categorie;
+        this.objectif = objectif;
+        this.nbre_place = nbre_place;
+        this.date = date;
+        this.Time = time;
+        this.coach = coach;
+        this.etat = etat;
+        this.image.set(image);
+
+    }
+
+    public byte[] getImage() {
+        return image.get();
+    }
+
+    public ObjectProperty<byte[]> imageProperty() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image.set(image);
+    }
+
+    public Evenement(int id, String nom, String categorie, String objectif, int nbre_place, Date date, Time time, User coach, boolean etat, byte[] image) {
+        this.id = id;
+        this.nom = nom;
+        this.categorie = categorie;
+        this.objectif = objectif;
+        this.nbre_place = nbre_place;
+        this.date = date;
+        Time = time;
+        this.coach = coach;
+        this.etat = etat;
+        this.image.set(image);
+
+    }
 
     public Evenement() {
     }
 
-    public Evenement(int id, String nom,Date date, int nbre_place, String moderateur, String categorie, String objectif, User coach, boolean etat) {
-        this.id = id;
-        this.nom = nom;
-        this.date = date;
-        this.nbre_place = nbre_place;
-        this.moderateur = moderateur;
-        this.categorie = categorie;
-        this.objectif = objectif;
-        this.coach = coach;
-        this.etat = etat;
-    }
 
-    public Evenement(String nom,Date date, int nbre_place, String moderateur, String categorie, String objectif, User coach, boolean etat) {
-        this.nom = nom;
-        this.date = date;
-        this.nbre_place = nbre_place;
-        this.moderateur = moderateur;
-        this.categorie = categorie;
-        this.objectif = objectif;
-        this.coach = coach;
-        this.etat = etat;
-    }
 
     public int getId() {
         return id;
@@ -69,13 +109,7 @@ public class Evenement {
         this.nbre_place = nbre_place;
     }
 
-    public String getModerateur() {
-        return moderateur;
-    }
 
-    public void setModerateur(String moderateur) {
-        this.moderateur = moderateur;
-    }
 
     public String getCategorie() {
         return categorie;
@@ -109,17 +143,26 @@ public class Evenement {
         this.etat = etat;
     }
 
+    public Time getTime() {
+        return Time;
+    }
+
+    public void setTime(Time time) {
+        Time = time;
+    }
+
     @Override
     public String toString() {
         return "Evenement{" +
                 "id=" + id +
+                ", nom='" + nom + '\'' +
                 ", date=" + date +
                 ", nbre_place=" + nbre_place +
-               // ", moderateur='" + moderateur + '\'' +
                 ", categorie='" + categorie + '\'' +
                 ", objectif='" + objectif + '\'' +
                 ", coach=" + coach +
                 ", etat=" + etat +
+                ", Time='" + Time + '\'' +
                 '}';
     }
 }

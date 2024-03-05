@@ -1,14 +1,11 @@
 package com.example.bty.Controllers;
 
-import com.example.bty.Controllers.ProduitController.VitrineClient;
+import com.example.bty.Controllers.EvenementController.clientVitrine;
 import com.example.bty.Entities.Role;
 import com.example.bty.Entities.User;
 import com.example.bty.Services.IServiceUser;
-import com.example.bty.Services.ServiceProduit;
 import com.example.bty.Services.ServiceUser;
 import com.example.bty.Utils.Session;
-import javafx.application.Application;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -20,7 +17,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -213,25 +209,37 @@ public class DashboardController implements Initializable {
             int id = u.getId();
             System.out.println(id);
             ServiceProduit.setUserDetails(u1, id);*/
-            //consulterCoaches();
+           // consulterCoaches();
 
 
         }
         else if(user.getRole().equals(Role.COACH)){
-            dashboard_coach.setVisible(true);
+            System.out.println("coach found");
+            // Instancier la classe VitrineClient
+            clientVitrine v = new clientVitrine();
+
+            // Appeler la méthode start (ou toute autre méthode pour démarrer l'interface)
+            v.start(new Stage());
+            dashboard_coach.setVisible(false);
             dashboard_Admin.setVisible(false);
-            dashboard_membre.setVisible(false);
-            usernameCoach.setText(u.getName());
+
+//            LoginGymController v1 = new LoginGymController();
+//            v1.signupSlider1();
         }
+
         else if(user.getRole().equals(Role.MEMBRE)){
             System.out.println("membre found");
             // Instancier la classe VitrineClient
-            VitrineClient vitrineClient = new VitrineClient();
+            clientVitrine v = new clientVitrine();
 
             // Appeler la méthode start (ou toute autre méthode pour démarrer l'interface)
-            vitrineClient.start(new Stage());
+            v.start(new Stage());
             dashboard_coach.setVisible(false);
             dashboard_Admin.setVisible(false);
+
+
+
+
 
         }
         else{
@@ -308,15 +316,9 @@ public class DashboardController implements Initializable {
     public void goToDashbordAdmin(ActionEvent actionEvent) {
     }
 
-    public void goToCoach(ActionEvent actionEvent) {
-
-    }
-
-    public void goToMembre(ActionEvent actionEvent) {
-    }
 
     public void goToEvents(ActionEvent actionEvent) {
-
+        loadContent("/dashbordEvenement.fxml");
     }
 
     public void goToStore(ActionEvent actionEvent) throws IOException {
@@ -351,6 +353,14 @@ public class DashboardController implements Initializable {
             (ActionEvent actionEvent) throws IOException {
         // Charger le contenu de DashboardProduit.fxml
         loadContent("/DashboardAdminOffre.fxml");
+    }
+
+    public void goToCoach(ActionEvent actionEvent) {
+        loadContent("/coachList.fxml");
+    }
+
+    public void goToMembre(ActionEvent actionEvent) {
+        loadContent("/membreList.fxml");
     }
 
 

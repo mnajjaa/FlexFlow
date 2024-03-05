@@ -1,31 +1,26 @@
-package com.example.bty.Controllers.graphiqueGCP;
+package com.example.bty.Controllers;
+
 import com.example.bty.Controllers.CourController.CourMembre;
-import com.example.bty.Controllers.EvenementController.clientVitrine;
 import com.example.bty.Controllers.ProduitController.VitrineClient;
-import com.example.bty.Entities.Role;
 import com.example.bty.Entities.User;
 import com.example.bty.Utils.Session;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.*;
-import java.util.Objects;
 
 public class FD extends Application {
 
@@ -38,162 +33,100 @@ public class FD extends Application {
     private TextField idOffreField;
     private TextField lesjoursFiled;
     private TextField horaireFiled;
-    private TextField nomField;
-    private ImageView backgroundImag;
-    User user;
 
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setTitle("Formulaire d'ajout d'une demande");
 
-        VBox cardContainer = new VBox();
-        //cardContainer.getStyleClass().add("card-container");
-        cardContainer.setPadding(new Insets(20));
-        cardContainer.setSpacing(10);
+
+
+        primaryStage.setTitle("Formulaire d'ajout d'une demande ");
+
+        // Appel de la méthode createLeftDashboard pour obtenir le sidebar
         AnchorPane sidebar = createLeftDashboard(primaryStage);
 
-        //cardContainer.getStyleClass().add("card-container1");
+        VBox cardContainer = new VBox();
+        cardContainer.getStyleClass().add("card-container1");
         cardContainer.setPadding(new Insets(20));
         cardContainer.setSpacing(10);
 
-        Label cardTitle = new Label("Ajouter une demande de Coaching privé");
-        cardTitle.setStyle("-fx-translate-x: 250;-fx-font-size: 21px; -fx-font-weight: bold; -fx-text-fill: #673AB7;");
+        Label cardTitle = new Label("Ajouter une demande ");
+        cardTitle.setStyle("-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #d8c6e5; -fx-font-family: 'Arial', sans-serif;");
 
         GridPane grid = new GridPane();
-        grid.setMaxWidth(670);
-        grid.setMaxHeight(670);
-        grid.setVgap(18);
-        grid.setHgap(5);
-        grid.setStyle("-fx-translate-x: 230;-fx-background-color: #D1C4E9; -fx-padding: 25; -fx-border-radius: 10; -fx-background-radius: 10; -fx-alignment: center;");
-
-        Label nomLabel = new Label("Nom:");
-        setupStyledLabel(nomLabel);
-        nomField = new TextField();
-        nomField.setPrefWidth(250);
-        setupStyledTextField(nomField);
-        GridPane.setConstraints(nomLabel, 0, 0);
-        GridPane.setConstraints(nomField, 1, 0);
-
+        grid.setVgap(15);
+        grid.setHgap(15);
+        grid.setStyle("-fx-background-color: #d5bce7; -fx-padding: 25; -fx-border-radius: 10; -fx-background-radius: 10; -fx-alignment: center;");
 
         Label ageLabel = new Label("Age:");
-        setupStyledLabel(ageLabel);
+        GridPane.setConstraints(ageLabel, 0, 0);
         ageField = new TextField();
-        ageField.setPrefWidth(250);
-        setupStyledTextField(ageField);
-        GridPane.setConstraints(ageLabel, 0, 1);
-        GridPane.setConstraints(ageField, 1, 1);
+        GridPane.setConstraints(ageField, 1, 0);
 
         Label butLabel = new Label("But:");
-        setupStyledLabel(butLabel);
+        GridPane.setConstraints(butLabel, 0, 1);
         butField = new TextField();
-        butField.setPrefWidth(250);
-        setupStyledTextField(butField);
-        GridPane.setConstraints(butLabel, 0, 2);
-        GridPane.setConstraints(butField, 1, 2);
+        GridPane.setConstraints(butField, 1, 1);
 
         Label niveauPhysiqueLabel = new Label("Niveau Physique:");
-        setupStyledLabel(niveauPhysiqueLabel);
+        GridPane.setConstraints(niveauPhysiqueLabel, 0, 2);
         niveauPhysiqueField = new TextField();
-        niveauPhysiqueField.setPrefWidth(250);
-        setupStyledTextField(niveauPhysiqueField);
-        GridPane.setConstraints(niveauPhysiqueLabel, 0, 3);
-        GridPane.setConstraints(niveauPhysiqueField, 1, 3);
-
-
+        GridPane.setConstraints(niveauPhysiqueField, 1, 2);
 
         Label maladieChroniqueLabel = new Label("Maladie Chronique:");
-        setupStyledLabel(maladieChroniqueLabel);
+        GridPane.setConstraints(maladieChroniqueLabel, 0, 3);
         maladieChroniqueField = new TextField();
-        maladieChroniqueField.setPrefWidth(250);
-        setupStyledTextField(maladieChroniqueField);
-        GridPane.setConstraints(maladieChroniqueLabel, 0, 4);
-        GridPane.setConstraints(maladieChroniqueField, 1, 4);
-
+        GridPane.setConstraints(maladieChroniqueField, 1, 3);
 
         Label nombreHeureLabel = new Label("Nombre d'Heures:");
-        setupStyledLabel(nombreHeureLabel);
+        GridPane.setConstraints(nombreHeureLabel, 0, 4);
         nombreHeureField = new TextField();
-        nombreHeureField.setPrefWidth(250);
-        setupStyledTextField(nombreHeureField);
-        GridPane.setConstraints(nombreHeureLabel, 0, 5);
-        GridPane.setConstraints(nombreHeureField, 1, 5);
+        GridPane.setConstraints(nombreHeureField, 1, 4);
 
-
-        Label idUserLabel = new Label("Identifiant User:");
-        setupStyledLabel(idUserLabel);
+        Label idUserLabel = new Label("ID Utilisateur:");
+        GridPane.setConstraints(idUserLabel, 0, 5);
         idUserField = new TextField();
-        idUserField.setPrefWidth(250);
-        setupStyledTextField(idUserField);
-        GridPane.setConstraints(idUserLabel, 0, 6);
-        GridPane.setConstraints(idUserField, 1, 6);
+        GridPane.setConstraints(idUserField, 1, 5);
 
-
-        Label idOffreLabel = new Label("numéro d'Offre:");
-        setupStyledLabel(idOffreLabel);
+        Label idOffreLabel = new Label("ID Offre:");
+        GridPane.setConstraints(idOffreLabel, 0, 6);
         idOffreField = new TextField();
-        idOffreField.setPrefWidth(250);
-        setupStyledTextField(idOffreField);
-        GridPane.setConstraints(idOffreLabel, 0, 7);
-        GridPane.setConstraints(idOffreField, 1, 7);
-
+        GridPane.setConstraints(idOffreField, 1, 6);
 
         Label etatLabel = new Label("Etat:");
-        setupStyledLabel(etatLabel);
+        grid.add(etatLabel, 0, 7);
 
         TextField etatField = new TextField("En Attente");
-        etatField.setDisable(true); // Make the text field non-editable
-        etatField.setStyle("-fx-font-size: 15px; -fx-background-color: whitesmoke; -fx-border-color: #3f51b5; -fx-border-width: 1px; -fx-border-radius: 5px; -fx-text-fill: #000000;");
-        etatField.setPrefWidth(250);
-
-        GridPane.setConstraints(etatLabel, 0, 8);
-        GridPane.setConstraints(etatField, 1, 8);
-
-
+        etatField.setEditable(false);
+        grid.add(etatField, 1, 7);
 
         Label horaireLabel = new Label("Horaire:");
-        setupStyledLabel(horaireLabel);
+        GridPane.setConstraints(horaireLabel, 0, 8);
         horaireFiled = new TextField();
-        horaireFiled.setPrefWidth(250);
-        setupStyledTextField(horaireFiled);
-        GridPane.setConstraints(horaireLabel, 0, 9);
-        GridPane.setConstraints(horaireFiled, 1, 9);
+        GridPane.setConstraints(horaireFiled, 1, 8);
 
-
-        Label lesjoursLabel = new Label("Les jours:");
-        setupStyledLabel(lesjoursLabel);
+        Label lesjoursLabel = new Label("Lesjours:");
+        GridPane.setConstraints(lesjoursLabel, 0, 9);
         lesjoursFiled = new TextField();
-        lesjoursFiled.setPrefWidth(250);
-        setupStyledTextField(lesjoursFiled);
-        GridPane.setConstraints(lesjoursLabel, 0, 10);
-        GridPane.setConstraints(lesjoursFiled, 1, 10);
-
-
-
+        GridPane.setConstraints(lesjoursFiled, 1, 9);
 
         Button sendButton = new Button("Envoyer");
-        setupButton(sendButton);
-        GridPane.setConstraints(sendButton, 1, 11);
+        GridPane.setConstraints(sendButton, 1, 10);
         sendButton.setOnAction(event -> insertDemande());
 
-        Button consulterButton = new Button("Consulter liste de demande");
-        setupButton(consulterButton);
-        GridPane.setConstraints(consulterButton, 2, 11);
-        consulterButton.setOnAction(event -> {
-            try {
-                consulterDemandes();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        });
-
-        grid.getChildren().add(consulterButton);
+      /*  Button consulterButton = new Button("Consulter liste de demande");
+        GridPane.setConstraints(consulterButton, 2, 10);
+        consulterButton.setOnAction(event -> consulterDemandes());
+        grid.getChildren().add(consulterButton);*/
 
 
 
         grid.getChildren().addAll(ageLabel, ageField, butLabel, butField, niveauPhysiqueLabel, niveauPhysiqueField,
                 maladieChroniqueLabel, maladieChroniqueField, nombreHeureLabel, nombreHeureField, idUserLabel,
-                idUserField, idOffreLabel, idOffreField, etatLabel,etatField,lesjoursLabel, lesjoursFiled, horaireLabel, horaireFiled,nomLabel,nomField,
+                idUserField, idOffreLabel, idOffreField, lesjoursLabel, lesjoursFiled, horaireLabel, horaireFiled,
                 sendButton);
+
+
+
 
         ageField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.matches("\\d*")) {
@@ -229,12 +162,16 @@ public class FD extends Application {
 
         // Appel de la méthode pour configurer la validation du champ horaireFiled
         setupTimeValidation(horaireFiled);
-        // Appel de la méthode pour configurer la validation des champs de type String
-        setupStringValidation(nomField);
+
         setupStringValidation(maladieChroniqueField);
         setupStringValidation(butField);
         setupStringValidation(niveauPhysiqueField);
         setupStringValidation(lesjoursFiled);
+
+
+
+
+
 
         // Ajout du sidebar à gauche du BorderPane
         BorderPane root = new BorderPane();
@@ -243,47 +180,23 @@ public class FD extends Application {
         formContainer.getChildren().addAll(cardTitle, grid);
         root.setCenter(formContainer);
         Scene scene = new Scene(root, 1366, 700);
+
+       //scene.getStylesheets().add(getClass().getResource("/Styles/StyleAR.css").toExternalForm());
         scene.getStylesheets().add(getClass().getResource("/dashboardDesign.css").toExternalForm());
 
         primaryStage.setScene(scene);
         primaryStage.show();
-    }
 
-    private void setupLabel(Label label) {
-        label.setStyle("-fx-font-weight: bold;");
-    }
 
-    private void setupTextField(TextField textField) {
-        textField.setStyle("-fx-text-inner-color: black;");
-    }
 
-    private void setupButton(Button button) {
-        button.setStyle("-fx-background-color: #673AB7; -fx-text-fill: #FFFFFF; -fx-font-size: 13px; -fx-padding: 10 20; -fx-border-radius: 5;");
-        button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: #311B92; -fx-text-fill: #FFFFFF; -fx-font-size: 13px; -fx-padding: 10 20; -fx-border-radius: 5;"));
-        button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #673AB7; -fx-text-fill: #FFFFFF; -fx-font-size: 13px; -fx-padding: 10 20; -fx-border-radius: 5;"));
     }
 
 
-
-    private void setupStyledLabel(Label label) {
-        label.setStyle("-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #3f51b5; -fx-font-family: 'Arial', sans-serif;");
-    }
-
-    private void setupStyledTextField(TextField textField) {
-        textField.setStyle("-fx-font-size: 15px; -fx-background-color: whitesmoke; -fx-border-color: #3f51b5; -fx-border-width: 1px; -fx-border-radius: 5px; -fx-text-fill: #000000;");
-        textField.focusedProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal) {
-                textField.setStyle("-fx-font-size: 15px; -fx-background-color: whitesmoke; -fx-border-color: #303f9f; -fx-border-width: 1px; -fx-border-radius: 5px; -fx-text-fill: #000000;");
-            } else {
-                textField.setStyle("-fx-font-size: 15px; -fx-background-color: whitesmoke; -fx-border-color: #3f51b5; -fx-border-width: 1px; -fx-border-radius: 5px; -fx-text-fill: #000000;");
-            }
-        });
-    }
 
 
 
     private AnchorPane createLeftDashboard(Stage primaryStage) {
-        User loggedInUser = Session.getInstance().getLoggedInUser();
+        //User loggedInUser = Session.getInstance().getLoggedInUser();
         AnchorPane mainForm = new AnchorPane();
         mainForm.setPrefSize(1100, 900);
 
@@ -297,14 +210,14 @@ public class FD extends Application {
         //leftAnchorPane.setPrefSize(70, 280);
 //        dashboardAdmin.setBottomAnchor(mainForm, 40.0);
 //        dashboardAdmin.setLeftAnchor(mainForm, 40.0);
-        dashboardAdmin.setTranslateY(0);
+        dashboardAdmin.setTranslateY(-5);
         dashboardAdmin.setPrefSize(234, 1500);
         dashboardAdmin.getStyleClass().add("border-pane");
 
 
         FontAwesomeIconView usernameAdmin = createFontAwesomeIconView("USER", "WHITE", 50, 82, 91);
         Label welcomeLabel = createLabel("Welcome, " , "Arial Bold", 15, 78, 101, "WHITE");
-        Label usernameLabel = createLabel(loggedInUser.getName(), "Arial Bold", 20, 78, 120,"WHITE");
+        Label usernameLabel = createLabel("MarcoMan", "Arial Bold", 20, 11, 120,"WHITE");
         // Line line = createLine(-100, 152, 100, 152, 111);
         Line line = createColoredLine(-100, 152, 100, 152, 111, "WHITE");
 
@@ -314,7 +227,7 @@ public class FD extends Application {
         Button demandeBtn = createButton("Demande Coahing", 22, 319);
         Button offreAdminBtn = createButton("Offre", 22, 361);
         Button storeAdminBtn = createButton("Store", 22, 405);
-        Button lesOffresBtn = createButton("Les Offres", 22, 448);
+
         CoursBtn.setOnAction(event -> {
             // Instancier et afficher la vue DashboardVitrineController
             CourMembre c = new CourMembre();
@@ -323,10 +236,7 @@ public class FD extends Application {
 
 
         eventsBtn.setOnAction(event -> {
-            /*DashbordEvenement e = new DashbordEvenement();
-            e.start(primaryStage);*/
-            clientVitrine e = new clientVitrine();
-            e.start(primaryStage);
+            // Instancier et afficher la vue DashboardVitrineController
 
         });
 
@@ -339,33 +249,23 @@ public class FD extends Application {
 
 
         offreAdminBtn.setOnAction(event -> {
-
-
-
-                Formoffre o = new Formoffre();
-                o.start(primaryStage);
+            // Instancier et afficher la vue DashboardVitrineController
 
         });
 
 
         storeAdminBtn.setOnAction(event -> {
             // Instancier et afficher la vue DashboardVitrineController
-            VitrineClient v = new VitrineClient();
-            v.start(primaryStage);
-        });
-
-        lesOffresBtn.setOnAction(event -> {
-            // Instancier et afficher la vue DashboardVitrineController
 
         });
 
 
 
-        Line line2 = createColoredLine(-100, 493, 100, 493, 112, "WHITE");
+        Line line2 = createColoredLine(-100, 449, 100, 449, 112, "WHITE");
 
+        Button profileAdminBtn = createButton("Profile", 22, 462);
+        Button logoutBtn = createButton("Logout", 22, 503);
 
-        Button profileAdminBtn = createButton("Profile", 22, 506);
-        Button logoutBtn = createButton("Logout", 22, 547);
 // Add event handler to logoutBtn
 
 // Add event handler to logoutBtn
@@ -398,10 +298,9 @@ public class FD extends Application {
                 createFontAwesomeIconView("CALENDAR", "WHITE", 20, 38, 385),
 
                 createFontAwesomeIconView("SHOPPING_CART", "WHITE", 20, 38, 429),
-                createFontAwesomeIconView("BOOK", "WHITE", 20, 38, 475),
 
-                createFontAwesomeIconView("ID_CARD", "WHITE", 20, 38, 531),
-                createFontAwesomeIconView("EXTERNAL_LINK", "WHITE", 20, 38, 575)
+                createFontAwesomeIconView("ID_CARD", "WHITE", 20, 38, 486),
+                createFontAwesomeIconView("EXTERNAL_LINK", "WHITE", 20, 38, 529)
         };
 
         VBox reportContainer = new VBox();
@@ -431,12 +330,11 @@ public class FD extends Application {
         dashboardAdmin.getChildren().addAll(
                 usernameAdmin, welcomeLabel, usernameLabel, line,
                 DashboardBtn,CoursBtn, eventsBtn, demandeBtn, offreAdminBtn,
-                storeAdminBtn,lesOffresBtn, line2, profileAdminBtn,
+                storeAdminBtn, line2, profileAdminBtn,
                 logoutBtn, icons[0], icons[1], icons[2], icons[3],
-                icons[4], icons[5], icons[6],icons[7],icons[8] ,reportContainer,
+                icons[4], icons[5], icons[6],icons[7], reportContainer,
                 contentPlaceholder
         );
-
 
         mainForm.getChildren().addAll(dashboardAdmin);
         return dashboardAdmin;
@@ -444,13 +342,6 @@ public class FD extends Application {
 
     }
 
-    private void showAlert1(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
-    }
 
 
 
@@ -513,8 +404,6 @@ public class FD extends Application {
 
 
 
-
-
     private boolean validateFields() {
         if (ageField.getText().isEmpty() || butField.getText().isEmpty() || niveauPhysiqueField.getText().isEmpty()
                 || maladieChroniqueField.getText().isEmpty() || nombreHeureField.getText().isEmpty()
@@ -525,7 +414,6 @@ public class FD extends Application {
         }
         return true;
     }
-
 
     private void setupTimeValidation(TextField timeField) {
         timeField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -550,22 +438,7 @@ public class FD extends Application {
     }
 
     private void insertDemande() {
-        Session session = Session.getInstance();
-        User loggedInUser = session.getLoggedInUser();
-
-        if (loggedInUser == null) {
-            showAlert("Erreur", "Aucun utilisateur connecté !");
-            return;
-        }
-
-        // Vérifier si l'utilisateur connecté a le rôle de membre
-        if (!loggedInUser.getRole().equals(Role.MEMBRE)) {
-            showAlert("Erreur", "Vous devez être membre pour insérer une demande !");
-            return;
-        }
-
-        if (!checkEmptyFields()) {
-            showAlertt("Champs vides", "Veuillez remplir tous les champs !");
+        if (!validateFields()) {
             return;
         }
 
@@ -581,21 +454,20 @@ public class FD extends Application {
         String password = "";
 
         try (Connection conn = DriverManager.getConnection(url, username, password)) {
-            String query = "INSERT INTO demande (nom,Age, But, NiveauPhysique, MaladieChronique, NombreHeure, ID_User, ID_Offre, Etat, Horaire, lesjours) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
+            String query = "INSERT INTO demande (Age, But, NiveauPhysique, MaladieChronique, NombreHeure, ID_User, ID_Offre, Etat, Horaire, lesjours) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             String etat = "En Attente";
             java.sql.Time horaire = java.sql.Time.valueOf("08:00:00");
             PreparedStatement statement = conn.prepareStatement(query);
-            statement.setString(1, nomField.getText());
-            statement.setInt(2, Integer.parseInt(ageField.getText()));
-            statement.setString(3, butField.getText());
-            statement.setString(4, niveauPhysiqueField.getText());
-            statement.setString(5, maladieChroniqueField.getText());
-            statement.setInt(6, Integer.parseInt(nombreHeureField.getText()));
-            statement.setInt(7, Integer.parseInt(idUserField.getText()));
-            statement.setInt(8, Integer.parseInt(idOffreField.getText()));
-            statement.setString(9, etat);
-            statement.setTime(10, horaire);
-            statement.setString(11, lesjoursFiled.getText());
+            statement.setInt(1, Integer.parseInt(ageField.getText()));
+            statement.setString(2, butField.getText());
+            statement.setString(3, niveauPhysiqueField.getText());
+            statement.setString(4, maladieChroniqueField.getText());
+            statement.setInt(5, Integer.parseInt(nombreHeureField.getText()));
+            statement.setInt(6, Integer.parseInt(idUserField.getText()));
+            statement.setInt(7, Integer.parseInt(idOffreField.getText()));
+            statement.setString(8, etat);
+            statement.setTime(9, horaire);
+            statement.setString(10, lesjoursFiled.getText());
 
             int rowsInserted = statement.executeUpdate();
             if (rowsInserted > 0) {
@@ -608,39 +480,12 @@ public class FD extends Application {
     }
 
 
-    // Méthode pour vérifier si des champs sont vides
-    private boolean checkEmptyFields() {
-        if (nomField.getText().isEmpty() || ageField.getText().isEmpty() || butField.getText().isEmpty() ||
-                niveauPhysiqueField.getText().isEmpty() || maladieChroniqueField.getText().isEmpty() ||
-                nombreHeureField.getText().isEmpty() || idUserField.getText().isEmpty() || idOffreField.getText().isEmpty() ||
-                lesjoursFiled.getText().isEmpty()) {
-            return false;
-        }
-        return true;
-    }
-
-    // Méthode pour afficher un message d'alerte dans l'interface utilisateur
-
-
-
-    // Méthode pour vérifier si des champs sont vides
-//    private boolean checkEmptyFields() {
-//        if (nomField.getText().isEmpty() || ageField.getText().isEmpty() || butField.getText().isEmpty() ||
-//                niveauPhysiqueField.getText().isEmpty() || maladieChroniqueField.getText().isEmpty() ||
-//                nombreHeureField.getText().isEmpty() || idUserField.getText().isEmpty() || idOffreField.getText().isEmpty() ||
-//                lesjoursFiled.getText().isEmpty()) {
-//            showAlert("Champs vides", "Veuillez remplir tous les champs !");
-//            return false;
-//        }
-//        return true;
-//    }
-
     // Méthode pour gérer l'événement du bouton "Consulter"
-    private void consulterDemandes() throws SQLException {
-        // Ouvrir la fenêtre de consultation des demandes sans demander le nom du client
+   /* private void consulterDemandes() {
         ConsultationDemandes consultationDemandes = new ConsultationDemandes();
         consultationDemandes.start(new Stage());
-    }
+    }*/
+
     private String getSpecialiteFromOffreId(int idOffre) {
         String url = "jdbc:mysql://localhost:3306/pidevgym";
         String username = "root";
@@ -709,7 +554,6 @@ public class FD extends Application {
     }
 
     private void setInvalidStyle() {
-        nomField.setStyle("-fx-border-color: initial;");
         ageField.setStyle("-fx-border-color: initial;");
         butField.setStyle("-fx-border-color: initial;");
         niveauPhysiqueField.setStyle("-fx-border-color: initial;");
@@ -720,7 +564,6 @@ public class FD extends Application {
         lesjoursFiled.setStyle("-fx-border-color: initial;");
         horaireFiled.setStyle("-fx-border-color: initial;");
 
-        nomField.setStyle("-fx-border-color: initial;");
         ageField.setStyle("-fx-border-color: red;");
         butField.setStyle("-fx-border-color: red;");
         niveauPhysiqueField.setStyle("-fx-border-color: red;");
@@ -740,13 +583,7 @@ public class FD extends Application {
         alert.setContentText(content);
         alert.showAndWait();
     }
-    private void showAlertt(String title, String message) {
-        Alert alert = new Alert(AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
+
 
 
     public static void main(String[] args) {

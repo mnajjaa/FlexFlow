@@ -37,9 +37,9 @@
                         </Label>
                         <Line endX="100.0" layoutX="111.0" layoutY="152.0" startX="-100.0" stroke="WHITE" />
                         <Button fx:id="dashboard_btn" layoutX="22.0" layoutY="159.0" mnemonicParsing="false" onAction="#goToAccueil" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="dashboardDesign.css" text="Acceuil" />
-                        <Button fx:id="coaches_btn" layoutX="21.0" layoutY="202.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="dashboardDesign.css" text="Coachs" />
-                        <Button fx:id="members_btn" layoutX="23.0" layoutY="244.0" mnemonicParsing="false" onAction="#goToMembre" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="dashboardDesign.css" text="Membres"  />
-                        <Button fx:id="eventsAdmin_btn" layoutX="23.0" layoutY="287.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="dashboardDesign.css" text="Evenements"   />
+                        <Button fx:id="coaches_btn" layoutX="21.0" layoutY="202.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="dashboardDesign.css" onAction="#goToCoach" text="Coachs" />
+                        <Button fx:id="members_btn" layoutX="23.0" layoutY="244.0" mnemonicParsing="false" onAction="#goToMembre" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="dashboardDesign.css"  text="Membres"  />
+                        <Button fx:id="eventsAdmin_btn" layoutX="23.0" layoutY="287.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="dashboardDesign.css" onAction="#goToEvents" text="Evenements"   />
                         <Button fx:id="coursAdmin_btn" layoutX="23.0" layoutY="330.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="dashboardDesign.css" onAction="#goToCours" text="Cours"  />
                         <Button fx:id="offre_btn" onAction="#goToOffre" layoutX="23.0" layoutY="376.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="dashboardDesign.css" text="Offre Coaching" />
                         <Button fx:id="storeAdmin_btn" layoutX="23.0" layoutY="420.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="dashboardDesign.css" onAction="#goToStore" text="Store" />

@@ -1,5 +1,6 @@
 package com.example.bty.Controllers.graphiqueGCP;
 
+import com.example.bty.Controllers.graphiqueGCP.AdminInterface;
 import com.example.bty.Services.ServiceOffre;
 import com.example.bty.Utils.ConnexionDB;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
@@ -8,6 +9,8 @@ import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -26,18 +29,19 @@ public class Dashbordadmin {
     public Button ajout_produit;
     public Button actuliser_produit;
     public Label dashboard_NM;
+    public Button actuliser;
 
     @FXML
-    private static TableView<AdminInterface.OffreItem> tableView;
+    private  TableView<AdminInterface.OffreItem> tableView;
 
 
 
     @FXML
-    private TableColumn<AdminInterface.OffreItem, String> Id;
+    private TableColumn<AdminInterface.OffreItem, String> IdCol;
     @FXML
     public TableColumn<AdminInterface.OffreItem, String> specialiteCol;
     @FXML
-    public TableColumn<AdminInterface.OffreItem, Float> tarifnCol;
+    public TableColumn<AdminInterface.OffreItem, String> tarifnCol;
     @FXML
     public TableColumn<AdminInterface.OffreItem, String > idCoachCol;
     @FXML
@@ -64,9 +68,9 @@ public class Dashbordadmin {
 
     @FXML
     private void initialize() {
-        Id.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getId()));
+        IdCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getId()));
         specialiteCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getSpecialite()));
-        tarifnCol.setCellValueFactory(cellData -> new SimpleFloatProperty(cellData.getValue().getTarifHeure()).asObject());
+        tarifnCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTarifHeure()));
         idCoachCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getIdCoach()));
         etatCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEtatOffre()));
 
@@ -107,10 +111,16 @@ public class Dashbordadmin {
                 return button;
             }
         });
-       // actionColumn.setCellFactory(param -> new AdminInterface.ButtonCell());
+        // actionColumn.setCellFactory(param -> new AdminInterface.ButtonCell());
 
 
-
+        actuliser.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                // Appel de la méthode pour ouvrir la nouvelle fenêtre d'ajout de produit
+                actualiserTable();
+            }
+        });
 
 
         // Chargement initial des données dans la table
@@ -170,7 +180,7 @@ public class Dashbordadmin {
 
 
 
-    private static void accepterOffre(String id) {
+    private  void accepterOffre(String id) {
 
         try {
             PreparedStatement statement = connection.prepareStatement("UPDATE Offre SET etatOffre = 'Acceptée' WHERE id = ?");
@@ -184,7 +194,7 @@ public class Dashbordadmin {
         }
     }
 
-    private static void refuserOffre(String id) {
+    private  void refuserOffre(String id) {
         try {
             PreparedStatement statement = connection.prepareStatement("UPDATE Offre SET etatOffre = 'Refusée' WHERE id = ?");
             statement.setString(1, id);
@@ -342,42 +352,42 @@ public class Dashbordadmin {
     private void actualiserTable() {
         ObservableList<AdminInterface.OffreItem>
 
-            produits = FXCollections.observableArrayList(consulterOffre());
+                produits = FXCollections.observableArrayList(consulterOffre());
 
         tableView.setItems(produits);
     }
 
 
-//    public static List<AdminInterface.OffreItem> consulterOffre() {
-//        List<AdminInterface.OffreItem> commandes = new ArrayList<>();
-//        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgym", "root", "")) {
-//            String query = "SELECT * FROM Offre"; // Assurez-vous que le nom de la table est correct
-//
-//            try (Statement statement = connection.createStatement();
-//                 ResultSet resultSet = statement.executeQuery(query)) {
-//
-//
-//                while (resultSet.next()) {
-//                    AdminInterface.OffreItem offreItem = new AdminInterface.OffreItem();
-//
-//                    offreItem.setId(resultSet.getString("id"));
-//                    offreItem.setSpecialite(resultSet.getString("specialite"));
-//                    offreItem.setTarifHeure(resultSet.getFloat("tarif_heure"));
-//                    offreItem.setIdCoach(resultSet.getString("id_Coach"));
-//                    offreItem.setEtatOffre(resultSet.getString("etatOffre"));
-//                    commandes.add(offreItem);
-//                }
-//
-//
-//
-//            }
-//        }catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        return commandes;
-//    }
+    public static List<AdminInterface.OffreItem> consulterOffre() {
+        List<AdminInterface.OffreItem> commandes = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgym", "root", "")) {
+            String query = "SELECT * FROM Offre"; // Assurez-vous que le nom de la table est correct
 
-    private static AdminInterface.OffreItem consulterOffre() {
+            try (Statement statement = connection.createStatement();
+                 ResultSet resultSet = statement.executeQuery(query)) {
+
+
+                while (resultSet.next()) {
+                    AdminInterface.OffreItem offreItem = new AdminInterface.OffreItem();
+
+                    offreItem.setId(resultSet.getString("id"));
+                    offreItem.setSpecialite(resultSet.getString("specialite"));
+                    offreItem.setTarifHeure(resultSet.getString("tarif_heure"));
+                    offreItem.setIdCoach(resultSet.getString("id_Coach"));
+                    offreItem.setEtatOffre(resultSet.getString("etatOffre"));
+                    commandes.add(offreItem);
+                }
+
+
+
+            }
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return commandes;
+    }
+
+ /*  private  AdminInterface.OffreItem consulterOffre() {
         ObservableList<AdminInterface.OffreItem> data = FXCollections.observableArrayList();
 
         try {
@@ -402,8 +412,8 @@ public class Dashbordadmin {
         }
 
         tableView.setItems(data);
-        return null;
-    }
+       return data;
+    }*/
 
 
    /* private void actualiserTable() {
