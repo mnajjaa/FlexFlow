@@ -415,7 +415,7 @@ public class DashboardController implements Initializable {
             dashboard_membre.setVisible(false);
             dashboard_membre.setManaged(false);
             usernameAdmin.setText(u.getName());
-            consulterCoaches();
+           // consulterCoaches();
         }
         else if(user.getRole().equals(Role.COACH)){
             dashboard_coach.setVisible(true);
@@ -433,7 +433,7 @@ public class DashboardController implements Initializable {
         else{
             System.out.println("user not found");
         }
-    // consulterMembers();
+     consulterMembers();
     }
     public void switchForm(ActionEvent actionEvent) {
  if (actionEvent.getSource().equals(dashboard_btn)) {
@@ -601,11 +601,11 @@ public class DashboardController implements Initializable {
 
 
     public void dali(ActionEvent event) {
-        System.out.println("Hello");
+        System.out.println("Hello dashbordX");
         user_profil.setManaged(true);
         user_profil.setVisible(true);
-        coaches_list.setManaged(false);
-        coaches_list.setVisible(false);
+       // coaches_list.setManaged(false);
+       // coaches_list.setVisible(false);
         coaches_form.setManaged(false);
         coaches_form.setVisible(false);
 
