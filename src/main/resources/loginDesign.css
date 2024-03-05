@@ -37,7 +37,9 @@ and open the template in the editor.
     -fx-background-color: #fff;
     -fx-text-fill: #7AA95C;
 }
-
+.error_lbl {
+    -fx-text-fill: #d40404;
+}
 .login-form{
     -fx-background-color: #fff;
     -fx-border-color: #000;

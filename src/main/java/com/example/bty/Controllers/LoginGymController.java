@@ -44,6 +44,7 @@ public class LoginGymController implements Initializable {
     public Label errorEmail_lbl;
     public Label errorPwd_lbl;
     public Text restPwd_btn;
+    public Label errorTop_lbl;
     @FXML
     private Button si_loginBtn;
     @FXML
@@ -90,14 +91,11 @@ public class LoginGymController implements Initializable {
             si_email.setStyle("");
             si_password.setStyle("");
 
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Warning Dialog");
-            alert.setHeaderText(null);
-            alert.setContentText("Email and Password fields cannot be empty!");
-            alert.showAndWait();
+            errorTop_lbl.setText("Tous les champs doivent être remplis!");
             // Change the border color of the text fields to red
             if (email.isEmpty()) {
                 si_email.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
+
             }
             if (password.isEmpty()) {
                 si_password.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
@@ -105,18 +103,10 @@ public class LoginGymController implements Initializable {
             return;
 
         } else if (!email.contains("@") || !email.contains(".")) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Warning Dialog");
-            alert.setHeaderText(null);
-            alert.setContentText("Invalid email format!");
-            alert.showAndWait();
+           errorEmail_lbl.setText("Invalid email format!");
             return;
         } else if (password.length() < 8) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Warning Dialog");
-            alert.setHeaderText(null);
-            alert.setContentText("Password must be at least 8 characters long!");
-            alert.showAndWait();
+            errorPwd_lbl.setText("Le mot de passe doit comporter au moins 8 caractères!");
             return;
         } else {
             System.out.println(email + " " + password);
@@ -138,11 +128,7 @@ public class LoginGymController implements Initializable {
                 primaryStage.setTitle("Dashboard");
             } else if (i == 2) {
                 System.out.println("login failed");
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Warning Dialog");
-                alert.setHeaderText(null);
-                alert.setContentText("Le compte est désactivé!");
-                alert.showAndWait();
+                errorTop_lbl.setText("Votre compte est désactivé !");
                 //lien
 
                 // nheb nzyd kifeh yab3ethh demande lil admin soit tousel notif soit yab3ethh mail
@@ -160,19 +146,12 @@ public class LoginGymController implements Initializable {
 
                     if (user01.getRole().equals(Role.MEMBRE) || user01.getRole().equals(Role.COACH)) {
                         serviceUser.desactiverAcc(user01.getId());
-                        Alert alert = new Alert(Alert.AlertType.WARNING);
-                        alert.setTitle("Warning Dialog");
-                        alert.setHeaderText(null);
-                        alert.setContentText("Your account has been deactivated!");
-                        alert.showAndWait();
+                        errorTop_lbl.setText("Votre compte a été désactivé! Veuillez contacter l'administrateur.");
                         System.out.println("houni user member ou coach");
                     } else {
                         System.out.println("houni user admin");
-                        Alert alert = new Alert(Alert.AlertType.WARNING);
-                        alert.setTitle("Warning Dialog");
-                        alert.setHeaderText(null);
-                        alert.setContentText("Invalid password!");
-                        alert.showAndWait();
+                       errorPwd_lbl.setText("Invalid password!");
+                       si_password.setStyle("-fx-border-color: red ; -fx-border-width: 1px ;");
                     }
 
                 }
@@ -181,11 +160,7 @@ public class LoginGymController implements Initializable {
                 si_password.setStyle("");
                 si_password.setStyle("-fx-border-color: red ; -fx-border-width: 1px ;");
                 si_email.setStyle("-fx-border-color: red ; -fx-border-width: 1px ;");
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Warning Dialog");
-                alert.setHeaderText(null);
-                alert.setContentText("Invalid email or password!");
-                alert.showAndWait();
+                errorTop_lbl.setText("Invalid email or password!");
 
             }
         }
