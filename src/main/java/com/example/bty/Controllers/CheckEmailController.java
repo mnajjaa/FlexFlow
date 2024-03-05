@@ -31,10 +31,10 @@ public class CheckEmailController {
         // check if email exists in the database
         User user = serviceUser.findByEmail(email);
         if (user!=null) {
-            if (!user.isEtat()) {
-                error_lbl.setText("Account is disabled!");
-                return;
-            } else {
+//            if (!user.isEtat()) {
+//                error_lbl.setText("Account is disabled!");
+//                return;
+//            } else {
                 System.out.println("User exist");
                 Random random = new Random();
                 random.nextInt(9999); // code bin 0 w 8999 [0,9999[
@@ -53,7 +53,7 @@ public class CheckEmailController {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            }
+//            }
         }else {
             System.out.println("User not exist");
             error_lbl.setText("Email does not exist!");

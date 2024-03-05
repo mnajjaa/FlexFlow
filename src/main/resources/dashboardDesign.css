@@ -41,14 +41,14 @@ and open the template in the editor.
 }
 
 .nav{
-    -fx-background-color: linear-gradient(to top right, #2c2c57, #2c3e50);
+    -fx-background-color: linear-gradient(to top right, #2c3e50, #2c2c57);
 }
 .nav-border{
     -fx-border-color: #000;
     -fx-border-width: 0px .2px .4px .4px;
 }
 .nav-vbox{
-    -fx-background-color: linear-gradient(to top right, #2c2c57, #2c3e50);
+    -fx-background-color: linear-gradient(to top right,#2c3e50, #2c2c57);
     -fx-border-color: #000;
     -fx-border-width: 0px .2px .4px .4px;
 }
@@ -88,7 +88,7 @@ and open the template in the editor.
 .textfield{
     -fx-background-color: #efefef;
     -fx-background-radius: 4px;
-    -fx-border-color: linear-gradient(to top right, #2c2c57, #2c3e50);
+    -fx-border-color: linear-gradient(to top right, #2c3e50, #2c2c57);
     -fx-border-radius: 4px;
     -fx-border-width: .5px;
     -fx-font-family: Tahoma;
@@ -99,7 +99,7 @@ and open the template in the editor.
 }
 
 .btn{
-    -fx-background-color: #2c2c57;
+    -fx-background-color: #7AA95C;
     -fx-background-radius: 6px;
     -fx-cursor: hand;
     -fx-text-fill: #fff;
@@ -111,7 +111,7 @@ and open the template in the editor.
 
 .table-view{
     -fx-background-color: transparent;
-    -fx-border-color: linear-gradient(to top right, #2c2c57, #2c3e50);
+    -fx-border-color: linear-gradient(to top right,  #2c3e50, #2c2c57);
     -fx-border-radius: 8px;
     -fx-border-width: 2px;
     -fx-padding: 0px;
@@ -120,7 +120,7 @@ and open the template in the editor.
     -fx-alignment: CENTER;
 }
 .table-view .column-header-background{
-    -fx-background-color: linear-gradient(to top right, #2c2c57, #2c3e50);
+    -fx-background-color: linear-gradient(to top right, #2c3e50, #2c2c57);
     -fx-background-radius: 8px 8px 0px 0px;
 }
 .table-view .column-header, .filter{
@@ -143,7 +143,7 @@ and open the template in the editor.
 
 .report_container Text {
     -fx-font-weight: bold;
-    -fx-fill: #2c2c57;
+    -fx-fill: #7AA95C;
 }
 
 .report_container Label {
@@ -153,7 +153,7 @@ and open the template in the editor.
 
 .report_container Button {
     -fx-pref-width: 80;
-    -fx-background-color: #2c2c57;
+    -fx-background-color: #7AA95C;
     -fx-text-fill: #FFFFFF;
 }
 

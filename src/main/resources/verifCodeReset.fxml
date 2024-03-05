@@ -40,7 +40,7 @@
         <Label fx:id="error_lbl" styleClass="error_lbl" />
         <Label fx:id="enterCode_lbl" text="veuillez entrer votre code de vérification" />
         <TextField fx:id="code_txtfd" prefHeight="25.0" prefWidth="235.0" styleClass="input_field" />
-        <Button fx:id="enterCode_btn" mnemonicParsing="false" onAction="#verifCodeReset" prefHeight="25.0" prefWidth="96.0" text="Enter" />
+        <Button fx:id="enterCode_btn" mnemonicParsing="false" onAction="#verifCodeReset" prefHeight="25.0" prefWidth="96.0" text="Enter" styleClass="enterCode-btn" stylesheets="verifCode.css" />
         <ImageView fitHeight="221.0" fitWidth="353.0" pickOnBounds="true" preserveRatio="true">
             <image>
                 <Image url="@undraw_Code_typing_re_p8b9.png" />

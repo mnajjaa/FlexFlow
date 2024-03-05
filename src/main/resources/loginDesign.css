@@ -10,7 +10,7 @@ and open the template in the editor.
 */
 
 .side-form{
-    -fx-background-color: linear-gradient(to top right, #2c2c57, #392b78);
+    -fx-background-color: linear-gradient(to top right, #2c3e50, #2c2c57);
     -fx-border-color: #000;
     -fx-border-width: .4px .2px .4px .4px;
 }
@@ -35,7 +35,7 @@ and open the template in the editor.
 
 .side-btn:hover{
     -fx-background-color: #fff;
-    -fx-text-fill: #392b78;
+    -fx-text-fill: #7AA95C;
 }
 
 .login-form{
@@ -45,14 +45,14 @@ and open the template in the editor.
 }
 
 .login-btn{
-    -fx-background-color: linear-gradient(to top right, #2c2c57, #392b78);
+    -fx-background-color:  #7AA95C;
     -fx-cursor: hand;
     -fx-text-fill: #fff;
     -fx-font-size: 14px;
     -fx-font-family: Arial;
 }
 .login-btn:hover{
-    -fx-background-color: linear-gradient(to top right, #0F7874, #4AD7D1);
+    -fx-background-color: linear-gradient(to top right, #2c3e50, #2c2c57);
 }
 
 .textfield{
@@ -65,5 +65,8 @@ and open the template in the editor.
 .textfield:focused{
     -fx-background-color: #fff;
     -fx-border-width: 1px;
-    -fx-border-color: #4AD7D1;
+    -fx-border-color: #7AA95C;
+}
+.text-hover-hand:hover {
+    -fx-cursor: hand;
 }

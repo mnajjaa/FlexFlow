@@ -54,7 +54,7 @@
             </font>
          </Label>
          <Button fx:id="sub_signupBtn" layoutX="60.0" layoutY="351.0" mnemonicParsing="false" onAction="#signupSlider" prefHeight="35.0" prefWidth="181.0" styleClass="side-btn" stylesheets="loginDesign.css" text="Sign Up" />
-         <Button fx:id="sub_loginBtn" layoutX="60.0" layoutY="351.0" mnemonicParsing="false" onAction="#loginSlider" prefHeight="35.0" prefWidth="181.0" styleClass="side-btn" stylesheets="loginDesign.css" text="SIgn In" visible="true" />
+         <Button fx:id="sub_loginBtn" layoutX="60.0" layoutY="351.0" mnemonicParsing="false" onAction="#loginSlider" prefHeight="35.0" prefWidth="181.0" styleClass="side-btn" stylesheets="loginDesign.css" text="Sign In" visible="true" />
          <Label fx:id="edit_label" layoutX="83.0" layoutY="316.0" text="Create Account" textFill="WHITE">
             <font>
                <Font name="Tahoma" size="20.0" />
