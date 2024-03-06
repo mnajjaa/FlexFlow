@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.bty.Controllers.ReponseController.AfficherReponseController"
+            prefHeight="400.0" prefWidth="600.0">
+    <children>
+        <TableView fx:id="tv_reponse" layoutX="15.0" layoutY="70.0" prefHeight="555.0" prefWidth="930.0">
+            <columns>
+                <TableColumn fx:id="col_reponse_id" prefWidth="91.19997978210449" text="ID Réponse" />
+                <TableColumn fx:id="col_reponse" prefWidth="126.4000015258789" text="Réponse" />
+                <TableColumn fx:id="col_reclamation_id" prefWidth="100.0" text="ID Réclamation" />
+                <TableColumn fx:id="col_date_reclamation" prefWidth="116.0" text="date_reclamation" />
+                <TableColumn fx:id="col_titre_reclamation" prefWidth="140.79998779296875" text="titre " />
+                <TableColumn fx:id="col_descritpion_reclamation" prefWidth="144.00006103515625" text="description" />
+                <TableColumn fx:id="col_etat_reclamation" prefWidth="273.5999755859375" text="etat" />
+            </columns>
+        </TableView>
+        <Button fx:id="btn_ajouter_rec" layoutX="753.0" layoutY="21.0" mnemonicParsing="false" onAction="#AjouterReclamation" text="Ajouter Reclamation" />
+    </children>
+
+</AnchorPane>

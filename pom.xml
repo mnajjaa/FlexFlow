@@ -14,7 +14,10 @@
         <junit.version>5.9.2</junit.version>
     </properties>
 
+
+
     <dependencies>
+
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
@@ -76,6 +79,7 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.33</version>
         </dependency>
+
 
 
     </dependencies>

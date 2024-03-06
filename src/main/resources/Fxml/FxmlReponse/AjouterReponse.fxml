@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.bty.Controllers.ReponseController.AjouterReponseController"
+            prefHeight="400.0" prefWidth="600.0">
+    <children>
+        <TextField fx:id="tf_reponse" layoutX="134.0" layoutY="112.0" prefHeight="126.0" prefWidth="298.0" styleClass="input_field" />
+        <Button layoutX="221.0" layoutY="311.0" mnemonicParsing="false" onAction="#AjouterReponse" styleClass="ajouter-button" text="Ajouter Reponse" />
+        <Label fx:id="lb" layoutX="206.0" layoutY="79.0" text="Ajouter votre reponse" />
+        <Label fx:id="error_reponse" layoutX="197.0" layoutY="252.0" text="votre reponse est vide  !!" textFill="#e70303" />
+        <TextField fx:id="tf_id_rec" layoutX="193.0" layoutY="38.0" promptText="id reclamation" />
+    </children>
+</AnchorPane>
