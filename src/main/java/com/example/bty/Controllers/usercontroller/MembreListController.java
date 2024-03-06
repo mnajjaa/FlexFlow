@@ -1,4 +1,4 @@
-package com.example.bty.Controllers;
+package com.example.bty.Controllers.usercontroller;
 
 import com.example.bty.Entities.User;
 import com.example.bty.Services.IServiceUser;

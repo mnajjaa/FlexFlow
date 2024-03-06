@@ -32,7 +32,7 @@
                                             <ImageView fitHeight="215.0" fitWidth="215.0" layoutX="14.0" layoutY="88.0" preserveRatio="true">
                                                 <!-- Replace 'path_to_credit_card_image' with the actual path to your credit card image -->
                                                 <image>
-                                                    <Image url="@cour1.jpg" />
+                                                    <Image url="@com/example/bty/imagesModuleCours/cour1.jpg" />
                                                 </image>
                                             </ImageView>
 
@@ -48,7 +48,7 @@
                                             <ImageView fitHeight="215.0" fitWidth="215.0" layoutX="50.0" layoutY="88.0" preserveRatio="true">
                                                 <!-- Replace 'path_to_credit_card_image' with the actual path to your credit card image -->
                                                 <image>
-                                                    <Image url="@cour2.png" />
+                                                    <Image url="@com/example/bty/imagesModuleCours/cour2.png" />
                                                 </image>
                                             </ImageView>
 
@@ -63,7 +63,7 @@
                                             <ImageView fitHeight="134.0" fitWidth="232.0" layoutX="94.0" layoutY="88.0" preserveRatio="true">
                                                 <!-- Replace 'path_to_credit_card_image' with the actual path to your credit card image -->
                                                 <image>
-                                                    <Image url="@cour3.jpg" />
+                                                    <Image url="@com/example/bty/imagesModuleCours/cour3.jpg" />
                                                 </image>
                                             </ImageView>
 

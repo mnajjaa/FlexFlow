@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.StackPane?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="700.0" minWidth="1366.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bty.Controllers.CoachListController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="700.0" minWidth="1366.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bty.Controllers.usercontroller.CoachListController">
 
     <AnchorPane fx:id="main_form" prefHeight="200.0" prefWidth="200.0">
         <BorderPane layoutX="-8.0" layoutY="29.0" prefHeight="600.0" prefWidth="1100.0" styleClass="border-pane" stylesheets="dashboardDesign.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-8.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -41,7 +41,6 @@
                                         </columns>
                                     </TableView>
 
-                                    <Button layoutX="357.0" layoutY="2.0" mnemonicParsing="false" onAction="#dali" prefHeight="25.0" prefWidth="148.0" text="profile tst" />
                                     <Button fx:id="addCoach_btn" layoutX="46.0" layoutY="8.0" mnemonicParsing="false" onAction="#goToAddForm" prefHeight="25.0" prefWidth="148.0" styleClass="btn" stylesheets="dashboardDesign.css" text="Ajouter" />                                </children>
                             </AnchorPane>
                         </children>

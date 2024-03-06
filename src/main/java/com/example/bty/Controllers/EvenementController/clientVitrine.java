@@ -3,6 +3,7 @@ package com.example.bty.Controllers.EvenementController;
 import static com.example.bty.Controllers.EvenementController.DetailsEvenementWindow.createDetailsCard;
 
 import com.example.bty.Controllers.CourController.CourMembre;
+import com.example.bty.Controllers.DashboardMembre;
 import com.example.bty.Controllers.ProduitController.VitrineClient;
 import com.example.bty.Controllers.graphiqueGCP.FD;
 import com.example.bty.Controllers.graphiqueGCP.Formoffre;
@@ -200,7 +201,18 @@ public clientVitrine(){
         Button demandeBtn = createButton("Demande Coahing", 22, 319);
         Button offreAdminBtn = createButton("Offre", 22, 361);
         Button storeAdminBtn = createButton("Store", 22, 405);
-        Button lesOffresBtn = createButton("Les Offres", 22, 448);
+
+
+        DashboardBtn.setOnAction(event -> {
+            // Instancier et afficher la vue DashboardVitrineController
+            DashboardMembre m = new DashboardMembre();
+            try {
+                m.start(primaryStage);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+
         CoursBtn.setOnAction(event -> {
             // Instancier et afficher la vue DashboardVitrineController
             CourMembre c = new CourMembre();
@@ -228,8 +240,8 @@ public clientVitrine(){
 
 
 
-                Formoffre o = new Formoffre();
-                o.start(primaryStage);
+            Formoffre o = new Formoffre();
+            o.start(primaryStage);
 
 
         });
@@ -241,18 +253,12 @@ public clientVitrine(){
             v.start(primaryStage);
         });
 
-        lesOffresBtn.setOnAction(event -> {
-            // Instancier et afficher la vue DashboardVitrineController
-
-        });
 
 
+        Line line2 = createColoredLine(-100, 449, 100, 449, 112, "WHITE");
 
-        Line line2 = createColoredLine(-100, 493, 100, 493, 112, "WHITE");
-
-
-        Button profileAdminBtn = createButton("Profile", 22, 506);
-        Button logoutBtn = createButton("Logout", 22, 547);
+        Button profileAdminBtn = createButton("Profile", 22, 462);
+        Button logoutBtn = createButton("Logout", 22, 503);
 // Add event handler to logoutBtn
 
 // Add event handler to logoutBtn
@@ -285,10 +291,9 @@ public clientVitrine(){
                 createFontAwesomeIconView("CALENDAR", "WHITE", 20, 38, 385),
 
                 createFontAwesomeIconView("SHOPPING_CART", "WHITE", 20, 38, 429),
-                createFontAwesomeIconView("BOOK", "WHITE", 20, 38, 475),
 
-                createFontAwesomeIconView("ID_CARD", "WHITE", 20, 38, 531),
-                createFontAwesomeIconView("EXTERNAL_LINK", "WHITE", 20, 38, 575)
+                createFontAwesomeIconView("ID_CARD", "WHITE", 20, 38, 486),
+                createFontAwesomeIconView("EXTERNAL_LINK", "WHITE", 20, 38, 529)
         };
 
         VBox reportContainer = new VBox();
@@ -318,9 +323,9 @@ public clientVitrine(){
         dashboardAdmin.getChildren().addAll(
                 usernameAdmin, welcomeLabel, usernameLabel, line,
                 DashboardBtn,CoursBtn, eventsBtn, demandeBtn, offreAdminBtn,
-                storeAdminBtn,lesOffresBtn, line2, profileAdminBtn,
+                storeAdminBtn, line2, profileAdminBtn,
                 logoutBtn, icons[0], icons[1], icons[2], icons[3],
-                icons[4], icons[5], icons[6],icons[7],icons[8] ,reportContainer,
+                icons[4], icons[5], icons[6],icons[7] ,reportContainer,
                 contentPlaceholder
         );
 

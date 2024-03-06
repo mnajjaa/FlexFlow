@@ -1,9 +1,8 @@
-package com.example.bty.Controllers;
+package com.example.bty.Controllers.usercontroller;
 
 import com.example.bty.Entities.Role;
 import com.example.bty.Entities.User;
 import com.example.bty.Entities.Validation;
-import com.example.bty.LoginView;
 import com.example.bty.Services.*;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.animation.TranslateTransition;
@@ -11,23 +10,17 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Random;
@@ -325,7 +318,7 @@ public class LoginGymController implements Initializable {
 
     public void restPwd(MouseEvent mouseEvent) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/checkEmail.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/CheckEmail.fxml"));
             Parent root = loader.load();
             Scene scene = new Scene(root);
             Stage stage = (Stage) restPwd_btn.getScene().getWindow();

@@ -11,6 +11,19 @@ and open the template in the editor.
 /* styles.css */
 
 /* CSS pour le texte de l'événement le plus demandé */
+/* styles.css */
+/* dashboardDesign.css */
+/* style.css */
+#offreChart .chart-bar {
+    /* Fond noir pour le graphique à barres */
+    -fx-background-color: #E9967A	;
+}
+
+#offreChart .chart-bar .bar {
+    /* Couleur blanche pour les barres */
+    -fx-bar-fill: #E9967A	;
+}
+
 
 .bold-text {
     -fx-font-weight: bold;

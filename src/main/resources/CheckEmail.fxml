@@ -13,7 +13,7 @@
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bty.Controllers.CheckEmailController" styleClass="login_container" stylesheets="verifCode.css">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bty.Controllers.usercontroller.CheckEmailController" styleClass="login_container" stylesheets="verifCode.css">
     <VBox prefHeight="400.0" prefWidth="200.0" styleClass="login_logo_container" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
         <Text fill="#ef2424" strokeType="OUTSIDE" strokeWidth="0.0" text="FlexFlow" wrappingWidth="104.017578125">
             <stroke>
@@ -44,7 +44,7 @@
         <Button fx:id="checkEmail_btn" mnemonicParsing="false" onAction="#goToCodeVerif" prefHeight="25.0" prefWidth="96.0" text="Enter" />
         <ImageView fitHeight="229.0" fitWidth="354.0" pickOnBounds="true" preserveRatio="true">
             <image>
-                <Image url="@undraw_Forgot_password_re_hxwm.png" />
+                <Image url="@com/example/bty/imagesUser/undraw_Forgot_password_re_hxwm.png" />
             </image>
         </ImageView>
     </VBox>

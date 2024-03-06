@@ -1,4 +1,4 @@
-package com.example.bty.Controllers;
+package com.example.bty.Controllers.ProduitController;
 
 import com.example.bty.Controllers.ProduitController.ActionButtonTableCell;
 import com.example.bty.Controllers.ProduitController.Ajoutproduit;

@@ -114,7 +114,7 @@ public class payer extends Application {
         numCardTextField.setPrefHeight(37);
         numCardTextField.setPromptText("**** **** **** ****");
 
-        ImageView cardImageView = new ImageView(new Image("/card_pay.png"));
+        ImageView cardImageView = new ImageView(new Image("/com/example/bty/imagesModuleProduit/card_pay.png"));
         cardImageView.setFitHeight(38);
         cardImageView.setFitWidth(115);
         cardImageView.setLayoutX(336);
@@ -165,7 +165,7 @@ public class payer extends Application {
         backButton.setLayoutY(33);
         backButton.setMnemonicParsing(false);
 
-        ImageView backImageView = new ImageView(new Image("/card_pay.png"));
+        ImageView backImageView = new ImageView(new Image("/com/example/bty/imagesModuleProduit/card_pay.png"));
         backImageView.setFitHeight(24);
         backImageView.setFitWidth(38);
         backButton.setGraphic(backImageView);

@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.StackPane?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="700.0" minWidth="1366.0" prefHeight="700.0" prefWidth="1373.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bty.Controllers.MembreListController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="700.0" minWidth="1366.0" prefHeight="700.0" prefWidth="1373.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bty.Controllers.usercontroller.MembreListController">
 
     <AnchorPane fx:id="main_form" prefHeight="200.0" prefWidth="200.0">
         <BorderPane layoutX="-8.0" layoutY="29.0" prefHeight="600.0" prefWidth="1100.0" styleClass="border-pane" stylesheets="dashboardDesign.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-8.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -40,7 +40,6 @@
                                             <TableColumn fx:id="membres_col_action" prefWidth="87.0" text="Action" />
                                         </columns>
                                     </TableView>
-                                    <Button layoutX="257.0" layoutY="3.0" mnemonicParsing="false" onAction="#dalimtaahoussi" prefHeight="11.0" prefWidth="99.0" text="Button" />
                                 </children>
                             </AnchorPane>
                         </children>

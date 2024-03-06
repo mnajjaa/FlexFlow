@@ -1,4 +1,5 @@
-package com.example.bty.Controllers;
+package com.example.bty.Controllers.usercontroller;
+import com.example.bty.Controllers.usercontroller.CoachesFormController;
 
 import com.example.bty.Entities.User;
 import com.example.bty.Services.IServiceUser;
@@ -7,12 +8,18 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -140,6 +147,7 @@ public class CoachListController implements Initializable {
     public TableColumn membres_col_telephone;
     public TableColumn membres_col_action;
     public TableColumn membres_col_etat;
+    public Button addCoach_btn;
 
 
     User user ;
@@ -147,6 +155,8 @@ public class CoachListController implements Initializable {
     public static String pathImage ;
 
     IServiceUser serviceUser00=new ServiceUser();
+
+
 
     public void consulterCoaches() {
         // Fetch all coaches
@@ -206,9 +216,34 @@ public class CoachListController implements Initializable {
                     // Check if a row has been selected
                     if (selectedCoach != null) {
                         id = selectedCoach.getId();
-                     
+//                        coaches_list.setVisible(false);
+//                        coaches_list.setManaged(false);
+
+//                        coaches_form.setVisible(true);
+//                        coaches_form.setManaged(true);
 
                         // Populate the form fields with the selected coach's details
+
+
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/CoachesForm.fxml"));
+                        CoachesFormController controller = loader.getController();
+                        controller.SetId(id);
+                        Parent root = null;
+                        try {
+                            root = loader.load();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+
+                        Scene scene = new Scene(root);
+
+                        Stage stage = new Stage();
+                        stage.setTitle("Add Coach");
+                        stage.initModality(Modality.APPLICATION_MODAL);
+                        // Ajustez la largeur selon vos besoins
+
+                        stage.setScene(scene);
+                        stage.showAndWait();
 
                         coaches_name.setText(selectedCoach.getName());
                         coaches_email.setText(selectedCoach.getEmail());
@@ -245,6 +280,26 @@ public class CoachListController implements Initializable {
                     });
                 });
             }
+
+            private void openCoachesForm(ActionEvent actionEvent) {
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/CoachesForm.fxml"));
+                    Parent root = loader.load();
+
+                    Scene scene = new Scene(root);
+
+                    Stage stage = new Stage();
+                    stage.setTitle("Add Coach");
+                    stage.initModality(Modality.APPLICATION_MODAL);
+                    // Ajustez la largeur selon vos besoins
+
+                    stage.setScene(scene);
+                    stage.showAndWait();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
@@ -276,6 +331,27 @@ public class CoachListController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 consulterCoaches();
+        addCoach_btn.setOnAction(this::openCoachesForm);
+
+    }
+
+    private void openCoachesForm(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/CoachesForm.fxml"));
+            Parent root = loader.load();
+
+            Scene scene = new Scene(root);
+
+            Stage stage = new Stage();
+            stage.setTitle("Add Coach");
+           stage.initModality(Modality.APPLICATION_MODAL);
+            // Ajustez la largeur selon vos besoins
+
+            stage.setScene(scene);
+            stage.showAndWait();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void coachesSelect(MouseEvent mouseEvent) {

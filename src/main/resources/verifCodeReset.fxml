@@ -14,7 +14,7 @@
 <?import javafx.scene.paint.Color?>
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.example.bty.Controllers.VerifCodeResetController"
+            fx:controller="com.example.bty.Controllers.usercontroller.VerifCodeResetController"
             styleClass="login_container" stylesheets="verifCode.css"
             prefHeight="400.0" prefWidth="600.0">
     <VBox prefHeight="400.0" prefWidth="200.0" styleClass="login_logo_container" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -43,7 +43,7 @@
         <Button fx:id="enterCode_btn" mnemonicParsing="false" onAction="#verifCodeReset" prefHeight="25.0" prefWidth="96.0" text="Enter" styleClass="enterCode-btn" stylesheets="verifCode.css" />
         <ImageView fitHeight="221.0" fitWidth="353.0" pickOnBounds="true" preserveRatio="true">
             <image>
-                <Image url="@undraw_Code_typing_re_p8b9.png" />
+                <Image url="@com/example/bty/imagesUser/undraw_Code_typing_re_p8b9.png" />
             </image>
         </ImageView>
     </VBox>

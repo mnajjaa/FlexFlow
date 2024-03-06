@@ -216,10 +216,14 @@ public class DashboardController implements Initializable {
         else if(user.getRole().equals(Role.COACH)){
             System.out.println("coach found");
             // Instancier la classe VitrineClient
-            clientVitrine v = new clientVitrine();
+            DashboardMembre v = new DashboardMembre();
 
             // Appeler la méthode start (ou toute autre méthode pour démarrer l'interface)
-            v.start(new Stage());
+            try {
+                v.start(new Stage());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
             dashboard_coach.setVisible(false);
             dashboard_Admin.setVisible(false);
 
@@ -230,10 +234,14 @@ public class DashboardController implements Initializable {
         else if(user.getRole().equals(Role.MEMBRE)){
             System.out.println("membre found");
             // Instancier la classe VitrineClient
-            clientVitrine v = new clientVitrine();
+            DashboardMembre v = new DashboardMembre();
 
             // Appeler la méthode start (ou toute autre méthode pour démarrer l'interface)
-            v.start(new Stage());
+            try {
+                v.start(new Stage());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
             dashboard_coach.setVisible(false);
             dashboard_Admin.setVisible(false);
 
@@ -318,7 +326,7 @@ public class DashboardController implements Initializable {
 
 
     public void goToEvents(ActionEvent actionEvent) {
-        loadContent("/dashbordEvenement.fxml");
+        loadContent("/com/example/bty/FxmlEvenement/dashbordEvenement.fxml");
     }
 
     public void goToStore(ActionEvent actionEvent) throws IOException {
@@ -363,6 +371,9 @@ public class DashboardController implements Initializable {
         loadContent("/membreList.fxml");
     }
 
+    public void goToProfile(ActionEvent actionEvent) {
+        loadContent("/UserProfil.fxml");
+    }
 
 
 

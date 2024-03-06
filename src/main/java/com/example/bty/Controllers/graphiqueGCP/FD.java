@@ -1,11 +1,14 @@
 package com.example.bty.Controllers.graphiqueGCP;
 import com.example.bty.Controllers.CourController.CourMembre;
+import com.example.bty.Controllers.DashboardMembre;
 import com.example.bty.Controllers.EvenementController.clientVitrine;
 import com.example.bty.Controllers.ProduitController.VitrineClient;
 import com.example.bty.Entities.Role;
 import com.example.bty.Entities.User;
 import com.example.bty.Utils.Session;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
@@ -60,11 +63,11 @@ public class FD extends Application {
         cardTitle.setStyle("-fx-translate-x: 250;-fx-font-size: 21px; -fx-font-weight: bold; -fx-text-fill: #673AB7;");
 
         GridPane grid = new GridPane();
-        grid.setMaxWidth(670);
+        grid.setMaxWidth(800);
         grid.setMaxHeight(670);
         grid.setVgap(18);
         grid.setHgap(5);
-        grid.setStyle("-fx-translate-x: 230;-fx-background-color: #D1C4E9; -fx-padding: 25; -fx-border-radius: 10; -fx-background-radius: 10; -fx-alignment: center;");
+        grid.setStyle("-fx-translate-x: 175;-fx-background-color: #D1C4E9; -fx-padding: 25; -fx-border-radius: 10; -fx-background-radius: 10; -fx-alignment: center;");
 
         Label nomLabel = new Label("Nom:");
         setupStyledLabel(nomLabel);
@@ -175,7 +178,7 @@ public class FD extends Application {
         GridPane.setConstraints(sendButton, 1, 11);
         sendButton.setOnAction(event -> insertDemande());
 
-        Button consulterButton = new Button("Consulter liste de demande");
+        Button consulterButton = new Button("Consulter les demandes");
         setupButton(consulterButton);
         GridPane.setConstraints(consulterButton, 2, 11);
         consulterButton.setOnAction(event -> {
@@ -187,6 +190,24 @@ public class FD extends Application {
         });
 
         grid.getChildren().add(consulterButton);
+
+        Button consulterButton1 = new Button("Voir nos offres");
+        grid.add(consulterButton1, 3, 11);
+        setupButton(consulterButton1);
+
+
+        // Ajoutez un gestionnaire d'événements pour le bouton
+        consulterButton1.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+
+            public void handle(ActionEvent event) {
+                   InterfaceOffre ardInterface = new InterfaceOffre();
+                    ardInterface.start(new Stage());
+
+
+            }
+        });
 
 
 
@@ -314,7 +335,17 @@ public class FD extends Application {
         Button demandeBtn = createButton("Demande Coahing", 22, 319);
         Button offreAdminBtn = createButton("Offre", 22, 361);
         Button storeAdminBtn = createButton("Store", 22, 405);
-        Button lesOffresBtn = createButton("Les Offres", 22, 448);
+
+        DashboardBtn.setOnAction(event -> {
+            // Instancier et afficher la vue DashboardVitrineController
+            DashboardMembre m = new DashboardMembre();
+            try {
+                m.start(primaryStage);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+
         CoursBtn.setOnAction(event -> {
             // Instancier et afficher la vue DashboardVitrineController
             CourMembre c = new CourMembre();
@@ -342,8 +373,9 @@ public class FD extends Application {
 
 
 
-                Formoffre o = new Formoffre();
-                o.start(primaryStage);
+            Formoffre o = new Formoffre();
+            o.start(primaryStage);
+
 
         });
 
@@ -354,18 +386,12 @@ public class FD extends Application {
             v.start(primaryStage);
         });
 
-        lesOffresBtn.setOnAction(event -> {
-            // Instancier et afficher la vue DashboardVitrineController
-
-        });
 
 
+        Line line2 = createColoredLine(-100, 449, 100, 449, 112, "WHITE");
 
-        Line line2 = createColoredLine(-100, 493, 100, 493, 112, "WHITE");
-
-
-        Button profileAdminBtn = createButton("Profile", 22, 506);
-        Button logoutBtn = createButton("Logout", 22, 547);
+        Button profileAdminBtn = createButton("Profile", 22, 462);
+        Button logoutBtn = createButton("Logout", 22, 503);
 // Add event handler to logoutBtn
 
 // Add event handler to logoutBtn
@@ -398,10 +424,9 @@ public class FD extends Application {
                 createFontAwesomeIconView("CALENDAR", "WHITE", 20, 38, 385),
 
                 createFontAwesomeIconView("SHOPPING_CART", "WHITE", 20, 38, 429),
-                createFontAwesomeIconView("BOOK", "WHITE", 20, 38, 475),
 
-                createFontAwesomeIconView("ID_CARD", "WHITE", 20, 38, 531),
-                createFontAwesomeIconView("EXTERNAL_LINK", "WHITE", 20, 38, 575)
+                createFontAwesomeIconView("ID_CARD", "WHITE", 20, 38, 486),
+                createFontAwesomeIconView("EXTERNAL_LINK", "WHITE", 20, 38, 529)
         };
 
         VBox reportContainer = new VBox();
@@ -431,9 +456,9 @@ public class FD extends Application {
         dashboardAdmin.getChildren().addAll(
                 usernameAdmin, welcomeLabel, usernameLabel, line,
                 DashboardBtn,CoursBtn, eventsBtn, demandeBtn, offreAdminBtn,
-                storeAdminBtn,lesOffresBtn, line2, profileAdminBtn,
+                storeAdminBtn, line2, profileAdminBtn,
                 logoutBtn, icons[0], icons[1], icons[2], icons[3],
-                icons[4], icons[5], icons[6],icons[7],icons[8] ,reportContainer,
+                icons[4], icons[5], icons[6],icons[7] ,reportContainer,
                 contentPlaceholder
         );
 

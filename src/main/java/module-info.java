@@ -40,5 +40,7 @@ module com.example.bty {
 
     exports com.example.bty.Controllers.EvenementController;
     opens com.example.bty.Controllers.EvenementController to javafx.fxml;
+    exports com.example.bty.Controllers.usercontroller;
+    opens com.example.bty.Controllers.usercontroller to javafx.fxml;
 
 }
