@@ -14,7 +14,10 @@
     -fx-text-fill: #023315;
     -fx-font-family: 'Arial', sans-serif;
 }
-
+.like-label {
+    -fx-font-weight: bold; /* Définit la police en gras */
+    -fx-text-fill: blue; /* Définit la couleur du texte en bleu */
+}
 
 .fancy-label {
     -fx-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -31,7 +34,7 @@
 }
 
 .label {
-    -fx-font-size: 15px;
+    -fx-font-size: 60px;
     -fx-text-fill: #2c3e50;
     -fx-padding: 5 0 5 0;
     -fx-font-family: 'Segoe UI', Tahoma, Geneva, Verdana;
@@ -39,7 +42,7 @@
 }
 
 .text-field {
-    -fx-font-size: 15px;
+    -fx-font-size: 60px;
     -fx-padding: 8;
     -fx-pref-width: 250;
     -fx-background-radius: 15;
@@ -56,7 +59,7 @@
 }
 
 .upload-button {
-    -fx-font-size: 18px;
+    -fx-font-size: 100px;
     -fx-padding: 10 16;
     -fx-min-width: 60;
     -fx-background-radius: 10;
@@ -132,4 +135,10 @@
     -fx-background-size: cover;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
+}
+
+.consulter-button {
+    -fx-font-size: 12px; /* Taille de la police */
+    -fx-min-width: 30px; /* Largeur minimale */
+    -fx-min-height: 30px; /* Hauteur minimale */
 }

@@ -17,12 +17,15 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
+
 
 public class InterfaceOffre extends Application {
     private ImageView backgroundImag;
@@ -33,35 +36,42 @@ public class InterfaceOffre extends Application {
 
         Image image = null;
         try {
-            image = new Image(new FileInputStream("C:\\Users\\farah\\IdeaProjects\\FlexFlow\\src\\main\\Resources\\images\\y2.png"));
+            image = new Image(new FileInputStream("C:\\Users\\farah\\IdeaProjects\\FlexFlow\\src\\main\\Resources\\images\\FlexFlow.png"));
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
 
         this.backgroundImag = new ImageView(image);
-        backgroundImag.setFitHeight(600);
-        backgroundImag.setFitWidth(700);
+        backgroundImag.setFitHeight(700);
+        backgroundImag.setFitWidth(900);
 
         Button consulterButton = new Button("Consulter liste des offres");
         consulterButton.setOnAction(event -> {
             consulterOffres();
         });
 
-        // Création du titre
-        Label titleLabel = new Label("FlexFlow");
-        titleLabel.setStyle("-fx-font-size: 40px; -fx-font-weight: bold; -fx-padding: 50px 0  0  2px;");
+//        //Création du titre
+//      Label titleLabel = new Label("Clique sur cette bouton pour savoir nos offres ");
+//    titleLabel.setStyle("-fx-font-size: 40px; -fx-font-weight: bold; -fx-padding: 50px 0  0  2px;");
 
         // Intégration du système de like/dislike
         VBox vbox = new VBox(10);
         createLikeDislikeStars(vbox);
-        vbox.getChildren().addAll(titleLabel, consulterButton);
+        vbox.getChildren().addAll( consulterButton);
         vbox.setAlignment(Pos.CENTER); // Alignement du VBo
+        // Création du bouton
+
+
+// Ajout de la classe CSS pour le style
+        consulterButton.getStyleClass().add("consulter-button");
+
+
 
         StackPane stackPane = new StackPane();
         stackPane.getChildren().addAll(backgroundImag, vbox);
         StackPane.setAlignment(vbox, Pos.CENTER); // Alignement au centre
 
-        Scene scene = new Scene(stackPane, 700, 650);
+        Scene scene = new Scene(stackPane, 800, 650);
         scene.getStylesheets().add(getClass().getResource("/Styles/StyleAR.css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -94,12 +104,17 @@ public class InterfaceOffre extends Application {
             });
         }
 
-        HBox starBox = new HBox(5); // Utilisation de HBox pour les étoiles
+        HBox starBox = new HBox(3); // Utilisation de HBox pour les étoiles
         starBox.getChildren().addAll(stars);
         starBox.setAlignment(Pos.CENTER_RIGHT); // Aligner à droite
 
         // Label pour indiquer "Combien vous aimez nos offres"
         Label likeLabel = new Label("Combien vous aimez nos offres:");
+
+        // Ajout de la classe CSS pour le style
+        likeLabel.getStyleClass().add("like-label");
+
+        likeLabel.setTextFill(Color.BLUE); // Définit la couleur du texte en bleu
 
         // Création d'une boîte pour les étoiles et la section 0/5
         HBox starAndSelectionBox = new HBox(5);
@@ -141,7 +156,7 @@ public class InterfaceOffre extends Application {
                 -20.0, 20.0,
                 -5.0, 15.0
         );
-        star.setFill(Color.WHITE);
+        star.setFill(Color.GRAY);
         return star;
     }
 
@@ -154,9 +169,9 @@ public class InterfaceOffre extends Application {
     private void updateStarColors(Polygon[] stars, int selectedStars, int maxStars) {
         for (int i = 0; i < maxStars; i++) {
             if (i < selectedStars) {
-                stars[i].setFill(Color.YELLOW); // Colored star
+                stars[i].setFill(Color.YELLOWGREEN); // Colored star
             } else {
-                stars[i].setFill(Color.WHITE); // White star
+                stars[i].setFill(Color.GRAY); // White star
             }
         }
     }

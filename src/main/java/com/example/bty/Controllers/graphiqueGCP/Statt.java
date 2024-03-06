@@ -68,7 +68,7 @@ public class Statt extends Application {
         // Parcourir chaque demande dans la liste
         for (ConsultationDemandes.DemandeItem demande : demandesList) {
 
-            String offreId = demande.getId_offre(); // Récupérer l'ID de l'offre
+            String offreId = demande.getNom(); // Récupérer l'ID de l'offre
 
             // Mettre à jour le compteur pour cet ID d'offre
             offreStats.put(offreId, offreStats.getOrDefault(offreId, 0) + 1);
