@@ -3,6 +3,7 @@ import com.example.bty.Controllers.CourController.CourMembre;
 import com.example.bty.Controllers.DashboardMembre;
 import com.example.bty.Controllers.EvenementController.clientVitrine;
 import com.example.bty.Controllers.ProduitController.VitrineClient;
+import com.example.bty.Controllers.ReclamationController.AjouterReclamation;
 import com.example.bty.Entities.Role;
 import com.example.bty.Entities.User;
 import com.example.bty.Utils.Session;
@@ -390,7 +391,7 @@ public class FD extends Application {
 
         Line line2 = createColoredLine(-100, 449, 100, 449, 112, "WHITE");
 
-        Button profileAdminBtn = createButton("Profile", 22, 462);
+//        Button profileAdminBtn = createButton("Profile", 22, 462);
         Button logoutBtn = createButton("Logout", 22, 503);
 // Add event handler to logoutBtn
 
@@ -425,7 +426,7 @@ public class FD extends Application {
 
                 createFontAwesomeIconView("SHOPPING_CART", "WHITE", 20, 38, 429),
 
-                createFontAwesomeIconView("ID_CARD", "WHITE", 20, 38, 486),
+//                createFontAwesomeIconView("ID_CARD", "WHITE", 20, 38, 486),
                 createFontAwesomeIconView("EXTERNAL_LINK", "WHITE", 20, 38, 529)
         };
 
@@ -443,6 +444,7 @@ public class FD extends Application {
         reportLabel.getStyleClass().add("report_label");
 
         Button reportButton = createButton("Report", 0, 0);
+        reportButton.setOnAction(event -> openAjouterReclamationInterface(primaryStage));
         reportButton.getStyleClass().add("report_button");
 
 
@@ -456,9 +458,9 @@ public class FD extends Application {
         dashboardAdmin.getChildren().addAll(
                 usernameAdmin, welcomeLabel, usernameLabel, line,
                 DashboardBtn,CoursBtn, eventsBtn, demandeBtn, offreAdminBtn,
-                storeAdminBtn, line2, profileAdminBtn,
+                storeAdminBtn, line2,
                 logoutBtn, icons[0], icons[1], icons[2], icons[3],
-                icons[4], icons[5], icons[6],icons[7] ,reportContainer,
+                icons[4], icons[5], icons[6],reportContainer,
                 contentPlaceholder
         );
 
@@ -467,6 +469,16 @@ public class FD extends Application {
         return dashboardAdmin;
 
 
+    }
+
+
+    private void openAjouterReclamationInterface(Stage primaryStage) {
+        AjouterReclamation ajouterReclamation = new AjouterReclamation();
+        try {
+            ajouterReclamation.start(new Stage());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void showAlert1(String title, String content) {
