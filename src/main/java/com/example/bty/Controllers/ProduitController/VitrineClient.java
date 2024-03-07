@@ -54,7 +54,7 @@ import java.util.List;
 
 public class VitrineClient extends Application {
 
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/pidevgym";
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/pidevgym1";
     private static final String DB_USERNAME = "root";
     private static final String DB_PASSWORD = "";
 

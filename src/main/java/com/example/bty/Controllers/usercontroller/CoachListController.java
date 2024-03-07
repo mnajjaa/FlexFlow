@@ -16,13 +16,16 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
+import  javafx.scene.Node;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+
+
 
 public class CoachListController implements Initializable {
 
@@ -129,6 +132,7 @@ public class CoachListController implements Initializable {
     public Button commande_btn;
     public Button offre_btn;
     public TableColumn coaches_col_action;
+    public StackPane contentPlaceholder;
 
     public Button coaches_updateBtn1;
     public TextField confirm_password;
@@ -155,6 +159,14 @@ public class CoachListController implements Initializable {
     public static String pathImage ;
 
     IServiceUser serviceUser00=new ServiceUser();
+    private static CoachListController instance;
+    public CoachListController() {
+        instance = this;
+    }
+
+    public static CoachListController getInstance() {
+        return instance;
+    }
 
 
 
@@ -216,6 +228,7 @@ public class CoachListController implements Initializable {
                     // Check if a row has been selected
                     if (selectedCoach != null) {
                         id = selectedCoach.getId();
+                        System.out.println(id);
 //                        coaches_list.setVisible(false);
 //                        coaches_list.setManaged(false);
 
@@ -226,26 +239,28 @@ public class CoachListController implements Initializable {
 
 
                         FXMLLoader loader = new FXMLLoader(getClass().getResource("/CoachesForm.fxml"));
-                        CoachesFormController controller = loader.getController();
-                        controller.SetId(id);
-                        Parent root = null;
                         try {
-                            root = loader.load();
+                            Parent root = loader.load();
+                            CoachesFormController controller = loader.getController();
+                            controller.SetId(id);
+                            Scene scene = new Scene(root);
+
+                            Stage stage = new Stage();
+                            stage.setTitle("Modifier Coach");
+                            stage.initModality(Modality.APPLICATION_MODAL);
+                            // Ajustez la largeur selon vos besoins
+                          // Set the height and width of the stage
+
+                            stage.setScene(scene);
+                            stage.showAndWait();
+
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
 
-                        Scene scene = new Scene(root);
 
-                        Stage stage = new Stage();
-                        stage.setTitle("Add Coach");
-                        stage.initModality(Modality.APPLICATION_MODAL);
-                        // Ajustez la largeur selon vos besoins
 
-                        stage.setScene(scene);
-                        stage.showAndWait();
-
-                        coaches_name.setText(selectedCoach.getName());
+                        /*coaches_name.setText(selectedCoach.getName());
                         coaches_email.setText(selectedCoach.getEmail());
                         coaches_telephone.setText(selectedCoach.getTelephone());
                         coaches_password.setText(selectedCoach.getPassword());
@@ -253,10 +268,10 @@ public class CoachListController implements Initializable {
                         coaches_name.setEditable(true);
                         coaches_email.setEditable(true);
                         coaches_telephone.setEditable(true);
-                        coaches_password.setEditable(true);
+                        coaches_password.setEditable(true);*/
 
 
-                        System.out.println(coaches_name.getText() + " " + coaches_email.getText() + " " + coaches_telephone.getText());
+                   //     System.out.println(coaches_name.getText() + " " + coaches_email.getText() + " " + coaches_telephone.getText());
                     }
                 });
                 deleteIcon.setOnMouseClicked(event -> {
@@ -356,4 +371,17 @@ consulterCoaches();
 
     public void coachesSelect(MouseEvent mouseEvent) {
     }
+
+    private void loadContent(String fxmlFileName) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFileName));
+            Parent content = loader.load();
+            contentPlaceholder.getChildren().clear();
+            contentPlaceholder.getChildren().add(content);
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Gérer l'erreur de chargement du fichier FXML
+        }
+    }
 }
+

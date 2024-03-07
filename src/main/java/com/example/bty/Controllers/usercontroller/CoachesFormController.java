@@ -120,20 +120,30 @@ public CoachesFormController(){}
     }
 
 
-    public void coachesUpdateBtn(ActionEvent actionEvent) {
+    public void coachesUpdateBtn(ActionEvent actionEvent) throws IOException {
        // User loggedInUser = Session.getInstance().getLoggedInUser();
 
-        User coach=new User(id, coaches_name.getText(),coaches_email.getText(),coaches_telephone.getText(),Role.COACH,true,null);
+        User coach=new User(id, coaches_name.getText(),coaches_email.getText(),coaches_telephone.getText(),Role.COACH,true);
         serviceUser00.update(coach);
+        CoachListController c=CoachListController.getInstance();
+        c.consulterCoaches();
+        Stage currentStage = (Stage) coaches_updateBtn.getScene().getWindow();
+        currentStage.close();
+
+
 //CoachListController.consulterCoach();
        //loadCoachListInterface();
-
-
+       //consulterCoach();
 
     }
 
     public void SetId(int id){
         this.id = id;
+        User user = serviceUser00.findByID(id);
+        System.out.println(id);
+        coaches_name.setText(user.getName());
+        coaches_email.setText(user.getEmail());
+        coaches_telephone.setText(user.getTelephone());
     }
 
     public void SetUser(User userModif){
@@ -143,6 +153,10 @@ public CoachesFormController(){}
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+
+
+
 
     }
 }

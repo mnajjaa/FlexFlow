@@ -161,7 +161,7 @@ public class DashboardProduit {
     public String getProduitMoinsVendu() {
         String produitMoinsVendu = null;
 
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgym", "root", "")) {
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgym1", "root", "")) {
 //            String sql = "SELECT nom FROM produit ORDER BY prix * quantite ASC LIMIT 1";
             String sql = "SELECT nom FROM produit ORDER BY quantiteVendues ASC LIMIT 1";
 
@@ -187,7 +187,7 @@ public class DashboardProduit {
     public String getProduitPlusAchete() {
         String produitPlusAchete = null;
         // Connexion à la base de données
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgym", "root", "")) {
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgym1", "root", "")) {
 
             // Requête SQL pour obtenir le produit le plus acheté
 //            String sql = "SELECT nom FROM produit ORDER BY prix * quantite DESC LIMIT 1";

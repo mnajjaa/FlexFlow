@@ -1,6 +1,8 @@
 package com.example.bty.Controllers;
 
 import com.example.bty.Controllers.EvenementController.clientVitrine;
+import com.example.bty.Controllers.usercontroller.CoachesFormController;
+import com.example.bty.Controllers.usercontroller.UserProfilController;
 import com.example.bty.Entities.Role;
 import com.example.bty.Entities.User;
 import com.example.bty.Services.IServiceUser;
@@ -10,7 +12,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
@@ -372,7 +376,8 @@ public class DashboardController implements Initializable {
     }
 
     public void goToProfile(ActionEvent actionEvent) {
-        loadContent("/UserProfil.fxml");
+        loadContent("/userProfil.fxml");
+
     }
 
 

@@ -23,6 +23,25 @@ public class User {
         this.image = image;
 
     }
+    public User(int id, String name, String email, String telephone, boolean etat) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.telephone = telephone;
+        this.etat = etat;
+
+
+    }
+    public User(int id, String name, String email, String telephone,Role role, boolean etat) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.telephone = telephone;
+        this.role = role;
+        this.etat = etat;
+
+
+    }
 
     public String getImage() {
         return image;

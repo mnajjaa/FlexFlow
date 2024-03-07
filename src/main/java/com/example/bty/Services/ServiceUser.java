@@ -252,6 +252,7 @@ public class ServiceUser implements IServiceUser {
                 U.setPassword(rs.getString("password"));
                 U.setImage(rs.getString("image"));
                 U.setTelephone(rs.getString("telephone"));
+                U.setEtat(rs.getBoolean("etat"));
                 //  U.setPassword(rs.getString("password"));
             }
         } catch (SQLException ex) {

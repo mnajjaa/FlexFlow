@@ -10,7 +10,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ConnexionDB {
-    final String url ="jdbc:mysql://localhost:3306/pidevgym";
+    final String url ="jdbc:mysql://localhost:3306/pidevgym1";
     final String login ="root";
     final String pwd="";
     private static ConnexionDB instance;

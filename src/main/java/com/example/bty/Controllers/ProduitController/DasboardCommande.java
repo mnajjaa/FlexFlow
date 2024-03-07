@@ -119,7 +119,7 @@ public class DasboardCommande {
 //        XYChart.Series<String, Number> series = new XYChart.Series<>();
 //        series.setName("Chiffre d'affaires par jour");
 //
-//        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgym", "root", "");
+//        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgym1", "root", "");
 //             Statement statement = connection.createStatement();
 //             ResultSet resultSet = statement.executeQuery("SELECT dateCommande, SUM(montant) FROM commande GROUP BY dateCommande")) {
 //
