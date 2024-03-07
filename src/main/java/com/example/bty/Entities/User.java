@@ -12,8 +12,26 @@ public class User {
     private Role role;
     private  boolean etat =false;    // 0 = desactiver , 1 = activer
     private String image;
+    private boolean mfaEnabled ;//si l'utilisateur a activé l'authentification à deux facteurs
+    private String mfaSecret ;//la clé secrète de l'authentification à deux facteurs
 
-    public User(int id, String name, String email, String telephone, Role role, boolean b,String image) {
+    public boolean isMfaEnabled() {
+        return mfaEnabled;
+    }
+
+    public void setMfaEnabled(boolean mfaEnabled) {
+        this.mfaEnabled = mfaEnabled;
+    }
+
+    public String getMfaSecret() {
+        return mfaSecret;
+    }
+
+    public void setMfaSecret(String mfaSecret) {
+        this.mfaSecret = mfaSecret;
+    }
+
+    public User(int id, String name, String email, String telephone, Role role, boolean b, String image) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -135,6 +153,12 @@ public class User {
         this.password = password;
     }
 
+
+
+    public Role getRole() {
+        return  role;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -144,13 +168,13 @@ public class User {
                 ", password='" + password + '\'' +
                 ", telephone='" + telephone + '\'' +
                 ", role=" + role +
-                ",image='"+image+'\''+
+                ", etat=" + etat +
+                ", image='" + image + '\'' +
+                ", mfaEnabled=" + mfaEnabled +
+                ", mfaSecret='" + mfaSecret + '\'' +
                 '}';
     }
 
-    public Role getRole() {
-        return  role;
-    }
     public String getTelephone() {
         return telephone;
     }

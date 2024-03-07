@@ -11,6 +11,7 @@ module com.example.bty {
     requires stripe.java;
     requires java.desktop;
     requires java.mail;
+    requires totp;
 
     requires com.google.zxing;
     requires com.google.zxing.javase;
