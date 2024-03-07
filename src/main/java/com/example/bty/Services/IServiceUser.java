@@ -24,4 +24,6 @@ public interface IServiceUser {
     void updatePassword(String text, Integer id);
 
     User findByID(int idUser);
+    public void setSecretKey(String secret, int id);
+    public void EnableOrDisablemfa(int id);
 }

@@ -3,24 +3,33 @@ package com.example.bty.Controllers.usercontroller;
 import com.example.bty.Entities.Role;
 import com.example.bty.Entities.User;
 import com.example.bty.Entities.Validation;
+import com.example.bty.LoginView;
 import com.example.bty.Services.*;
+import com.example.bty.Utils.Session;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Random;
@@ -56,6 +65,7 @@ public class LoginGymController implements Initializable {
     private AnchorPane main_form;
     @FXML
     private TextField si_email; // Champ de texte pour l'email
+    public StackPane contentPlaceholder;
 
     @FXML
     private PasswordField si_password;
@@ -107,19 +117,42 @@ public class LoginGymController implements Initializable {
             // Appeler la méthode de connexion avec les valeurs récupérées
             int i = serviceUser.Authentification(email, password);
             if (i == 1) {
-                System.out.println("login success");
-                FXMLLoader dashboardLoader = new FXMLLoader(getClass().getResource("/dashboardX.fxml"));
-                Parent dashboardRoot = dashboardLoader.load();
-                Scene dashboardScene = new Scene(dashboardRoot);
+                User user = serviceUser.findByEmail(email);
+                System.out.println(user.isMfaEnabled());
+                if (user.isMfaEnabled())
+                {
 
-                // Accéder au contrôleur du tableau de bord si nécessaire
-                // DashboardController dashboardController = dashboardLoader.getController();
+                    System.out.println("MFA enabled");
+                    // Redirect to the MFA page
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/mfa.fxml"));
+                    Parent root = loader.load();
+                    Scene scene = new Scene(root);
+                    Stage stage = (Stage) si_email.getScene().getWindow();
+                    stage.setScene(scene);
+                    stage.show();
+                    mfaController mfaController = loader.getController();
+                    mfaController.setUser(user,si_email);
 
-                // Obtenir la scène principale et changer la scène actuelle
-                Stage primaryStage = (Stage) si_email.getScene().getWindow();
-                primaryStage.setScene(dashboardScene);
-                primaryStage.setTitle("Dashboard");
-            } else if (i == 2) {
+                }
+                else {
+                    System.out.println("login success");
+                    Session s = Session.getInstance();
+                    s.setLoggedInUser(user);
+                    FXMLLoader dashboardLoader = new FXMLLoader(getClass().getResource("/dashboardX.fxml"));
+                    Parent dashboardRoot = dashboardLoader.load();
+                    Scene dashboardScene = new Scene(dashboardRoot);
+
+                    // Accéder au contrôleur du tableau de bord si nécessaire
+                    // DashboardController dashboardController = dashboardLoader.getController();
+
+                    // Obtenir la scène principale et changer la scène actuelle
+                    Stage primaryStage = (Stage) si_email.getScene().getWindow();
+                    primaryStage.setScene(dashboardScene);
+                    primaryStage.setTitle("Dashboard");
+                    loadContent("/Accueil.fxml");
+                }
+            }
+            else if (i == 2) {
                 System.out.println("login failed");
                 errorTop_lbl.setText("Votre compte est désactivé !");
                 //lien
@@ -159,7 +192,18 @@ public class LoginGymController implements Initializable {
         }
     }
     //************************************* sign up  ******************************************//
-
+    private void loadContent(String fxmlFileName) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFileName));
+            Parent content = loader.load();
+            contentPlaceholder.getChildren().clear();
+            contentPlaceholder.getChildren().add(content);
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Gérer l'erreur de chargement du fichier FXML
+        }
+    }
+    ///+****************** content load ***************************
     @FXML
     private void signup() throws IOException {
         String email = su_email.getText(); // Récupérer l'email depuis le champ de texte
@@ -318,7 +362,7 @@ public class LoginGymController implements Initializable {
 
     public void restPwd(MouseEvent mouseEvent) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/CheckEmail.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/checkEmail.fxml"));
             Parent root = loader.load();
             Scene scene = new Scene(root);
             Stage stage = (Stage) restPwd_btn.getScene().getWindow();
