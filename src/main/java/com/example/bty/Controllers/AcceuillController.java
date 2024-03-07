@@ -88,10 +88,16 @@ public class AcceuillController {
         }
 
 
+        int traite = getUnresolvedComplaintCount();
+        if (traite  != 0) {
+            dashboard_TI.setText( traite+"");
+        } else {
+            dashboard_TI.setText("Aucun reclamation non traite");
+        }
 
 
 
-        // Chargement initial des données dans la table
+                // Chargement initial des données dans la table
 
 
         // Button ajoutProduitButton = new Button("Ajout");
@@ -112,9 +118,6 @@ public class AcceuillController {
 
         // Update the Text element in the FXML file with the retrieved event name
         mostLikedcours.setText("Le cour le plus aimé : "+ mostLikedCours);
-
-
-
 
 
     }
@@ -142,6 +145,32 @@ public class AcceuillController {
 
         return mostRequestedEvent;
     }
+
+
+    private int getUnresolvedComplaintCount() {
+        // Implement logic to query the database and get the count of unresolved complaints
+        // You might need to replace the following placeholder code with your actual database query
+
+        int unresolvedComplaintCount = 0; // Default value
+
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgym", "root", "")) {
+            String query = "SELECT COUNT(*) as count FROM reclamation WHERE etat = 'Non traite'";
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query);
+                 ResultSet resultSet = preparedStatement.executeQuery()) {
+
+                if (resultSet.next()) {
+                    unresolvedComplaintCount = resultSet.getInt("count");
+                }
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return unresolvedComplaintCount;
+    }
+
 
 
     private String getMostLikedCourse() {

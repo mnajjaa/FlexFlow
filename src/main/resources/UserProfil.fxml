@@ -55,14 +55,14 @@
                                             <String fx:value="shadow" />
                                         </styleClass>
                                         <children>
-                                            <Label layoutX="15.0" layoutY="84.0" text="Confirm">
+                                            <Label layoutX="15.0" layoutY="84.0" text="Confirme">
                                                 <font>
                                                     <Font size="14.0" />
                                                 </font>
                                             </Label>
                                             <PasswordField fx:id="new_password" layoutX="111.0" layoutY="82.0" prefHeight="25.0" prefWidth="148.0" styleClass="textfield" stylesheets="dashboardDesign.css" AnchorPane.leftAnchor="111.0" AnchorPane.rightAnchor="27.0" />
 
-                                            <Label layoutX="14.0" layoutY="48.0" text="New Password">
+                                            <Label layoutX="14.0" layoutY="48.0" text="Nouveau mot de passe">
                                                 <font>
                                                     <Font size="14.0" />
                                                 </font>
@@ -73,7 +73,7 @@
                                     </AnchorPane>
                                     <ImageView fx:id="profile_img" fitHeight="116.0" fitWidth="861.0" layoutX="229.0" layoutY="58.0" pickOnBounds="true" preserveRatio="true">
                                         <image>
-                                            <Image url="@com/example/bty/imagesUser/undraw_Pic_profile_re_7g2h.png" />
+                                            <Image url="@undraw_Pic_profile_re_7g2h.png" />
                                         </image>
                                         <!--                        <clip>-->
                                         <!--                            <Circle centerX="430.5" centerY="58.0" radius="50" />-->
@@ -82,7 +82,7 @@
                                     <Button fx:id="update_img_btn" layoutX="386.0" layoutY="69.0" mnemonicParsing="false" onAction="#updateImgBtn" prefHeight="37.0" prefWidth="125.0" styleClass="btn" stylesheets="dashboardDesign.css" text="Modifier" />
                                     <ImageView fx:id="image" fitHeight="187.0" fitWidth="365.0" layoutX="386.0" layoutY="485.0" pickOnBounds="true" preserveRatio="true" styleClass="border-radius">
                                         <image>
-                                            <Image url="@com/example/bty/imagesUser/undraw_Personal_info_re_ur1n.png" />
+                                            <Image url="@undraw_Personal_info_re_ur1n.png" />
                                         </image>
                                     </ImageView>
                                 </AnchorPane>

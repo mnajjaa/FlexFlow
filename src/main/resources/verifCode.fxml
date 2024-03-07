@@ -39,7 +39,7 @@
         <Button fx:id="enterCode_btn" mnemonicParsing="false" onAction="#verifierCode" prefHeight="25.0" prefWidth="96.0" text="Enter" styleClass="enterCode-btn" />
         <ImageView fitHeight="221.0" fitWidth="353.0" pickOnBounds="true" preserveRatio="true">
             <image>
-                <Image url="@com/example/bty/imagesUser/undraw_Code_typing_re_p8b9.png" />
+                <Image url="@undraw_Code_typing_re_p8b9.png" />
             </image>
         </ImageView>
     </VBox>

@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
@@ -197,6 +198,9 @@ public class DashboardController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+
+
        // border.getStyleClass().add("border-pane");
         this.user = session.getLoggedInUser();
         if(user.getRole().equals(Role.ADMIN)){
@@ -260,7 +264,26 @@ public class DashboardController implements Initializable {
     }
 
 
+    @FXML
+    void handleLogoutButton(ActionEvent event) {
+        try {
+            // Charger le fichier FXML de l'interface LoginGym
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/LoginGym.fxml"));
+            Parent root = loader.load();
 
+            // Créer une nouvelle scène avec l'interface LoginGym
+            Scene scene = new Scene(root);
+
+            // Obtenir la fenêtre actuelle à partir de l'événement
+            Stage stage = (Stage) logout00_btn.getScene().getWindow();
+
+            // Mettre à jour la scène de la fenêtre avec l'interface LoginGym
+            stage.setScene(scene);
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public void switchForm(ActionEvent actionEvent) {
  if (actionEvent.getSource().equals(dashboard_btn)) {
@@ -311,18 +334,7 @@ public class DashboardController implements Initializable {
         }
     }
 
-    public void coachesUpdateBtn(ActionEvent actionEvent) {
-    }
 
-    public void coachesDeleteBtn(ActionEvent actionEvent) {
-    }
-
-    public void coachesSelect(MouseEvent mouseEvent) {
-    }
-
-
-    public void goToDashbordAdmin(ActionEvent actionEvent) {
-    }
 
 
     public void goToEvents(ActionEvent actionEvent) {
@@ -374,6 +386,11 @@ public class DashboardController implements Initializable {
     public void goToProfile(ActionEvent actionEvent) {
         loadContent("/UserProfil.fxml");
     }
+
+    public void goToLogout(ActionEvent actionEvent) {
+        loadContent("/LoginGym.fxml");
+    }
+
 
 
 

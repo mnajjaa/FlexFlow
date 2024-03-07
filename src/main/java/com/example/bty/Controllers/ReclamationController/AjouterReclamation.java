@@ -61,7 +61,7 @@ public class AjouterReclamation extends Application {
         Label lbl_title = new Label();
         lbl_title.setLayoutX(183);
         lbl_title.setLayoutY(49);
-        lbl_title.setText("remplir votre reclamation");
+        lbl_title.setText("Remplir votre reclamation");
         root.getChildren().add(lbl_title);
         lbl_title.getStyleClass().add("label-titre");
 
@@ -82,28 +82,6 @@ public class AjouterReclamation extends Application {
         root.getChildren().add(lbl_description);
         lbl_description.getStyleClass().add("label-titre");
 
-
-//        Label error_titre = new Label();
-//        error_titre.setLayoutX(232);
-//        error_titre.setLayoutY(151);
-//        error_titre.setText("le titre est vide !!");
-//        error_titre.setTextFill(javafx.scene.paint.Color.web("#fc0505"));
-//        root.getChildren().add(error_titre);
-//        error_titre.setVisible(false);
-//
-//        Label error_description = new Label();
-//        error_description.setLayoutX(198);
-//        error_description.setLayoutY(313);
-//        error_description.setText("la description est vide !!");
-//        error_description.setTextFill(javafx.scene.paint.Color.web("#fc0505"));
-//        root.getChildren().add(error_description);
-//
-//        Label error_caractere = new Label();
-//        error_caractere.setLayoutX(172);
-//        error_caractere.setLayoutY(173);
-//        error_caractere.setText("le titre contient des caractères spéciaux");
-//        error_caractere.setTextFill(javafx.scene.paint.Color.web("#fc0505"));
-//        root.getChildren().add(error_caractere);
 
         error_titre = new Label();
         error_titre.setLayoutX(232);

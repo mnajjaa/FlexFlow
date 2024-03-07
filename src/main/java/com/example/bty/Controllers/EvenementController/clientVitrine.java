@@ -191,16 +191,16 @@ public clientVitrine(){
 
 
         FontAwesomeIconView usernameAdmin = createFontAwesomeIconView("USER", "WHITE", 50, 82, 91);
-        Label welcomeLabel = createLabel("Welcome, " , "Arial Bold", 15, 78, 101, "WHITE");
+        Label welcomeLabel = createLabel("Bienvenue, " , "Arial Bold", 15, 78, 101, "WHITE");
         Label usernameLabel = createLabel( loggedInUser.getName(), "Arial Bold", 20, 78, 120,"WHITE");
         // Line line = createLine(-100, 152, 100, 152, 111);
         Line line = createColoredLine(-100, 152, 100, 152, 111, "WHITE");
 
-        Button DashboardBtn = createButton("Dashboard", 22, 186);
+        Button DashboardBtn = createButton("Acceuil", 22, 186);
         Button CoursBtn = createButton("Cours", 22, 234);
         Button eventsBtn = createButton("Evenements", 22, 276);
         Button demandeBtn = createButton("Demande Coahing", 22, 319);
-        Button offreAdminBtn = createButton("Offre", 22, 361);
+        Button offreAdminBtn = createButton("Ajouter Offre", 22, 361);
         Button storeAdminBtn = createButton("Store", 22, 405);
 
 
@@ -304,20 +304,18 @@ public clientVitrine(){
         reportContainer.getStyleClass().add("report_container");
 
 
-        Text reportText = new Text("Report Suggestion/Bug?");
+        Text reportText = new Text("Signaler une suggestion?");
         reportText.getStyleClass().add("report_text");
 
-        Label reportLabel = new Label("Use this to report any errors or suggestions.");
-        reportLabel.getStyleClass().add("report_label");
 
-        Button reportButton = createButton("Report", 0, 0);
+        Button reportButton = createButton("Signaler", 0, 0);
         reportButton.setOnAction(event -> openAjouterReclamationInterface(primaryStage));
 
         reportButton.getStyleClass().add("report_button");
 
 
 
-        reportContainer.getChildren().addAll(reportText, reportLabel, reportButton);
+        reportContainer.getChildren().addAll(reportText, reportButton);
 
         StackPane contentPlaceholder = new StackPane();
         contentPlaceholder.setLayoutX(220);
@@ -447,7 +445,7 @@ public clientVitrine(){
 
 
         // Ajouter un bouton "See More"
-        Button SeeButton = new Button("See more");
+        Button SeeButton = new Button("Details");
         SeeButton.getStyleClass().add("add-to-cart-button");
 
 

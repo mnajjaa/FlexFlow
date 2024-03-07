@@ -25,7 +25,7 @@
                             <String fx:value="shadow" />
                         </styleClass>
                         <FontAwesomeIconView fill="WHITE" glyphName="USER" layoutX="82.0" layoutY="91.0" size="6em" />
-                        <Label layoutX="78.0" layoutY="101.0" text="Welcome," textFill="WHITE">
+                        <Label layoutX="78.0" layoutY="101.0" text="Bienvenue," textFill="WHITE">
                             <font>
                                 <Font name="Tahoma" size="15.0" />
                             </font>
@@ -46,12 +46,12 @@
                         <Button fx:id="commande_btn" layoutX="22.0" layoutY="464.0" mnemonicParsing="false" onAction="#goToCommande" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="dashboardDesign.css" text="Commande" />
                         <Line endX="100.0" layoutX="117.0" layoutY="551.0" startX="-100.0" stroke="WHITE" />
                         <Button fx:id="profileAdmin_btn" disable="false" layoutX="20.0" layoutY="561.0" mnemonicParsing="false" onAction="#goToProfile" prefHeight="35.0" prefWidth="84.0" styleClass="nav-btn" stylesheets="dashboardDesign.css" text="Profile" />
-                        <Button fx:id="logout00_btn" layoutX="117.0" layoutY="561.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="84.0" styleClass="nav-btn" stylesheets="dashboardDesign.css" text="Logout" />
+                        <Button fx:id="logout00_btn" onAction="#handleLogoutButton" layoutX="117.0" layoutY="561.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="84.0" styleClass="nav-btn" stylesheets="dashboardDesign.css"  text="Logout" />
                         <VBox layoutX="21.0" layoutY="618.0" prefHeight="53.0" prefWidth="180.0" styleClass="report_container">
                             <children>
-                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Report Suggestion/Bug?" />
+                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Signaler une suggestion/un bug?" />
 
-                                <Button fx:id="report_btn" mnemonicParsing="false" text="Report">
+                                <Button fx:id="report_btn" mnemonicParsing="false" text="Signaler">
                                     <graphic>
                                         <FontAwesomeIconView glyphName="PLUS" />
                                     </graphic>

@@ -71,7 +71,7 @@
                             </AnchorPane>
                             <Separator layoutX="14.0" layoutY="179.0" prefHeight="0.0" prefWidth="1099.0" />
 <!--                            <Button fx:id="ajout_produit" layoutX="1054.0" layoutY="212.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="69.0" styleClass="nav-btnproduit" stylesheets="dashboardDesign.css" text="Ajout" />-->
-                            <Button fx:id="actualiser" layoutX="964.0" layoutY="190.0" mnemonicParsing="false" onAction="#actualiserTable" styleClass="nav-btnactualiser" stylesheets="dashboardDesign.css" text="Actualiser" />
+                            <Button fx:id="actuliser" layoutX="964.0" layoutY="190.0" mnemonicParsing="false" onAction="#actualiserTable" styleClass="nav-btnactualiser" stylesheets="dashboardDesign.css" text="Actualiser" />
                         </children>
                     </AnchorPane>
 

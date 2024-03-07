@@ -58,7 +58,7 @@
                                         <Button fx:id="coaches_updateBtn" layoutX="180.0" layoutY="283.0" mnemonicParsing="false" onAction="#coachesUpdateBtn" prefHeight="43.0" prefWidth="144.0" styleClass="btn" stylesheets="dashboardDesign.css" text="Modifier" />
                                     </AnchorPane>
                                     <ImageView fitHeight="401.0" fitWidth="395.0" layoutX="428.0" layoutY="70.0" pickOnBounds="true" preserveRatio="true">
-                                        <Image url="@com/example/bty/imagesUser/undraw_Authentication_re_svpt.png" />
+                                        <Image url="@undraw_Authentication_re_svpt.png" />
                                     </ImageView>
                                 </AnchorPane>
                             </AnchorPane>

@@ -92,7 +92,7 @@ public class DetailsEvenementWindow extends Stage {
             Button ReserverButton = new Button("Reserver");
             ReserverButton.getStyleClass().add("add-to-cart-button");
 
-            instance.scannerButton = new ToggleButton("Scanner Code");
+            instance.scannerButton = new ToggleButton("Scanner Passe");
             instance.scannerButton.getStyleClass().add("add-to-cart-button");
             instance.scannerButton.setDisable(true);
 
