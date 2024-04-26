@@ -42,12 +42,7 @@ import java.util.function.Consumer;
 
 public class AcceuillController {
 
-    public Label dashboard_NM;
-    public Label dashboard_NC;
-    public Label dashboard_TI;
-    public Text mostRequestedEventText;
-    public Text mostLikedcours;
-    public Text LastLikedCourse;
+
     @FXML
     private AnchorPane dashboardAnchorPane;
 
@@ -70,30 +65,10 @@ public class AcceuillController {
     private void initialize() {
 
 
-        int nombreUtilisateursMembre = getNombreUtilisateursMembre();
-
-        if (nombreUtilisateursMembre != 0) {
-            dashboard_NM.setText( nombreUtilisateursMembre+"");
-        } else {
-            dashboard_NM.setText("Aucun membre");
-        }
 
 
-        int nombreCoach = getNombreCoach();
-
-        if (nombreCoach  != 0) {
-            dashboard_NC.setText( nombreCoach+"");
-        } else {
-            dashboard_NC.setText("Aucun Coach");
-        }
 
 
-        int traite = getUnresolvedComplaintCount();
-        if (traite  != 0) {
-            dashboard_TI.setText( traite+"");
-        } else {
-            dashboard_TI.setText("Aucun reclamation non traite");
-        }
 
 
 
@@ -109,91 +84,9 @@ public class AcceuillController {
 
         chargerDonneesGraphique();
 
-        String mostRequestedEvent = getMostRequestedEvent();
-
-        // Update the Text element in the FXML file with the retrieved event name
-        mostRequestedEventText.setText("L'évenement le plus demandé : " + mostRequestedEvent);
-
-        String mostLikedCours = getMostLikedCourse();
-
-        // Update the Text element in the FXML file with the retrieved event name
-        mostLikedcours.setText("Le cour le plus aimé : "+ mostLikedCours);
-
-
-    }
-
-
-    private String getMostRequestedEvent() {
-        // Implement logic to query the database and get the most requested event name
-        // You might need to replace the following placeholder code with your actual database query
-
-        String mostRequestedEvent = "Aucun evenement"; // Default value
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgym", "root", "")) {
-            String query = "SELECT nomEvenement, COUNT(*) as count FROM evenement GROUP BY nomEvenement ORDER BY count DESC LIMIT 1";
-
-            try (PreparedStatement preparedStatement = connection.prepareStatement(query);
-                 ResultSet resultSet = preparedStatement.executeQuery()){
-
-
-            if (resultSet.next()) {
-                mostRequestedEvent = resultSet.getString("nomEvenement");
-            }
-
-        } }catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return mostRequestedEvent;
-    }
-
-
-    private int getUnresolvedComplaintCount() {
-        // Implement logic to query the database and get the count of unresolved complaints
-        // You might need to replace the following placeholder code with your actual database query
-
-        int unresolvedComplaintCount = 0; // Default value
-
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgym", "root", "")) {
-            String query = "SELECT COUNT(*) as count FROM reclamation WHERE etat = 'Non traite'";
-
-            try (PreparedStatement preparedStatement = connection.prepareStatement(query);
-                 ResultSet resultSet = preparedStatement.executeQuery()) {
-
-                if (resultSet.next()) {
-                    unresolvedComplaintCount = resultSet.getInt("count");
-                }
-
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return unresolvedComplaintCount;
-    }
 
 
 
-    private String getMostLikedCourse() {
-        // Implement logic to query the database and get the most liked course name
-        // You might need to replace the following placeholder code with your actual database query
-
-        String mostLikedCourse = "Aucun cours"; // Default value
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgym", "root", "")) {
-            String query = "SELECT nomCour, SUM(rating) as totalLikes FROM rating GROUP BY nomCour ORDER BY totalLikes DESC LIMIT 1";
-
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query);
-             ResultSet resultSet = preparedStatement.executeQuery()){
-
-
-            if (resultSet.next()) {
-                mostLikedCourse = resultSet.getString("nomCour");
-            }
-
-        } }catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return mostLikedCourse;
     }
 
 
@@ -201,49 +94,16 @@ public class AcceuillController {
 
 
 
-    public int getNombreUtilisateursMembre() {
-        int nombreUtilisateursMembre = 0;
 
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgym", "root", "")) {
-            String sql = "SELECT COUNT(*) AS nombre FROM user WHERE role = 'MEMBRE'";
 
-            try (PreparedStatement preparedStatement = connection.prepareStatement(sql);
-                 ResultSet resultSet = preparedStatement.executeQuery()) {
 
-                if (resultSet.next()) {
-                    nombreUtilisateursMembre = resultSet.getInt("nombre");
-                }
-            }
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-            // Gérer les erreurs de connexion ou de requête SQL ici
-        }
 
-        return nombreUtilisateursMembre;
-    }
 
-    public int getNombreCoach() {
-        int nombreCoach = 0;
 
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgym", "root", "")) {
-            String sql = "SELECT COUNT(*) AS nombre FROM user WHERE role = 'COACH'";
 
-            try (PreparedStatement preparedStatement = connection.prepareStatement(sql);
-                 ResultSet resultSet = preparedStatement.executeQuery()) {
 
-                if (resultSet.next()) {
-                    nombreCoach = resultSet.getInt("nombre");
-                }
-            }
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-            // Gérer les erreurs de connexion ou de requête SQL ici
-        }
-
-        return nombreCoach;
-    }
 
 
 

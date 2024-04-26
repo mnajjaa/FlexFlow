@@ -1,15 +1,7 @@
 package com.example.bty.Controllers.ProduitController;
 
-import com.example.bty.Controllers.CourController.CourMembre;
-import com.example.bty.Controllers.DashboardMembre;
-import com.example.bty.Controllers.EvenementController.DashbordEvenement;
-import com.example.bty.Controllers.EvenementController.clientVitrine;
-import com.example.bty.Controllers.ReclamationController.AjouterReclamation;
-import com.example.bty.Controllers.graphiqueGCP.FD;
-import com.example.bty.Controllers.graphiqueGCP.Formoffre;
 import com.example.bty.Entities.Commande;
 import com.example.bty.Entities.Produit;
-import com.example.bty.Entities.Role;
 import com.example.bty.Entities.User;
 import com.example.bty.Utils.Session;
 import com.itextpdf.text.*;
@@ -184,55 +176,20 @@ payer p = new payer();
         // Line line = createLine(-100, 152, 100, 152, 111);
         Line line = createColoredLine(-100, 152, 100, 152, 111, "WHITE");
 
-        Button DashboardBtn = createButton("Acceuil", 22, 186);
-        Button CoursBtn = createButton("Cours", 22, 234);
-        Button eventsBtn = createButton("Evenements", 22, 276);
-        Button demandeBtn = createButton("Demande Coahing", 22, 319);
-        Button offreAdminBtn = createButton("Ajouter Offre", 22, 361);
+
         Button storeAdminBtn = createButton("Store", 22, 405);
 
-        DashboardBtn.setOnAction(event -> {
-            // Instancier et afficher la vue DashboardVitrineController
-            DashboardMembre m = new DashboardMembre();
-            try {
-                m.start(primaryStage);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        });
 
-        CoursBtn.setOnAction(event -> {
-            // Instancier et afficher la vue DashboardVitrineController
-            CourMembre c = new CourMembre();
-            c.start(primaryStage);
-        });
-
-
-        eventsBtn.setOnAction(event -> {
+      //  eventsBtn.setOnAction(event -> {
             /*DashbordEvenement e = new DashbordEvenement();
             e.start(primaryStage);*/
-            clientVitrine e = new clientVitrine();
-            e.start(primaryStage);
+          /*  clientVitrine e = new clientVitrine();
+            e.start(primaryStage);*/
 
-        });
-
-
-        demandeBtn.setOnAction(event -> {
-            // Instancier et afficher la vue DashboardVitrineController
-            FD f = new FD();
-            f.start(primaryStage);
-        });
-
-
-        offreAdminBtn.setOnAction(event -> {
+      //  });
 
 
 
-            Formoffre o = new Formoffre();
-            o.start(primaryStage);
-
-
-        });
 
 
         storeAdminBtn.setOnAction(event -> {
@@ -272,11 +229,6 @@ payer p = new payer();
 
 
         FontAwesomeIconView[] icons = {
-                createFontAwesomeIconView("HOME", "WHITE", 20, 38, 212),
-                createFontAwesomeIconView("USER", "WHITE", 20, 38, 258),
-                createFontAwesomeIconView("USERS", "WHITE", 20, 38, 300),
-                createFontAwesomeIconView("BOOK", "WHITE", 20, 38, 343),
-                createFontAwesomeIconView("CALENDAR", "WHITE", 20, 38, 385),
 
                 createFontAwesomeIconView("SHOPPING_CART", "WHITE", 20, 38, 429),
 
@@ -311,10 +263,10 @@ payer p = new payer();
 
         dashboardAdmin.getChildren().addAll(
                 usernameAdmin, welcomeLabel, usernameLabel, line,
-                DashboardBtn,CoursBtn, eventsBtn, demandeBtn, offreAdminBtn,
+
                 storeAdminBtn, line2,
-                logoutBtn, icons[0], icons[1], icons[2], icons[3],
-                icons[4], icons[5], icons[6],reportContainer,
+                logoutBtn, icons[0]
+             ,reportContainer,
                 contentPlaceholder
         );
 
@@ -327,12 +279,12 @@ payer p = new payer();
 
 
     private void openAjouterReclamationInterface(Stage primaryStage) {
-        AjouterReclamation ajouterReclamation = new AjouterReclamation();
+     /*   AjouterReclamation ajouterReclamation = new AjouterReclamation();
         try {
             ajouterReclamation.start(new Stage());
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     private void showAlert1(String title, String content) {
@@ -711,7 +663,7 @@ payer p = new payer();
 
     private void sendConfirmationEmail(User loggedInUser, String nomFichierFacture, String userEmail) {
         final String username = "bahaeddinedridi1@gmail.com";
-        final String password = "inxx lwuu tsis yane";
+        final String password = "oman kvgj hdks njqc";
 
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");

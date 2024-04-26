@@ -1,6 +1,6 @@
 package com.example.bty.Controllers;
 
-import com.example.bty.Controllers.EvenementController.clientVitrine;
+import com.example.bty.Controllers.ProduitController.VitrineClient;
 import com.example.bty.Entities.Role;
 import com.example.bty.Entities.User;
 import com.example.bty.Services.IServiceUser;
@@ -220,7 +220,7 @@ public class DashboardController implements Initializable {
         else if(user.getRole().equals(Role.COACH)){
             System.out.println("coach found");
             // Instancier la classe VitrineClient
-            DashboardMembre v = new DashboardMembre();
+            VitrineClient v = new    VitrineClient();
 
             // Appeler la méthode start (ou toute autre méthode pour démarrer l'interface)
             try {
@@ -238,7 +238,7 @@ public class DashboardController implements Initializable {
         else if(user.getRole().equals(Role.MEMBRE)){
             System.out.println("membre found");
             // Instancier la classe VitrineClient
-            DashboardMembre v = new DashboardMembre();
+            VitrineClient v = new    VitrineClient();
 
             // Appeler la méthode start (ou toute autre méthode pour démarrer l'interface)
             try {

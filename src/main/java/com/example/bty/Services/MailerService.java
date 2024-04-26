@@ -15,7 +15,7 @@ public class MailerService {
         System.out.println(recipient);
         String host = "bahaeddinedridi1@gmail.com";  //← my email address
         final String user = "bahaeddinedridi1@gmail.com";//← my email address
-        final String password = "inxx lwuu tsis yane";//change accordingly   //← my email password
+        final String password = "oman kvgj hdks njqc";//change accordingly   //← my email password
 
         String to = recipient;//→ the EMAIL i want to send TO →
         Properties props = new Properties();

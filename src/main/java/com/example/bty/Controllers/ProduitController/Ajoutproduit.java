@@ -111,7 +111,7 @@ public class Ajoutproduit extends Application {
 
         Label typeLabel = new Label("Type :");
         typeComboBox = new ComboBox<>();
-        typeComboBox.getItems().addAll("Vitamine", "Accessoires", "Protéine","Vetement");
+        typeComboBox.getItems().addAll("Accessoires");
         gridPane.addRow(4, typeLabel, typeComboBox);
 
 

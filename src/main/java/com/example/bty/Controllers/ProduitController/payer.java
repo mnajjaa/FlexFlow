@@ -40,7 +40,7 @@ public class payer extends Application {
         AnchorPane root = new AnchorPane();
         root.setPrefSize(800, 600);
 
-        Label titleLabel = new Label("Payment ");
+        Label titleLabel = new Label("Paiment ");
         titleLabel.setStyle("-fx-font-size: 30;");
         titleLabel.setLayoutX(316);
         titleLabel.setLayoutY(34);
@@ -65,7 +65,7 @@ public class payer extends Application {
         paymentPane.setLayoutX(76);
         paymentPane.setLayoutY(105);
 
-        Button payButton = new Button("Pay now");
+        Button payButton = new Button("Payer");
         payButton.getStyleClass().add("pay-button");
 
         payButton.setLayoutX(510);

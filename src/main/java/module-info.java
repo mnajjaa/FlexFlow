@@ -30,18 +30,13 @@ module com.example.bty {
     opens com.example.bty.Controllers to javafx.fxml;
     exports com.example.bty.Controllers.ProduitController;
     opens com.example.bty.Controllers.ProduitController to javafx.fxml;
-    exports com.example.bty.Controllers.CourController;
-    opens com.example.bty.Controllers.CourController to javafx.fxml;
-    exports com.example.bty.Controllers.ReclamationController;
-    opens com.example.bty.Controllers.ReclamationController to javafx.fxml;
+
     exports com.example.bty.Views;
     opens com.example.bty.Views to javafx.fxml;
 
-    exports com.example.bty.Controllers.graphiqueGCP;
-    opens com.example.bty.Controllers.graphiqueGCP to javafx.fxml;
 
-    exports com.example.bty.Controllers.EvenementController;
-    opens com.example.bty.Controllers.EvenementController to javafx.fxml;
+
+
     exports com.example.bty.Controllers.usercontroller;
     opens com.example.bty.Controllers.usercontroller to javafx.fxml;
 
