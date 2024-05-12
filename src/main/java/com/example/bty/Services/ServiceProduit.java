@@ -21,9 +21,9 @@ public class ServiceProduit {
     private static int userId;
 
   public boolean ajouterProduit(Produit produit) {
-      String query = "INSERT INTO produit (idProduit, nom, Description, Prix, Type, Quantite, quantiteVendues, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+      String query = "INSERT INTO produit (id, nom, Description, Prix, Type, Quantite, quantite_vendues, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-      try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgym", "root", "");
+      try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgymweb", "root", "");
            PreparedStatement statement = connection.prepareStatement(query)) {
           statement.setInt(1, produit.getIdProduit());
           statement.setString(2, produit.getNom());
@@ -45,20 +45,20 @@ public class ServiceProduit {
 
     public List<Produit> consulterProduits() {
         List<Produit> produits = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgym", "root", "")) {
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgymweb", "root", "")) {
             String query = "SELECT * FROM produit";
             try (Statement statement = connection.createStatement();
                  ResultSet resultSet = statement.executeQuery(query)) {
                 while (resultSet.next()) {
                     Produit produit = new Produit();
 
-                    produit.setIdProduit(resultSet.getInt("idProduit"));
+                    produit.setIdProduit(resultSet.getInt("id"));
                     produit.setNom(resultSet.getString("nom"));
                     produit.setDescription(resultSet.getString("Description"));
                     produit.setPrix(resultSet.getDouble("Prix"));
                     produit.setType(resultSet.getString("Type"));
                     produit.setQuantite(resultSet.getInt("Quantite"));
-                    produit.setQuantiteVendues(resultSet.getInt("quantiteVendues"));
+                    produit.setQuantiteVendues(resultSet.getInt("quantite_vendues"));
 
                     produits.add(produit);
                 }
@@ -73,7 +73,7 @@ public class ServiceProduit {
 
     public List<Commmande> consulterCommandes() {
         List<Commmande> commandes = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgym", "root", "")) {
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgymweb", "root", "")) {
             String query = "SELECT * FROM commande"; // Assurez-vous que le nom de la table est correct
 
             try (Statement statement = connection.createStatement();
@@ -82,9 +82,9 @@ public class ServiceProduit {
                 while (resultSet.next()) {
                     Commmande commande = new Commmande();
 
-                    commande.setIdCommande(resultSet.getInt("idCommande"));
-                    commande.setDateCommande(resultSet.getTimestamp("dateCommande"));
-                    commande.setIdProduit(resultSet.getInt("idProduit"));
+                    commande.setIdCommande(resultSet.getInt("id"));
+                    commande.setDateCommande(resultSet.getTimestamp("date_commande"));
+                    commande.setIdProduit(resultSet.getInt("id_produit"));
                     commande.setNom(resultSet.getString("nom"));
                     commande.setMontant(resultSet.getDouble("montant"));
 
@@ -100,7 +100,7 @@ public class ServiceProduit {
 
     public List<paiment> consulterPaiment() {
         List<paiment> paiments = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgym", "root", "")) {
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgymweb", "root", "")) {
             String query = "SELECT * FROM  paiement"; // Assurez-vous que le nom de la table est correct
 
             try (Statement statement = connection.createStatement();
@@ -132,7 +132,7 @@ public class ServiceProduit {
 
     public List<Commmande> consulterCommandesParDate(LocalDate selectedDate) {
         List<Commmande> commandes = new ArrayList<>();
-        String query = "SELECT * FROM commande WHERE DATE(dateCommande) = ?";
+        String query = "SELECT * FROM commande WHERE DATE(date_commande) = ?";
 
         try (PreparedStatement preparedStatement = connexion.prepareStatement(query)) {
             preparedStatement.setDate(1, Date.valueOf(selectedDate));
@@ -140,9 +140,9 @@ public class ServiceProduit {
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
                     Commmande commande = new Commmande();
-                    commande.setIdCommande(resultSet.getInt("idCommande"));
-                    commande.setDateCommande(resultSet.getTimestamp("dateCommande"));
-                    commande.setIdProduit(resultSet.getInt("idProduit"));
+                    commande.setIdCommande(resultSet.getInt("id"));
+                    commande.setDateCommande(resultSet.getTimestamp("date_commande"));
+                    commande.setIdProduit(resultSet.getInt("id_produit"));
                     commande.setNom(resultSet.getString("nom"));
                     commande.setMontant(resultSet.getDouble("montant"));
                     commandes.add(commande);
@@ -157,7 +157,7 @@ public class ServiceProduit {
 
     public void modifierPrixProduit(int idProduit, double nouveauPrix) {
         // try (Connection connection = ConnexionDB.obtenirConnexion()) {
-        String query = "UPDATE produit SET Prix = ? WHERE idProduit = ?";
+        String query = "UPDATE produit SET Prix = ? WHERE id = ?";
         try (PreparedStatement statement = connexion.prepareStatement(query)) {
             statement.setDouble(1, nouveauPrix);
             statement.setInt(2, idProduit);
@@ -171,8 +171,8 @@ public class ServiceProduit {
 
 
     public boolean modifierProduit(Produit produit) {
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgym", "root", "")) {
-            String query = "UPDATE produit SET nom=?, description=?, prix=?, type=?, quantite=?, quantiteVendues=? WHERE idProduit=?";
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgymweb", "root", "")) {
+            String query = "UPDATE produit SET nom=?, description=?, prix=?, type=?, quantite=?, quantite_vendues=? WHERE id=?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, produit.getNom());
                 statement.setString(2, produit.getDescription());
@@ -206,11 +206,11 @@ public class ServiceProduit {
         }
     }*/
 
-    public boolean supprimerProduit(int idProduit) {
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgym", "root", "")) {
-            String query = "DELETE FROM produit WHERE idProduit = ?";
+    public boolean supprimerProduit(int id) {
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgymweb", "root", "")) {
+            String query = "DELETE FROM produit WHERE id = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
-                statement.setInt(1, idProduit);
+                statement.setInt(1, id);
                 statement.executeUpdate();
                 return true;
             }
@@ -230,13 +230,13 @@ public class ServiceProduit {
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
                     Produit produit = new Produit();
-                    produit.setIdProduit(resultSet.getInt("idProduit"));
+                    produit.setIdProduit(resultSet.getInt("id"));
                     produit.setNom(resultSet.getString("nom"));
                     produit.setDescription(resultSet.getString("description"));
                     produit.setPrix(resultSet.getDouble("prix"));
                     produit.setType(resultSet.getString("type"));
                     produit.setQuantite(resultSet.getInt("quantite"));
-                    produit.setQuantiteVendues(resultSet.getInt("quantiteVendues"));
+                    produit.setQuantiteVendues(resultSet.getInt("quantite_vendues"));
                     produits.add(produit);
                 }
             }
@@ -258,13 +258,13 @@ public class ServiceProduit {
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
                     Produit produit = new Produit();
-                    produit.setIdProduit(resultSet.getInt("idProduit"));
+                    produit.setIdProduit(resultSet.getInt("id"));
                     produit.setNom(resultSet.getString("nom"));
                     produit.setDescription(resultSet.getString("description"));
                     produit.setPrix(resultSet.getInt("prix"));
                     produit.setType(resultSet.getString("type"));
                     produit.setQuantite(resultSet.getInt("quantite"));
-                    produit.setQuantiteVendues(resultSet.getInt("quantiteVendues"));
+                    produit.setQuantiteVendues(resultSet.getInt("quantite_vendues"));
 
                     produits.add(produit);
                 }
@@ -279,7 +279,7 @@ public class ServiceProduit {
 
 
     public void mettreAJourQuantiteVendueEtTotale(Produit produit, int quantiteAchete) {
-        String query = "UPDATE produit SET quantiteVendues = quantiteVendues + ?, quantite = quantite - ? WHERE idProduit = ?";
+        String query = "UPDATE produit SET quantite_vendues = quantite_vendues + ?, quantite = quantite - ? WHERE id = ?";
 
         try (
                 PreparedStatement statement = connexion.prepareStatement(query)) {
@@ -302,13 +302,13 @@ public class ServiceProduit {
 
     public Produit mapperProduit(ResultSet resultSet) throws SQLException {
         Produit produit = new Produit();
-        produit.setIdProduit(resultSet.getInt("idProduit"));
+        produit.setIdProduit(resultSet.getInt("id"));
         produit.setNom(resultSet.getString("nom"));
         produit.setDescription(resultSet.getString("description"));
         produit.setPrix(resultSet.getDouble("prix"));
         produit.setType(resultSet.getString("type"));
         produit.setQuantite(resultSet.getInt("quantite"));
-        produit.setQuantiteVendues(resultSet.getInt("quantiteVendues"));
+        produit.setQuantiteVendues(resultSet.getInt("quantite_vendues"));
 
 
 
@@ -317,7 +317,7 @@ public class ServiceProduit {
 
     public Produit obtenirMeilleurVendeur() {
         Produit meilleurVendeur = null;
-        String query = "SELECT * FROM produit ORDER BY quantiteVendues DESC LIMIT 1";
+        String query = "SELECT * FROM produit ORDER BY quantite_vendues DESC LIMIT 1";
 
         try (
                 PreparedStatement statement = connexion.prepareStatement(query);
@@ -335,7 +335,7 @@ public class ServiceProduit {
 
     public double calculerChiffreAffairesTotal() {
         double chiffreAffairesTotal = 0.0;
-        String query = "SELECT SUM(quantiteVendues * prix) AS chiffreAffaires FROM produit";
+        String query = "SELECT SUM(quantite_vendues * prix) AS chiffreAffaires FROM produit";
 
         try (
                 PreparedStatement statement = connexion.prepareStatement(query);
@@ -355,7 +355,7 @@ public class ServiceProduit {
 
 
     public void afficherColonnesProduit() {
-        String query = "SELECT idProduit,nom, description, prix, type, quantite FROM produit";
+        String query = "SELECT id,nom, description, prix, type, quantite FROM produit";
 
         try (Statement statement = connexion.createStatement();
              ResultSet resultSet = statement.executeQuery(query)) {
@@ -389,7 +389,7 @@ public class ServiceProduit {
 
 
     public void ajouterCommande(Timestamp dateCommande, User user, Map<Produit, Integer> produitsDansPanier) {
-        String query = "INSERT INTO Commande (dateCommande, id_user, nom_client, idProduit, nom,montant) VALUES (?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO Commande (date_commande, id_user, nom_client, id_produit, nom,montant) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement statement = connexion.prepareStatement(query)) {
             statement.setTimestamp(1, dateCommande);
@@ -419,7 +419,7 @@ public class ServiceProduit {
     public static double calculerChiffreAffaires() {
         double chiffreAffaires = 0.0;
 
-        try (Connection connection =  ConnexionDB.getInstance().getConnexion()) {
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgymweb", "root", "")) {
             String query = "SELECT SUM(Montant) FROM commande";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query);
                  ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -480,7 +480,7 @@ public class ServiceProduit {
 
             // Concaténer les 4 premiers chiffres avec les 12 chiffres masqués
             String maskedCardInfo = cardInfo.substring(0, Math.max(0, cardInfo.length() - 12)) + maskedLastTwelveDigits;
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgym", "root", "");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgymweb", "root", "");
             String query = "INSERT INTO paiement (name, email, card_info, mm, yy, cvc, total) VALUES (?, ?, ?, ?, ?, ?, ?)";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setString(1, name);

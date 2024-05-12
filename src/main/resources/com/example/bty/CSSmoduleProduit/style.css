@@ -9,11 +9,7 @@ and open the template in the editor.
 */
 
 /* Define fonts */
-@font-face {
-    font-family: 'Sofia Sans Condensed SemiBold';
-    src: url('SofiaSansCondensed-SemiBold.ttf');
-    
-}
+
 /* Apply styles to all containers */
 .root {
     -fx-background-color: #2c3e50;

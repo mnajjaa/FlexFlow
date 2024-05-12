@@ -185,22 +185,30 @@ public class ServiceUser implements IServiceUser {
     @Override
     public List<User> getAllMembers() {
         List<User> users = new ArrayList<>();
-        String req = "SELECT * FROM user WHERE role = 'MEMBRE'";
-        try {
-            pste = cnx.prepareStatement(req);
-            ResultSet rs = pste.executeQuery();
-            while (rs.next()) {
-                User user = new User();
-                user.setId(rs.getInt("id"));
-                user.setName(rs.getString("nom"));
-                user.setEmail(rs.getString("email"));
-                //user.setPassword(rs.getString("password"));
-                user.setTelephone(rs.getString("telephone"));
-                user.setRole(Role.valueOf(rs.getString("role")));
-                user.setEtat(rs.getBoolean("etat"));
-                users.add(user);
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgym", "root", "")) {
+
+
+            String req = "SELECT * FROM user WHERE role = 'MEMBRE'";
+            try {
+                pste = cnx.prepareStatement(req);
+                ResultSet rs = pste.executeQuery();
+                while (rs.next()) {
+                    User user = new User();
+                    user.setId(rs.getInt("id"));
+                    user.setName(rs.getString("nom"));
+                    user.setEmail(rs.getString("email"));
+                    //user.setPassword(rs.getString("password"));
+                    user.setTelephone(rs.getString("telephone"));
+                    user.setRole(Role.valueOf(rs.getString("role")));
+                    user.setEtat(rs.getBoolean("etat"));
+                    users.add(user);
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            } catch (IllegalArgumentException e) {
+                throw new RuntimeException(e);
             }
-        } catch (SQLException ex) {
+        }catch (SQLException ex) {
             Logger.getLogger(ServiceUser.class.getName()).log(Level.SEVERE, null, ex);
         }
         return users;
@@ -210,22 +218,29 @@ public class ServiceUser implements IServiceUser {
     @Override
     public List<User> getAllCoaches() {
         List<User> coaches = new ArrayList<>();
-        String req = "SELECT * FROM user WHERE role = 'COACH'";
-        try {
-            pste = cnx.prepareStatement(req);
-            ResultSet rs = pste.executeQuery();
-            while (rs.next()) {
-                User coach = new User();
-                coach.setId(rs.getInt("id"));
-                coach.setName(rs.getString("nom"));
-                coach.setEmail(rs.getString("email"));
-                // Removed the line that fetches the password
-                coach.setTelephone(rs.getString("telephone"));
-                coach.setRole(Role.valueOf(rs.getString("role")));
-                coach.setEtat(rs.getBoolean("etat"));
-                coaches.add(coach);
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgym", "root", "")) {
+
+            String req = "SELECT * FROM user WHERE role = 'COACH'";
+            try {
+                pste = cnx.prepareStatement(req);
+                ResultSet rs = pste.executeQuery();
+                while (rs.next()) {
+                    User coach = new User();
+                    coach.setId(rs.getInt("id"));
+                    coach.setName(rs.getString("nom"));
+                    coach.setEmail(rs.getString("email"));
+                    // Removed the line that fetches the password
+                    coach.setTelephone(rs.getString("telephone"));
+                    coach.setRole(Role.valueOf(rs.getString("role")));
+                    coach.setEtat(rs.getBoolean("etat"));
+                    coaches.add(coach);
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            } catch (IllegalArgumentException e) {
+                throw new RuntimeException(e);
             }
-        } catch (SQLException ex) {
+        }catch (SQLException ex) {
             Logger.getLogger(ServiceUser.class.getName()).log(Level.SEVERE, null, ex);
         }
         return coaches;

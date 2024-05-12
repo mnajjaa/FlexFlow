@@ -119,9 +119,9 @@ public class paimentController {
     public String getProduitMoinsVendu() {
         String produitMoinsVendu = null;
 
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgym", "root", "")) {
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgymweb", "root", "")) {
 //            String sql = "SELECT nom FROM produit ORDER BY prix * quantite ASC LIMIT 1";
-            String sql = "SELECT nom FROM produit ORDER BY quantiteVendues ASC LIMIT 1";
+            String sql = "SELECT nom FROM produit ORDER BY quantite_vendues ASC LIMIT 1";
 
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -145,11 +145,11 @@ public class paimentController {
     public String getProduitPlusAchete() {
         String produitPlusAchete = null;
         // Connexion à la base de données
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgym", "root", "")) {
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgymweb", "root", "")) {
 
             // Requête SQL pour obtenir le produit le plus acheté
 //            String sql = "SELECT nom FROM produit ORDER BY prix * quantite DESC LIMIT 1";
-            String sql = "SELECT nom FROM produit ORDER BY quantiteVendues DESC LIMIT 1";
+            String sql = "SELECT nom FROM produit ORDER BY quantite_vendues DESC LIMIT 1";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql);
                  ResultSet resultSet = preparedStatement.executeQuery()) {

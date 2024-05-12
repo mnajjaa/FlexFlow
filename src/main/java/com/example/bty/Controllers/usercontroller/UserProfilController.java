@@ -76,7 +76,7 @@ public class UserProfilController implements Initializable {
     public void updateImgBtn(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Image Files", ".png", ".jpg", "*.jpeg")
+                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg")
         );
         pathImage = fileChooser.showOpenDialog(null).getAbsolutePath();
         Image img = new Image("file:" + pathImage);

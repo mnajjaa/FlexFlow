@@ -44,7 +44,7 @@ public class DetailsEvenementWindow extends Stage {
 
     private static Map<Evenement, VBox> detailsMap = new HashMap<>();
     private static final String TWILIO_ACCOUNT_SID = "AC8802c2e9768e4876ace30c6beb9ba980";
-    private static final String TWILIO_AUTH_TOKEN = "3c4c76aba0311dc8cfa7be9e240fdd6e";
+    private static final String TWILIO_AUTH_TOKEN = "6ecb828326a724faf557c7f259f06ef5";
     private static final String TWILIO_PHONE_NUMBER = "+19497102963";
 
     public DetailsEvenementWindow() {

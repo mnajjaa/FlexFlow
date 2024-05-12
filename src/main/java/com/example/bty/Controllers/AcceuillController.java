@@ -253,14 +253,14 @@ public class AcceuillController {
         XYChart.Series<String, Number> series = new XYChart.Series<>();
         series.setName("Chiffre d'affaires par jour");
 
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgym", "root", "");
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgymweb", "root", "");
              Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery("SELECT dateCommande, SUM(montant) FROM commande GROUP BY dateCommande")) {
+             ResultSet resultSet = statement.executeQuery("SELECT date_commande, SUM(montant) FROM commande GROUP BY date_commande")) {
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
             while (resultSet.next()) {
-                Timestamp timestamp = resultSet.getTimestamp("dateCommande");
+                Timestamp timestamp = resultSet.getTimestamp("date_commande");
                 Date date = new Date(timestamp.getTime());
 
                 double montant = resultSet.getDouble("SUM(montant)");

@@ -16,7 +16,7 @@ public class Spammer extends Application {
 
     // Vos identifiants Twilio
     public static final String ACCOUNT_SID = "AC2d5006eb11366ebad1a5aef33f894e09";
-    public static final String AUTH_TOKEN = "2d174a7080f2e779b18596e409a016d7";
+    public static final String AUTH_TOKEN = "daa2cdd068933e4d5ca081d5340dbf9c";
 
     @Override
     public void start(Stage primaryStage) {

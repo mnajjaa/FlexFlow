@@ -156,14 +156,12 @@ public class DashboardProduit {
     }
 
 
-
-
     public String getProduitMoinsVendu() {
         String produitMoinsVendu = null;
 
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgym", "root", "")) {
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgymweb", "root", "")) {
 //            String sql = "SELECT nom FROM produit ORDER BY prix * quantite ASC LIMIT 1";
-            String sql = "SELECT nom FROM produit ORDER BY quantiteVendues ASC LIMIT 1";
+            String sql = "SELECT nom FROM produit ORDER BY quantite_vendues ASC LIMIT 1";
 
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -187,11 +185,11 @@ public class DashboardProduit {
     public String getProduitPlusAchete() {
         String produitPlusAchete = null;
         // Connexion à la base de données
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgym", "root", "")) {
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgymweb", "root", "")) {
 
             // Requête SQL pour obtenir le produit le plus acheté
 //            String sql = "SELECT nom FROM produit ORDER BY prix * quantite DESC LIMIT 1";
-            String sql = "SELECT nom FROM produit ORDER BY quantiteVendues DESC LIMIT 1";
+            String sql = "SELECT nom FROM produit ORDER BY quantite_vendues DESC LIMIT 1";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql);
                  ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -265,13 +263,13 @@ public class DashboardProduit {
              ResultSet resultSet = statement.executeQuery(query)) {
             while (resultSet.next()) {
                 Produit produit = new Produit();
-                produit.setIdProduit(resultSet.getInt("idProduit"));
+                produit.setIdProduit(resultSet.getInt("id"));
                 produit.setNom(resultSet.getString("nom"));
                 produit.setDescription(resultSet.getString("Description"));
                 produit.setPrix(resultSet.getDouble("Prix"));
                 produit.setType(resultSet.getString("Type"));
                 produit.setQuantite(resultSet.getInt("Quantite"));
-                produit.setQuantiteVendues(resultSet.getInt("quantiteVendues"));
+                produit.setQuantiteVendues(resultSet.getInt("quantite_vendues"));
                 produits.add(produit);
             }
         } catch (SQLException e) {

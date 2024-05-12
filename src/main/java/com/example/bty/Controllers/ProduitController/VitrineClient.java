@@ -54,7 +54,7 @@ import java.util.List;
 
 public class VitrineClient extends Application {
 
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/pidevgym";
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/pidevgymweb";
     private static final String DB_USERNAME = "root";
     private static final String DB_PASSWORD = "";
 
@@ -419,14 +419,14 @@ payer p = new payer();
 
             while (resultSet.next()) {
                 Produit produit = new Produit();
-                produit.setIdProduit(resultSet.getInt("idProduit"));
+                produit.setIdProduit(resultSet.getInt("id"));
                 produit.setNom(resultSet.getString("nom"));
                 produit.setDescription(resultSet.getString("description"));
                 produit.setPrix(resultSet.getDouble("prix"));
                 produit.setType(resultSet.getString("type"));
                 produit.setQuantite(resultSet.getInt("quantite"));
-                produit.setQuantiteVendues(resultSet.getInt("quantiteVendues"));
-                produit.setQuantiteDisponible(resultSet.getInt("quantite") - resultSet.getInt("quantiteVendues"));
+                produit.setQuantiteVendues(resultSet.getInt("quantite_vendues"));
+                produit.setQuantiteDisponible(resultSet.getInt("quantite") - resultSet.getInt("quantite_vendues"));
                 produit.setImage(resultSet.getBytes("image"));
                 produits.add(produit);
             }
@@ -448,14 +448,14 @@ payer p = new payer();
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
                     Produit produit = new Produit();
-                    produit.setIdProduit(resultSet.getInt("idProduit"));
+                    produit.setIdProduit(resultSet.getInt("id"));
                     produit.setNom(resultSet.getString("nom"));
                     produit.setDescription(resultSet.getString("description"));
                     produit.setPrix(resultSet.getDouble("prix"));
                     produit.setType(resultSet.getString("type"));
                     produit.setQuantite(resultSet.getInt("quantite"));
-                    produit.setQuantiteVendues(resultSet.getInt("quantiteVendues"));
-                    produit.setQuantiteDisponible(resultSet.getInt("quantite") - resultSet.getInt("quantiteVendues"));
+                    produit.setQuantiteVendues(resultSet.getInt("quantite_vendues"));
+                    produit.setQuantiteDisponible(resultSet.getInt("quantite") - resultSet.getInt("quantite_vendues"));
                     produit.setImage(resultSet.getBytes("image"));
 
                     produitsRecherches.add(produit);
@@ -711,7 +711,7 @@ payer p = new payer();
 
     private void sendConfirmationEmail(User loggedInUser, String nomFichierFacture, String userEmail) {
         final String username = "bahaeddinedridi1@gmail.com";
-        final String password = "inxx lwuu tsis yane";
+        final String password = "oman kvgj hdks njqc";
 
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
@@ -877,7 +877,7 @@ payer p = new payer();
 
     private void mettreAJourQuantiteProduit(int idProduit, int quantiteAchete) {
         try {
-            String query = "UPDATE produit SET Quantite = Quantite - ?, quantiteVendues = quantiteVendues + ? WHERE idProduit = ?";
+            String query = "UPDATE produit SET Quantite = Quantite - ?, quantite_vendues = quantite_vendues + ? WHERE id = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setInt(1, quantiteAchete);
                 statement.setInt(2, quantiteAchete);
@@ -896,13 +896,17 @@ payer p = new payer();
 
 
     private void enregistrerCommande(Commande commande) {
+        User loggedInUser = Session.getInstance().getLoggedInUser();
+
         try {
-            String query = "INSERT INTO commande (dateCommande, idProduit, nom, montant) VALUES (?, ?, ?, ?)";
+            String query = "INSERT INTO commande (date_commande, id_produit, nom, montant,nom_user) VALUES (?, ?, ?, ?, ?)";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
                 statement.setInt(2, commande.getIdProduit());
                 statement.setString(3, commande.getNomProduit());
                 statement.setDouble(4, commande.getMontantTotale());
+                statement.setString(5,  loggedInUser.getName());
+
                 statement.executeUpdate();
 
                 System.out.println("Commande enregistrée avec succès !");
