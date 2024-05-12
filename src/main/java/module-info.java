@@ -17,7 +17,7 @@ module com.example.bty {
     requires java.prefs;
     requires twilio;
     requires totp;
-
+    requires com.google.gson;
 
 
     opens com.example.bty to javafx.fxml;

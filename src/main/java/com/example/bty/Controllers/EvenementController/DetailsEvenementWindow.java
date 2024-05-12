@@ -165,7 +165,7 @@ public class DetailsEvenementWindow extends Stage {
         User loggedInUser = Session.getInstance().getLoggedInUser();
 
         if (loggedInUser != null) {
-            if (loggedInUser.getRole() == Role.MEMBRE) {
+            if (loggedInUser.getRoles() != null && loggedInUser.getRoles().length > 0 && loggedInUser.getRoles()[0] == Role.MEMBRE) {
                 if (!hasUserReservedEvent(loggedInUser.getId(), evenement.getNom())) {
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                     alert.setTitle("Confirmation de Reservation");

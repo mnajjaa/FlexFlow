@@ -31,6 +31,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.ResourceBundle;
@@ -116,6 +117,7 @@ public class LoginGymController implements Initializable {
 
             // Appeler la méthode de connexion avec les valeurs récupérées
             int i = serviceUser.Authentification(email, password);
+            System.out.println(i);
             if (i == 1) {
                 User user = serviceUser.findByEmail(email);
                 System.out.println(user.isMfaEnabled());
@@ -170,7 +172,7 @@ public class LoginGymController implements Initializable {
                     User user01 = serviceUser.findByEmail(email);
                     System.out.println(user01);
 
-                    if (user01.getRole().equals(Role.MEMBRE) || user01.getRole().equals(Role.COACH)) {
+                    if (Arrays.equals(user01.getRoles(), new Role[]{Role.MEMBRE}) || Arrays.equals(user01.getRoles(), new Role[]{Role.COACH})){
                         serviceUser.desactiverAcc(user01.getId());
                         errorTop_lbl.setText("Votre compte a été désactivé! Veuillez contacter l'administrateur.");
                         System.out.println("houni user member ou coach");
@@ -263,24 +265,24 @@ public class LoginGymController implements Initializable {
                 alert.setContentText("Email already exists. Please use a different email.");
                 alert.showAndWait();
             } else {
-                Role defaultRole = Role.MEMBRE; // Définissez le rôle par défaut ici
-                User u = new User(username, email, password, telehone, defaultRole, null);
+                Role[] defaultRole = new Role[]{Role.MEMBRE}; // Définissez le rôle par défaut ici
+                User u = new User(username, email, password, telehone, defaultRole,false, null);
                 // Appeler la méthode d'inscription avec les valeurs récupérées
                 serviceUser.register(u);
 
-                // vérification par email pour activer le compte de l'utilisateur après l'inscription
-                Validation v = new Validation();
-                Random rand = new Random();
-                v.setCode(rand.nextInt(9999));
-                v.setCreated_at(Instant.now());
-                v.setExpired_at(Instant.now().plusSeconds(600));
-                User u1 = serviceUser.findByEmail(email);
-                v.setUser(u1);
-                System.out.println(v);
-                serviceValidation.ajouterValidation(v);
-                String msg = "Your validation code is : " + v.getCode();
-                String subj = "Validation Code";
-                mailerService.sendMail(u.getEmail(), msg, subj);
+//                // vérification par email pour activer le compte de l'utilisateur après l'inscription
+//                Validation v = new Validation();
+//                Random rand = new Random();
+//                v.setCode(rand.nextInt(9999));
+//                v.setCreated_at(Instant.now());
+//                v.setExpired_at(Instant.now().plusSeconds(600));
+//                User u1 = serviceUser.findByEmail(email);
+//                v.setUser(u1);
+//                System.out.println(v);
+//                serviceValidation.ajouterValidation(v);
+//                String msg = "Your validation code is : " + v.getCode();
+//                String subj = "Validation Code";
+//                mailerService.sendMail(u.getEmail(), msg, subj);
                 //redirect to verification code page
                 try {
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("/verifCode.fxml"));
