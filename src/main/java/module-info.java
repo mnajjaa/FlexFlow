@@ -9,6 +9,7 @@ module com.example.bty {
     requires javafx.web;
     requires java.desktop;
     requires java.mail;
+    requires totp;
 
     opens com.example.bty to javafx.fxml;
     exports com.example.bty;

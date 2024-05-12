@@ -5,6 +5,7 @@ import com.example.bty.Entities.User;
 import com.example.bty.Services.IServiceUser;
 import com.example.bty.Services.MailerService;
 import com.example.bty.Services.ServiceUser;
+import com.example.bty.Services.TwoAuthenticationService;
 import com.example.bty.Utils.Session;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
@@ -13,6 +14,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -22,6 +24,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.scene.control.MenuButton;
@@ -170,16 +174,26 @@ public class DashboardController implements Initializable {
     public TableColumn membres_col_telephone;
     public TableColumn membres_col_action;
     public TableColumn membres_col_etat;
+    public Button enable_btn;
+    public ImageView QrCode;
+    public TextField CodeInput;
+    public Button verifCode_btn;
+    @FXML
+    public ToggleButton mfa_btn;
+    public RadioButton enable2fa;
+    public CheckBox checkMfa_btn;
+    public Label error2fa_lbl;
     Session session = Session.getInstance();
-    User u=session.getLoggedInUser();
-    User user ;
+    User u = session.getLoggedInUser();
+    User user;
     MailerService mailerService = new MailerService();
-    public static String pathImage ;
+    TwoAuthenticationService twoAuthenticationService = new TwoAuthenticationService();
+    public static String pathImage;
 
 
     // ****************  //  fin MEMBERS ****************
 
-    IServiceUser serviceUser00=new ServiceUser();
+    IServiceUser serviceUser00 = new ServiceUser();
 
     public void consulterMembers() {
         // Fetch all members
@@ -224,40 +238,42 @@ public class DashboardController implements Initializable {
         membres_col_etat.setCellValueFactory(new PropertyValueFactory<>("etat"));
         membres_col_action.setCellFactory(param -> new TableCell<User, Void>() {
             //**********
-                final FontAwesomeIconView deleteIcon = new FontAwesomeIconView(FontAwesomeIcon.TRASH);
-                final HBox pane = new HBox(deleteIcon);
-                {
-                    deleteIcon.getStyleClass().add("delete-icon");
+            final FontAwesomeIconView deleteIcon = new FontAwesomeIconView(FontAwesomeIcon.TRASH);
+            final HBox pane = new HBox(deleteIcon);
 
-                    deleteIcon.setOnMouseClicked(event -> {
-                        User selectedMember = (User) members_tableView.getSelectionModel().getSelectedItem();
-                        // Create a confirmation dialog
-                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                        alert.setTitle("Confirmation Dialog");
-                        alert.setHeaderText("Delete Coach");
-                        alert.setContentText("Are you sure you want to delete this coach?");
+            {
+                deleteIcon.getStyleClass().add("delete-icon");
 
-                        // Show the dialog and wait for user's response
-                        alert.showAndWait().ifPresent(response -> {
-                            if (response == ButtonType.OK) {
-                                // If user confirmed, delete the coach
-                                serviceUser00.delete(selectedMember.getId());
+                deleteIcon.setOnMouseClicked(event -> {
+                    User selectedMember = (User) members_tableView.getSelectionModel().getSelectedItem();
+                    // Create a confirmation dialog
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setTitle("Confirmation Dialog");
+                    alert.setHeaderText("Delete Coach");
+                    alert.setContentText("Are you sure you want to delete this coach?");
 
-                                // Refresh the table
-                                consulterMembers();
-                            }
-                        });
+                    // Show the dialog and wait for user's response
+                    alert.showAndWait().ifPresent(response -> {
+                        if (response == ButtonType.OK) {
+                            // If user confirmed, delete the coach
+                            serviceUser00.delete(selectedMember.getId());
+
+                            // Refresh the table
+                            consulterMembers();
+                        }
                     });
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(pane);
                 }
-                @Override
-                protected void updateItem(Void item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (empty) {
-                        setGraphic(null);
-                    } else {
-                        setGraphic(pane);
-                    }
-                }
+            }
 
             //**********
 
@@ -267,6 +283,7 @@ public class DashboardController implements Initializable {
         // Add fetched members to the table
         members_tableView.getItems().addAll(members);
     }
+
     public void membersSelect(MouseEvent mouseEvent) {
     }
 
@@ -277,6 +294,7 @@ public class DashboardController implements Initializable {
 
     public void membersUpdate(ActionEvent actionEvent) {
     }
+
     public void membersDelete(ActionEvent actionEvent) {
     }
 
@@ -321,7 +339,7 @@ public class DashboardController implements Initializable {
         });
         coaches_col_etat.setCellValueFactory(new PropertyValueFactory<>("etat"));
 
- //*************************************************************************************
+        //*************************************************************************************
         coaches_col_action.setCellFactory(param -> new TableCell<User, Void>() {
             final FontAwesomeIconView updateIcon = new FontAwesomeIconView(FontAwesomeIcon.PENCIL_SQUARE);
             final FontAwesomeIconView deleteIcon = new FontAwesomeIconView(FontAwesomeIcon.TRASH);
@@ -381,6 +399,7 @@ public class DashboardController implements Initializable {
                     });
                 });
             }
+
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
@@ -397,17 +416,36 @@ public class DashboardController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        Stage primaryStage = new Stage();
+        // fetch the status of the checkbox
+        if (session.getLoggedInUser().isMfaEnabled()) {
+            checkMfa_btn.setSelected(true);
+            checkMfa_btn.setText("ON");
+            checkMfa_btn.setFont(Font.font("System", FontWeight.BOLD, 12)); // Set the font to bold
+//            String secret = session.getLoggedInUser().getMfaSecret(); //generates a secret key for the user
+//            String qrCode = twoAuthenticationService.getQRBarcodeURL(secret); //generates url for the qr code
+//            Image img = new Image(qrCode);//convert the qr code to an image
+//            QrCode.setImage(img); //set the image in the image view
+        } else {
+            checkMfa_btn.setSelected(false);
+            checkMfa_btn.setText("OFF");
+            checkMfa_btn.setFont(Font.font("System", FontWeight.BOLD, 12)); // Set the font to bold
+        }
+        CodeInput.setVisible(false);
+        CodeInput.setManaged(false);
+        verifCode_btn.setVisible(false);
+        verifCode_btn.setManaged(false);
         this.user = session.getLoggedInUser();
-        System.out.println("Image"+user.getImage());
+        System.out.println("Image" + user.getImage());
 
         profil_name.setText(session.getLoggedInUser().getName());
         profil_email.setText(session.getLoggedInUser().getEmail());
         profil_telephone.setText(session.getLoggedInUser().getTelephone());
-        if(user.getImage()!=null){
-            Image img = new Image("file:"+user.getImage());
+        if (user.getImage() != null) {
+            Image img = new Image("file:" + user.getImage());
             profile_img.setImage(img);
         }
-        if(user.getRole().equals(Role.ADMIN)){
+        if (user.getRole().equals(Role.ADMIN)) {
             dashboard_Admin.setVisible(true);
             dashboard_Admin.setManaged(true);
 
@@ -415,28 +453,26 @@ public class DashboardController implements Initializable {
             dashboard_membre.setVisible(false);
             dashboard_membre.setManaged(false);
             usernameAdmin.setText(u.getName());
-           // consulterCoaches();
-        }
-        else if(user.getRole().equals(Role.COACH)){
+            // consulterCoaches();
+        } else if (user.getRole().equals(Role.COACH)) {
             dashboard_coach.setVisible(true);
             dashboard_Admin.setVisible(false);
             dashboard_membre.setVisible(false);
             usernameCoach.setText(u.getName());
-        }
-        else if(user.getRole().equals(Role.MEMBRE)){
+        } else if (user.getRole().equals(Role.MEMBRE)) {
             System.out.println("membre found");
             dashboard_membre.setVisible(true);
             dashboard_Admin.setVisible(false);
             dashboard_coach.setVisible(false);
             usernameMembre.setText(u.getName());
-        }
-        else{
+        } else {
             System.out.println("user not found");
         }
-     consulterMembers();
+        //consulterMembers();
     }
+
     public void switchForm(ActionEvent actionEvent) {
- if (actionEvent.getSource().equals(dashboard_btn)) {
+        if (actionEvent.getSource().equals(dashboard_btn)) {
             main_form.setVisible(true);
             members_form.setVisible(false);
             coaches_form.setVisible(false);
@@ -449,7 +485,7 @@ public class DashboardController implements Initializable {
             members_form.setVisible(false);
             coaches_form.setVisible(true);
         }
- //ne9ssa ***********
+        //ne9ssa ***********
     }
 
     public void logout(ActionEvent actionEvent) {
@@ -472,21 +508,21 @@ public class DashboardController implements Initializable {
             alert.setContentText("Email already exists. Please use a different email.");
             alert.showAndWait();
         } else {
-            List<Object> element=new ArrayList<>();
-            for(char c = 'a'; c <= 'z'; ++c){
+            List<Object> element = new ArrayList<>();
+            for (char c = 'a'; c <= 'z'; ++c) {
                 element.add(c);
             }
-            for(int i = 0; i < 10; ++i){
+            for (int i = 0; i < 10; ++i) {
                 element.add(i);
             }
-            Collections.shuffle(element,new Random());
+            Collections.shuffle(element, new Random());
             StringBuilder sb = new StringBuilder();
-            for(int i = 0; i < 8; i++){
+            for (int i = 0; i < 8; i++) {
                 sb.append(element.get(i).toString());
             }
             String password = sb.toString();
 
-            System.out.println("Password: "+password);
+            System.out.println("Password: " + password);
             String subject = "Welcome to our platform";
             String message = "<html>"
                     + "<body>"
@@ -498,10 +534,10 @@ public class DashboardController implements Initializable {
                     + "</body>"
                     + "</html>";
             String recipient = email;
-            mailerService.sendMail(recipient,message,subject);
+            mailerService.sendMail(recipient, message, subject);
             System.out.println("Email sent successfully!");
 
-            User newCoach = new User(name, email, password, telephone, defaultRole,true,null);
+            User newCoach = new User(name, email, password, telephone, defaultRole, true, null);
             // Appeler la méthode d'inscription avec les valeurs récupérées
             serviceUser00.register(newCoach);
             serviceUser00.ActiverOrDesactiver(newCoach.getId());
@@ -517,8 +553,8 @@ public class DashboardController implements Initializable {
     }
 
     public void coachesUpdateBtn(ActionEvent actionEvent) {
-    User coach=new User(id,coaches_name.getText(),coaches_email.getText(),coaches_telephone.getText(),Role.COACH,true,null);
-    serviceUser00.update(coach);
+        User coach = new User(id, coaches_name.getText(), coaches_email.getText(), coaches_telephone.getText(), Role.COACH, true, null);
+        serviceUser00.update(coach);
         coaches_list.setVisible(true);
         coaches_list.setManaged(true);
 
@@ -526,10 +562,13 @@ public class DashboardController implements Initializable {
         coaches_form.setManaged(false);
         consulterCoaches();
     }
+
     public void coachesDeleteBtn(ActionEvent actionEvent) {
     }
+
     public void coachesSelect(MouseEvent mouseEvent) {
     }
+
     public void goToDashbordAdmin(ActionEvent actionEvent) {
     }
 
@@ -540,8 +579,10 @@ public class DashboardController implements Initializable {
     public void goToMembre(ActionEvent actionEvent) {
         consulterMembers();
     }
+
     public void goToEvents(ActionEvent actionEvent) {
     }
+
     public void goToCoachs(ActionEvent actionEvent) {
     }
 
@@ -590,10 +631,10 @@ public class DashboardController implements Initializable {
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg")
         );
-        pathImage= fileChooser.showOpenDialog(null).getAbsolutePath();
-        Image img = new Image("file:"+pathImage);
+        pathImage = fileChooser.showOpenDialog(null).getAbsolutePath();
+        Image img = new Image("file:" + pathImage);
         profile_img.setImage(img);
-        serviceUser00.updateImage(pathImage,Session.getInstance().getLoggedInUser().getId());
+        serviceUser00.updateImage(pathImage, Session.getInstance().getLoggedInUser().getId());
     }
 
     public void updateCoachBtn(ActionEvent event) {
@@ -601,34 +642,34 @@ public class DashboardController implements Initializable {
 
 
     public void dali(ActionEvent event) {
+
         System.out.println("Hello dashbordX");
         user_profil.setManaged(true);
         user_profil.setVisible(true);
-       // coaches_list.setManaged(false);
-       // coaches_list.setVisible(false);
+        // coaches_list.setManaged(false);
+        // coaches_list.setVisible(false);
         coaches_form.setManaged(false);
         coaches_form.setVisible(false);
 
     }
 
     public void updatePassword(ActionEvent event) {
-       if(!Objects.equals(new_password.getText(), confirm_password.getText())){
-           Alert alert = new Alert(Alert.AlertType.WARNING);
-           alert.setTitle("Password");
-           alert.setHeaderText(null);
-           alert.setContentText("Password not match");
-           alert.showAndWait();
-       }
-       else{
-           serviceUser00.updatePassword(new_password.getText(),Session.getInstance().getLoggedInUser().getId());
-           Alert alert = new Alert(Alert.AlertType.INFORMATION);
-              alert.setTitle("Password");
-                alert.setHeaderText(null);
-                alert.setContentText("Password updated");
-                alert.showAndWait();
-                new_password.clear();
-                confirm_password.clear();
-       }
+        if (!Objects.equals(new_password.getText(), confirm_password.getText())) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Password");
+            alert.setHeaderText(null);
+            alert.setContentText("Password not match");
+            alert.showAndWait();
+        } else {
+            serviceUser00.updatePassword(new_password.getText(), Session.getInstance().getLoggedInUser().getId());
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Password");
+            alert.setHeaderText(null);
+            alert.setContentText("Password updated");
+            alert.showAndWait();
+            new_password.clear();
+            confirm_password.clear();
+        }
     }
 
     public void goToAddForm(ActionEvent event) {
@@ -644,4 +685,137 @@ public class DashboardController implements Initializable {
         user_profil.setVisible(false);
         user_profil.setManaged(false);
     }
+
+    //enable btn loula ***********
+    public void enable(ActionEvent event) {
+        String secret = twoAuthenticationService.generateSecretKey(); //generates a secret key for the user
+        //serviceUser00.setSecretKey(secret,Session.getInstance().getLoggedInUser().getId()); //save the secret key in the database
+        //serviceUser00.EnableOrDisablemfa(Session.getInstance().getLoggedInUser().getId()); //activate the two factor authentication
+        String qrCode = twoAuthenticationService.getQRBarcodeURL(secret); //generates url for the qr code
+        Image img = new Image(qrCode);//convert the qr code to an image
+        QrCode.setImage(img); //set the image in the image view
+
+        verifCode_btn.setVisible(true);//make the verify code button visible
+        verifCode_btn.setManaged(true);
+        CodeInput.setVisible(true);//make the code input field visible
+        CodeInput.setManaged(true);
+
+
+    }
+
+    public void verifCode(ActionEvent event) {
+        System.out.println("Code: " + CodeInput.getText());
+        System.out.println("User"+Session.getInstance().getLoggedInUser());
+        System.out.println("Secret: " + Session.getInstance().getLoggedInUser().getMfaSecret());
+        if (twoAuthenticationService.verifyCode(Session.getInstance().getLoggedInUser().getMfaSecret(), CodeInput.getText())) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Code");
+            alert.setHeaderText(null);
+            alert.setContentText("Code correct");
+            alert.showAndWait();
+
+
+            verifCode_btn.setVisible(false);
+            verifCode_btn.setManaged(false);
+            CodeInput.setVisible(false);
+            CodeInput.setManaged(false);
+            QrCode.setVisible(false);
+            QrCode.setManaged(false);
+            error2fa_lbl.setText("");
+        } else {
+            error2fa_lbl.setText("Code incorrect");
+        }
+
+
+    }
+
+
+//    public void enabled(ActionEvent event) {
+//        if (enable2fa.isSelected()) {
+//            if(Session.getInstance().getLoggedInUser().isMfaEnabled())
+//            {
+//                Alert alert = new Alert(Alert.AlertType.WARNING);
+//                alert.setTitle("Two Factor Authentication");
+//                alert.setHeaderText(null);
+//                alert.setContentText("Two Factor Authentication is already enabled");
+//                alert.showAndWait();
+//
+//            }
+//            else
+//            {
+//                System.out.println("Im here");
+//                String secret = twoAuthenticationService.generateSecretKey(); //generates a secret key for the user
+//                System.out.println("Secret: " + secret);
+//                String qrCode = twoAuthenticationService.getQRBarcodeURL(secret); //generates url for the qr code
+//                serviceUser00.setSecretKey(secret, Session.getInstance().getLoggedInUser().getId());
+//                serviceUser00.EnableOrDisablemfa(Session.getInstance().getLoggedInUser().getId());
+//                User user=serviceUser00.findByEmail(Session.getInstance().getLoggedInUser().getEmail());
+//                Session.getInstance().setLoggedInUser(user);
+//                Image img = new Image(qrCode);//convert the qr code to an image
+//                QrCode.setImage(img); //set the image in the image view
+//                verifCode_btn.setVisible(true);//make the verify code button visible
+//                verifCode_btn.setManaged(true);
+//                CodeInput.setVisible(true);//make the code input field visible
+//                CodeInput.setManaged(true);
+//            }
+//
+//        } else {
+//            serviceUser00.setSecretKey(null, Session.getInstance().getLoggedInUser().getId());
+//            serviceUser00.EnableOrDisablemfa(Session.getInstance().getLoggedInUser().getId());
+//            verifCode_btn.setVisible(false);
+//            verifCode_btn.setManaged(false);
+//            CodeInput.setVisible(false);
+//            CodeInput.setManaged(false);
+//        }
+//    }
+
+
+    public void checked(ActionEvent event) {
+        checkMfa_btn.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                checkMfa_btn.setText("ON");
+            } else {
+                checkMfa_btn.setText("OFF");
+            }
+            checkMfa_btn.setFont(Font.font("System", FontWeight.BOLD, 12)); // Set the font to bold
+
+        });
+        if (checkMfa_btn.isSelected()) {
+            if(Session.getInstance().getLoggedInUser().isMfaEnabled())
+            {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Two Factor Authentication");
+                alert.setHeaderText(null);
+                alert.setContentText("Two Factor Authentication is already enabled");
+                alert.showAndWait();
+            }
+            else
+            {
+                System.out.println("Im here");
+                String secret = twoAuthenticationService.generateSecretKey(); //generates a secret key for the user
+                System.out.println("Secret: " + secret);
+                String qrCode = twoAuthenticationService.getQRBarcodeURL(secret); //generates url for the qr code
+                serviceUser00.setSecretKey(secret, Session.getInstance().getLoggedInUser().getId());
+                serviceUser00.EnableOrDisablemfa(Session.getInstance().getLoggedInUser().getId());
+                User user=serviceUser00.findByEmail(Session.getInstance().getLoggedInUser().getEmail());
+                Session.getInstance().setLoggedInUser(user);
+                Image img = new Image(qrCode);//convert the qr code to an image
+                QrCode.setImage(img); //set the image in the image view
+                verifCode_btn.setVisible(true);//make the verify code button visible
+                verifCode_btn.setManaged(true);
+                CodeInput.setVisible(true);//make the code input field visible
+                CodeInput.setManaged(true);
+            }
+        } else {
+            serviceUser00.setSecretKey(null, Session.getInstance().getLoggedInUser().getId());
+            serviceUser00.EnableOrDisablemfa(Session.getInstance().getLoggedInUser().getId());
+            verifCode_btn.setVisible(false);
+            verifCode_btn.setManaged(false);
+            CodeInput.setVisible(false);
+            CodeInput.setManaged(false);
+        }
+    }
 }
+
+
+

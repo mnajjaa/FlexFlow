@@ -86,9 +86,7 @@ public class ServiceUser implements IServiceUser {
                     Role userRole = Role.valueOf(rs.getString("role"));
                     User u = new User(rs.getInt("id"), rs.getString("nom"), rs.getString("email"), rs.getString("password"), rs.getString("telephone"), userRole, rs.getString("image"));
 
-                    Session s = Session.getInstance();
-                    s.setLoggedInUser(u);
-                    System.out.println("The connected is " + s.getLoggedInUser().getRole());
+                    //System.out.println("The connected is " + s.getLoggedInUser().getRole());
                     return 1;
                 }
                 System.out.println("Invalid user credentials");
@@ -243,8 +241,8 @@ public class ServiceUser implements IServiceUser {
             pste.setString(1, email);
 
             ResultSet rs = pste.executeQuery();
-            while (rs.next()) {
-
+            while (rs.next())
+            {
                 U.setId(rs.getInt("id"));
                 U.setName(rs.getString("nom"));
                 U.setEmail(rs.getString("email"));
@@ -252,11 +250,15 @@ public class ServiceUser implements IServiceUser {
                 U.setPassword(rs.getString("password"));
                 U.setImage(rs.getString("image"));
                 U.setTelephone(rs.getString("telephone"));
+                U.setEtat(rs.getBoolean("etat"));
+                U.setMfaEnabled(rs.getBoolean("mfaEnabled"));
+                U.setMfaSecret(rs.getString("mfaSecret"));
                 //  U.setPassword(rs.getString("password"));
             }
         } catch (SQLException ex) {
             Logger.getLogger(ServiceUser.class.getName()).log(Level.SEVERE, null, ex);
         }
+        System.out.println( "Service "+"User "+U);
         return U;
     }
 
@@ -304,6 +306,8 @@ public class ServiceUser implements IServiceUser {
                 user.setPassword(rs.getString("password"));
                 user.setTelephone(rs.getString("telephone"));
                 user.setImage(rs.getString("image"));
+                user.setMfaEnabled(rs.getBoolean("mfaEnabled"));
+                user.setMfaSecret(rs.getString("mfaSecret"));
                 return user;
             }
         } catch (SQLException ex) {
@@ -311,5 +315,32 @@ public class ServiceUser implements IServiceUser {
         }
 
       return user;
+    }
+
+
+    //** Set the secret key for multi-factor authentication
+    @Override
+    public void setSecretKey(String secret, int id) {
+        String req = "UPDATE user SET mfaSecret  = ? WHERE id = ?";
+        try {
+            pste = cnx.prepareStatement(req);
+            pste.setString(1, secret);
+            pste.setInt(2, id);
+            pste.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(ServiceUser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+//** Enable or disable multi-factor authentication
+    @Override
+    public void EnableOrDisablemfa(int id) {
+        String req = "UPDATE user SET mfaEnabled = !mfaEnabled WHERE id = ?";
+        try {
+            pste = cnx.prepareStatement(req);
+            pste.setInt(1, id);
+            pste.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(ServiceUser.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

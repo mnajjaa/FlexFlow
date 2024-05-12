@@ -5,6 +5,7 @@ import com.example.bty.Entities.User;
 import com.example.bty.Entities.Validation;
 import com.example.bty.LoginView;
 import com.example.bty.Services.*;
+import com.example.bty.Utils.Session;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
@@ -114,19 +115,41 @@ public class LoginGymController implements Initializable {
             // Appeler la méthode de connexion avec les valeurs récupérées
             int i = serviceUser.Authentification(email, password);
             if (i == 1) {
-                System.out.println("login success");
-                FXMLLoader dashboardLoader = new FXMLLoader(getClass().getResource("/dashboardX.fxml"));
-                Parent dashboardRoot = dashboardLoader.load();
-                Scene dashboardScene = new Scene(dashboardRoot);
+                User user = serviceUser.findByEmail(email);
+                System.out.println(user.isMfaEnabled());
+                if (user.isMfaEnabled())
+                {
 
-                // Accéder au contrôleur du tableau de bord si nécessaire
-                // DashboardController dashboardController = dashboardLoader.getController();
+                    System.out.println("MFA enabled");
+                    // Redirect to the MFA page
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/mfa.fxml"));
+                    Parent root = loader.load();
+                    Scene scene = new Scene(root);
+                    Stage stage = (Stage) si_email.getScene().getWindow();
+                    stage.setScene(scene);
+                    stage.show();
+                    mfaController mfaController = loader.getController();
+                    mfaController.setUser(user,si_email);
 
-                // Obtenir la scène principale et changer la scène actuelle
-                Stage primaryStage = (Stage) si_email.getScene().getWindow();
-                primaryStage.setScene(dashboardScene);
-                primaryStage.setTitle("Dashboard");
-            } else if (i == 2) {
+                }
+                else {
+                    System.out.println("login success");
+                    Session s = Session.getInstance();
+                    s.setLoggedInUser(user);
+                    FXMLLoader dashboardLoader = new FXMLLoader(getClass().getResource("/dashboardX.fxml"));
+                    Parent dashboardRoot = dashboardLoader.load();
+                    Scene dashboardScene = new Scene(dashboardRoot);
+
+                    // Accéder au contrôleur du tableau de bord si nécessaire
+                    // DashboardController dashboardController = dashboardLoader.getController();
+
+                    // Obtenir la scène principale et changer la scène actuelle
+                    Stage primaryStage = (Stage) si_email.getScene().getWindow();
+                    primaryStage.setScene(dashboardScene);
+                    primaryStage.setTitle("Dashboard");
+                }
+            }
+            else if (i == 2) {
                 System.out.println("login failed");
                 errorTop_lbl.setText("Votre compte est désactivé !");
                 //lien
