@@ -309,16 +309,16 @@ public class consulter extends Application {
              ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
                 Cours cr = new Cours();
-                cr.setId(resultSet.getInt("id_cour"));
-                cr.setNom(resultSet.getString("nomCour") + "    ");
-                cr.setCategorie(resultSet.getString("Categorie") + "    ");
-                cr.setCible(resultSet.getString("Cible") + "    ");
-                cr.setDuree(resultSet.getString("Duree") + "    ");
-                cr.setIntensite(resultSet.getString("Intensite") + "    ");
-                cr.setObjectif(resultSet.getString("Objectif") + "    ");
+                cr.setId(resultSet.getInt("id"));
+                cr.setNom(resultSet.getString("nom_cour") + "    ");
+                cr.setCategorie(resultSet.getString("categorie") + "    ");
+                cr.setCible(resultSet.getString("cible") + "    ");
+                cr.setDuree(resultSet.getString("duree") + "    ");
+                cr.setIntensite(resultSet.getString("intensite") + "    ");
+                cr.setObjectif(resultSet.getString("objectif") + "    ");
                 cr.setEtat(resultSet.getBoolean("etat"));
-                cr.setCapacite(resultSet.getInt("Capacite"));
-                int coachId = resultSet.getInt("id_user");
+                cr.setCapacite(resultSet.getInt("capacite"));
+                int coachId = resultSet.getInt("user_id");
 
                 String coachName = null;
                 try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT nom FROM user WHERE id = ?")) {
@@ -367,7 +367,7 @@ public class consulter extends Application {
         saveButton.setOnAction(event -> {
             // Code pour sauvegarder les modifications dans la base de données
             try (PreparedStatement statement = connection.prepareStatement(
-                         "UPDATE cours SET nomCour = ?, Duree = ?, Intensite = ?, Cible = ?, Categorie = ?, Objectif = ?, etat = ?, capacite = ?, id_user = ? WHERE id_cour = ?")) {
+                    "UPDATE cours SET nom_cour = ?, duree = ?, intensite = ?, cible = ?, categorie = ?, objectif = ?, etat = ?, capacite = ?, user_id = ? WHERE id = ?")) {
 
                 statement.setString(1, nomField.getText());
                 statement.setString(2, dureeField.getText());
@@ -450,7 +450,7 @@ public class consulter extends Application {
             }
 
             // Utilisez un bloc try-with-resources pour gérer les ressources JDBC
-            try (PreparedStatement statement = connection.prepareStatement("DELETE FROM cours WHERE id_cour = ?")) {
+            try (PreparedStatement statement = connection.prepareStatement("DELETE FROM cours WHERE id = ?")) {
                 statement.setInt(1, cours.getId());
                 int rowsAffected = statement.executeUpdate();
 

@@ -4,34 +4,19 @@ import com.example.bty.Entities.Role;
 import com.example.bty.Entities.User;
 import com.example.bty.Utils.ConnexionDB;
 import com.example.bty.Utils.Session;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
-import javafx.application.Application;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import org.mindrot.jbcrypt.BCrypt;
 
-import java.net.URL;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ServiceUser implements IServiceUser{
+public class ServiceUser implements IServiceUser {
 
 
     private PreparedStatement pste;
     Connection cnx = ConnexionDB.getInstance().getConnexion();
-
-
 
 
     //** Register a new user
@@ -43,8 +28,8 @@ public class ServiceUser implements IServiceUser{
             pste.setString(1, u.getName());
             pste.setString(2, u.getEmail());
             pste.setString(3, BCrypt.hashpw(u.getPassword(), BCrypt.gensalt()));
-            pste.setString(4,u.getTelephone());
-            pste.setString(5,u.getRole().toString());
+            pste.setString(4, u.getTelephone());
+            pste.setString(5, u.getRole().toString());
 
 
             pste.executeUpdate();
@@ -76,7 +61,7 @@ public class ServiceUser implements IServiceUser{
 
     //** Authenticate a user
     @Override
-    public int Authentification(String email,String password) {
+    public int Authentification(String email, String password) {
         int status = 0;
         try {
             String req = "select * from user where email=? ";
@@ -87,24 +72,21 @@ public class ServiceUser implements IServiceUser{
             while (rs.next()) //l9a une ligne fi wosset lbase de donnee
             {
                 //User u = this.findByEmail(email);
-                if(rs.getString("etat").equals("0"))
-                {
+                if (rs.getString("etat").equals("0")) {
 
-                    return 2 ;
+                    return 2;
                 }
 
-                if( BCrypt.checkpw(password, rs.getString("password"))) {
+                if (BCrypt.checkpw(password, rs.getString("password"))) {
                     System.out.println("Im here");
                     //if logged in successfully yemchy yasnaalou session w y7ottou fiha les informations mte3ou
 
                     //explain : f session bch y7ott le vrai role du user connecté khater 9bal ken y7ott role.ADMIN ou role.COACH meme si
                     // user connecté est un coach ou un membre
                     Role userRole = Role.valueOf(rs.getString("role"));
-                    User u =new User(rs.getInt("id"),rs.getString("nom"),rs.getString("email"),rs.getString("password"),rs.getString("telephone"),userRole,rs.getString("image"));
+                    User u = new User(rs.getInt("id"), rs.getString("nom"), rs.getString("email"), rs.getString("password"), rs.getString("telephone"), userRole, rs.getString("image"));
 
-                    Session s=Session.getInstance();
-                    s.setLoggedInUser(u);
-                    System.out.println("The connected is "+s.getLoggedInUser().getRole());
+                    //System.out.println("The connected is " + s.getLoggedInUser().getRole());
                     return 1;
                 }
                 System.out.println("Invalid user credentials");
@@ -119,10 +101,9 @@ public class ServiceUser implements IServiceUser{
     public void ActiverOrDesactiver(int id) {
 
         //verifier si l'utilisateur connecté est un admin
-        Session s=Session.getInstance();
+        Session s = Session.getInstance();
         User u = s.getLoggedInUser();
-        if(u.getRole() != Role.ADMIN)
-        {
+        if (u.getRole() != Role.ADMIN) {
             System.out.println("You are not allowed to perform this action");
             return;
         }
@@ -138,6 +119,19 @@ public class ServiceUser implements IServiceUser{
         }
     }
 
+    @Override
+    public void desactiverAcc(int id) {
+
+
+        String req = "UPDATE user SET etat =!etat  WHERE id = ?";
+        try {
+            pste = cnx.prepareStatement(req);
+            pste.setInt(1, id);
+            pste.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(ServiceUser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
 
     //** Update user information
@@ -166,10 +160,9 @@ public class ServiceUser implements IServiceUser{
     @Override
     public void delete(int id) {
         //verifier si l'utilisateur connecté est un admin
-        Session s=Session.getInstance();
+        Session s = Session.getInstance();
         User u = s.getLoggedInUser();
-        if(u.getRole() != Role.ADMIN)
-        {
+        if (u.getRole() != Role.ADMIN) {
             System.out.println("You are not allowed to perform this action");
             return;
         }
@@ -192,22 +185,30 @@ public class ServiceUser implements IServiceUser{
     @Override
     public List<User> getAllMembers() {
         List<User> users = new ArrayList<>();
-        String req = "SELECT * FROM user WHERE role = 'MEMBRE'";
-        try {
-            pste = cnx.prepareStatement(req);
-            ResultSet rs = pste.executeQuery();
-            while (rs.next()) {
-                User user = new User();
-                user.setId(rs.getInt("id"));
-                user.setName(rs.getString("nom"));
-                user.setEmail(rs.getString("email"));
-                //user.setPassword(rs.getString("password"));
-                user.setTelephone(rs.getString("telephone"));
-                user.setRole(Role.valueOf(rs.getString("role")));
-                user.setEtat(rs.getBoolean("etat"));
-                users.add(user);
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgym", "root", "")) {
+
+
+            String req = "SELECT * FROM user WHERE role = 'MEMBRE'";
+            try {
+                pste = cnx.prepareStatement(req);
+                ResultSet rs = pste.executeQuery();
+                while (rs.next()) {
+                    User user = new User();
+                    user.setId(rs.getInt("id"));
+                    user.setName(rs.getString("nom"));
+                    user.setEmail(rs.getString("email"));
+                    //user.setPassword(rs.getString("password"));
+                    user.setTelephone(rs.getString("telephone"));
+                    user.setRole(Role.valueOf(rs.getString("role")));
+                    user.setEtat(rs.getBoolean("etat"));
+                    users.add(user);
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            } catch (IllegalArgumentException e) {
+                throw new RuntimeException(e);
             }
-        } catch (SQLException ex) {
+        }catch (SQLException ex) {
             Logger.getLogger(ServiceUser.class.getName()).log(Level.SEVERE, null, ex);
         }
         return users;
@@ -217,22 +218,29 @@ public class ServiceUser implements IServiceUser{
     @Override
     public List<User> getAllCoaches() {
         List<User> coaches = new ArrayList<>();
-        String req = "SELECT * FROM user WHERE role = 'COACH'";
-        try {
-            pste = cnx.prepareStatement(req);
-            ResultSet rs = pste.executeQuery();
-            while (rs.next()) {
-                User coach = new User();
-                coach.setId(rs.getInt("id"));
-                coach.setName(rs.getString("nom"));
-                coach.setEmail(rs.getString("email"));
-                // Removed the line that fetches the password
-                coach.setTelephone(rs.getString("telephone"));
-                coach.setRole(Role.valueOf(rs.getString("role")));
-                coach.setEtat(rs.getBoolean("etat"));
-                coaches.add(coach);
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgym", "root", "")) {
+
+            String req = "SELECT * FROM user WHERE role = 'COACH'";
+            try {
+                pste = cnx.prepareStatement(req);
+                ResultSet rs = pste.executeQuery();
+                while (rs.next()) {
+                    User coach = new User();
+                    coach.setId(rs.getInt("id"));
+                    coach.setName(rs.getString("nom"));
+                    coach.setEmail(rs.getString("email"));
+                    // Removed the line that fetches the password
+                    coach.setTelephone(rs.getString("telephone"));
+                    coach.setRole(Role.valueOf(rs.getString("role")));
+                    coach.setEtat(rs.getBoolean("etat"));
+                    coaches.add(coach);
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            } catch (IllegalArgumentException e) {
+                throw new RuntimeException(e);
             }
-        } catch (SQLException ex) {
+        }catch (SQLException ex) {
             Logger.getLogger(ServiceUser.class.getName()).log(Level.SEVERE, null, ex);
         }
         return coaches;
@@ -240,29 +248,114 @@ public class ServiceUser implements IServiceUser{
 
 
     // Find a user by email
-    public User findByEmail(String email) throws SQLException {
+    @Override
+    public User findByEmail(String email) {
         User U = new User();
         String req = "SELECT * FROM user WHERE email = ?";
-        try (PreparedStatement pste=cnx.prepareStatement(req)) {
+        try (PreparedStatement pste = cnx.prepareStatement(req)) {
             pste.setString(1, email);
 
-
-            pste.setString(1,email);
-            ResultSet rs = pste.executeQuery(req);
-
-            while (rs.next()) {
-
+            ResultSet rs = pste.executeQuery();
+            while (rs.next())
+            {
                 U.setId(rs.getInt("id"));
                 U.setName(rs.getString("nom"));
                 U.setEmail(rs.getString("email"));
+                U.setRole(Role.valueOf(rs.getString("role")));
                 U.setPassword(rs.getString("password"));
-
+                U.setImage(rs.getString("image"));
+                U.setTelephone(rs.getString("telephone"));
+                U.setEtat(rs.getBoolean("etat"));
+                U.setMfaEnabled(rs.getBoolean("mfaEnabled"));
+                U.setMfaSecret(rs.getString("mfaSecret"));
+                //  U.setPassword(rs.getString("password"));
             }
         } catch (SQLException ex) {
             Logger.getLogger(ServiceUser.class.getName()).log(Level.SEVERE, null, ex);
         }
+        System.out.println( "Service "+"User "+U);
         return U;
     }
 
+    @Override
+    public void updateImage(String image, int id) {
+        String req = "UPDATE user SET image = ? WHERE id = ?";
+        try {
+            pste = cnx.prepareStatement(req);
+            pste.setString(1, image);
+            pste.setInt(2, id);
+            pste.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(ServiceUser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
+    @Override
+    public void updatePassword(String text, Integer id) {
+        String req = "UPDATE user SET password = ? WHERE id = ?";
+        try {
+            pste = cnx.prepareStatement(req);
+            pste.setString(1, BCrypt.hashpw(text, BCrypt.gensalt()));
+            pste.setInt(2, id);
+            pste.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(ServiceUser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Override
+    public User findByID(int idUser) {
+        User user = new User();
+        String req = "SELECT * FROM user WHERE id = ?";
+        try {
+            pste = cnx.prepareStatement(req);
+            pste.setInt(1, idUser);
+            ResultSet rs = pste.executeQuery();
+            while (rs.next()) {
+
+                user.setId(rs.getInt("id"));
+                user.setName(rs.getString("nom"));
+                user.setEmail(rs.getString("email"));
+                user.setRole(Role.valueOf(rs.getString("role")));
+                user.setEtat(rs.getBoolean("etat"));
+                user.setPassword(rs.getString("password"));
+                user.setTelephone(rs.getString("telephone"));
+                user.setImage(rs.getString("image"));
+                user.setMfaEnabled(rs.getBoolean("mfaEnabled"));
+                user.setMfaSecret(rs.getString("mfaSecret"));
+                return user;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ServiceUser.class.getName());
+        }
+
+        return user;
+    }
+
+
+    //** Set the secret key for multi-factor authentication
+    @Override
+    public void setSecretKey(String secret, int id) {
+        String req = "UPDATE user SET mfaSecret  = ? WHERE id = ?";
+        try {
+            pste = cnx.prepareStatement(req);
+            pste.setString(1, secret);
+            pste.setInt(2, id);
+            pste.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(ServiceUser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    //** Enable or disable multi-factor authentication
+    @Override
+    public void EnableOrDisablemfa(int id) {
+        String req = "UPDATE user SET mfaEnabled = !mfaEnabled WHERE id = ?";
+        try {
+            pste = cnx.prepareStatement(req);
+            pste.setInt(1, id);
+            pste.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(ServiceUser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

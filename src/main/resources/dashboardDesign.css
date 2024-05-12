@@ -8,6 +8,50 @@ and open the template in the editor.
     @author MarcoMan
  * Subscribe our YouTube Channel: https://www.youtube.com/@marcomanchannel
 */
+/* styles.css */
+
+/* CSS pour le texte de l'événement le plus demandé */
+/* styles.css */
+/* dashboardDesign.css */
+/* style.css */
+#offreChart .chart-bar {
+    /* Fond noir pour le graphique à barres */
+    -fx-background-color: #E9967A	;
+}
+
+#offreChart .chart-bar .bar {
+    /* Couleur blanche pour les barres */
+    -fx-bar-fill: #E9967A	;
+}
+
+
+.bold-text {
+    -fx-font-weight: bold;
+    -fx-font-family: 'Arial';
+    -fx-font-size: 24px;
+    -fx-fill: #2c3e50; /* Couleur du texte en noir */
+    -fx-text-alignment: center; /* Alignement du texte au centre */
+    -fx-padding: 5 10 5 10; /* Ajoute du padding autour du texte */
+    -fx-background-color: #f5f5f5; /* Couleur de fond */
+    -fx-border-color: #dddddd; /* Couleur de la bordure */
+    -fx-border-width: 2px; /* Largeur de la bordure */
+    -fx-border-radius: 10; /* Rayon de la bordure arrondie */
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 9, 0, 0, 5); /* Ombre portée */
+}
+
+
+.mostRequestedEventText {
+    -fx-font-size: 18px;
+    -fx-fill: #333333; /* Couleur du texte */
+    -fx-font-weight: bold;
+}
+
+/* CSS pour le texte du cours le plus liked */
+.mostLikedcours {
+    -fx-font-size: 18px;
+    -fx-fill: #007BFF; /* Couleur du texte */
+    -fx-font-weight: bold;
+}
 
 .card-container1 {
     -fx-background-color: pink;
@@ -63,10 +107,18 @@ and open the template in the editor.
 }
 
 .nav1{
+     -fx-background-color: linear-gradient(to top right, #7AA95C , #7AA95C);
+     -fx-border-radius: 10;
+     -fx-background-color: linear-gradient(to top right, #2c2c57, #2c3e50);
+ }
+
+.nav2{
     -fx-background-color: linear-gradient(to top right, #7AA95C , #7AA95C);
     -fx-border-radius: 10;
-    -fx-background-color: linear-gradient(to top right, #2c2c57, #2c3e50);
+
 }
+
+
 .nav-border{
     -fx-border-color: #000;
     -fx-border-width: 0px .2px .4px .4px;
@@ -116,7 +168,7 @@ and open the template in the editor.
 
 
 .white-bg{
-    -fx-background-color: white ;
+    -fx-background-color: white	;
     -fx-background-radius: 2%; /* Applique un rayon de 50% pour rendre le fond circulaire */
     -fx-border-radius:2%;
     -fx-border-color: #2c3e50;
@@ -124,7 +176,7 @@ and open the template in the editor.
 }
 
 .bg{
-    -fx-background-color: white ;
+    -fx-background-color: white	;
     -fx-background-radius: 6%; /* Applique un rayon de 50% pour rendre le fond circulaire */
 
 }
@@ -137,25 +189,26 @@ and open the template in the editor.
     -fx-border-radius: 15;
     -fx-background-radius:15;
     -fx-border-color:#2c3e50; /* Couleur de bordure bleue légère */
-    -fx-padding: 10;
-    fx-translate-y: -15;
+    -fx-padding: 12;
+    -fx-translate-y: -10;
 }
 
 .report_text {
     -fx-fill: #2c3e50; /* Texte blanc */
-    -fx-font-size: 16;
+    -fx-font-size: 15;
     -fx-font-weight: bold;
 }
 
 .report_label {
     -fx-text-fill: #2c3e50; /* Texte blanc */
-    -fx-font-size: 14;
+    -fx-font-size: 13;
 }
 
 .report_button {
     -fx-background-color: #2c3e50; /* Blanc pour le bouton */
     -fx-text-fill: #ffffff; /* Texte bleu pour le bouton */
     -fx-font-weight: bold;
+    -fx-min-width: 30;
 }
 
 
@@ -163,7 +216,7 @@ and open the template in the editor.
 
 
 .white-bg1{
-    -fx-background-color: white ;
+    -fx-background-color: white	;
     -fx-background-radius: 6px;
 
 }
@@ -242,28 +295,224 @@ and open the template in the editor.
 
 
 
-
-/* Style du champ de texte */
-.text-field {
-    -fx-background-color: #f0f0f0; /* Couleur de fond */
-    -fx-border-color: #ccc; /* Couleur de la bordure */
-    -fx-border-width: 1px; /* Largeur de la bordure */
-    -fx-border-radius: 3px; /* Rayon de la bordure */
-    -fx-padding: 5px; /* Espacement interne */
-    -fx-font-size: 14px; /* Taille de la police */
+/* Styles for the LineChart */
+.chart {
+    -fx-background-color: #ffffff; /* Couleur de fond du graphique */
 }
 
-/* Style du texte de l'invite */
-.text-field .text {
-    -fx-fill: #888; /* Couleur du texte de l'invite */
+/* Styles for the axes */
+.chart-axis {
+    -fx-tick-mark-visible: false; /* Masquer les marques de graduation sur les axes */
+    -fx-label-text-fill: #333333; /* Couleur du texte des axes */
 }
 
-/* Style du texte saisi */
-.text-field .text-input {
-    -fx-text-fill: #333; /* Couleur du texte saisi */
+/* Styles for the data series */
+.series0 {
+    -fx-stroke: #A0522D; /* Couleur de la ligne de la série */
+    -fx-background-color: #A0522D, white; /* Couleur de la zone en dessous de la ligne */
 }
 
-/* Style du curseur */
-.text-field .caret {
-    -fx-background-color: #333; /* Couleur du curseur */
+/* Styles for the legend */
+.chart-legend {
+    -fx-text-fill: #333333; /* Couleur du texte de la légende */
 }
+
+/* Styles for the chart title */
+.chart-title {
+    -fx-text-fill: #333333; /* Couleur du texte du titre du graphique */
+    -fx-font-size: 16px; /* Taille de la police du titre du graphique */
+}
+
+
+/* partie mta3 ibtihel : */
+
+
+
+.border-pane{
+    -fx-border-color: #000;
+    -fx-border-width: .4px;
+}
+
+.top-form{
+    -fx-background-color: #fff;
+    -fx-border-color: #000;
+    -fx-border-width: .4px .4px .8px .4px;
+}
+.semi-top{
+    -fx-background-color: #ddd;
+    -fx-border-color: #000;
+    -fx-border-width: .4px .4px .4px .4px;
+}
+.close-btn{
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+}
+.close-btn:hover{
+    -fx-background-color: #f85757;
+}
+
+.minimize-btn{
+    -fx-background-color: transparent;
+    -fx-cursor:hand;
+}
+.minimize-btn:hover{
+    -fx-background-color: #ddd;
+}
+
+.nav{
+    -fx-background-color: linear-gradient(to top right, #2c3e50, #2c2c57);
+}
+.nav-border{
+    -fx-border-color: #000;
+    -fx-border-width: 0px .2px .4px .4px;
+}
+.nav-vbox{
+    -fx-background-color: linear-gradient(to top right,#2c3e50, #2c2c57);
+    -fx-border-color: #000;
+    -fx-border-width: 0px .2px .4px .4px;
+}
+.nav-btn{
+    -fx-background-color: transparent;
+    -fx-cursor:hand;
+    -fx-border-color: #fff;
+    -fx-text-fill: #fff;
+    -fx-border-width: .6px;
+    -fx-font-size: 14px;
+    -fx-font-family: Arial;
+}
+.nav-btn:hover{
+    -fx-background-color: #fff;
+    -fx-text-fill: #000;
+}
+
+.logout{
+    -fx-background-color: #2c3e50;
+    -fx-cursor:hand;
+    -fx-background-radius: 50px;
+    -fx-padding: 5px;
+}
+.logout:hover{
+    -fx-background-color: #5041a7;
+}
+
+.shadow{
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 8,0,0,0);
+}
+
+.white-bg{
+    -fx-background-color: #fff;
+    -fx-background-radius: 6px;
+}
+
+.textfield{
+    -fx-background-color: #efefef;
+    -fx-background-radius: 4px;
+    -fx-border-color: linear-gradient(to top right, #2c3e50, #2c2c57);
+    -fx-border-radius: 4px;
+    -fx-border-width: .5px;
+    -fx-font-family: Tahoma;
+}
+.textfield:focused{
+    -fx-background-color: #fff;
+    -fx-border-width: 1px;
+}
+
+.btn{
+    -fx-background-color: #7AA95C;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+    -fx-text-fill: #fff;
+    -fx-font-size: 14px;
+}
+.btn:hover{
+    -fx-background-color: #2c3e50;
+}
+
+.table-view{
+    -fx-background-color: transparent;
+    -fx-border-color: linear-gradient(to top right,  #2c3e50, #2c2c57);
+    -fx-border-radius: 8px;
+    -fx-border-width: 2px;
+    -fx-padding: 0px;
+}
+.table-view .table-column{
+    -fx-alignment: CENTER;
+}
+.table-view .column-header-background{
+    -fx-background-color: linear-gradient(to top right, #2c3e50, #2c2c57);
+    -fx-background-radius: 8px 8px 0px 0px;
+}
+.table-view .column-header, .filter{
+    -fx-background-color: transparent;
+    -fx-size: 50px;
+}
+.table-view .column-header .label{
+    -fx-text-fill: #fff;
+    -fx-font-family: Arial;
+}
+
+/* Report Bug/Suggestion */
+.report_container {
+    -fx-background-color: #EEFFEE;
+    -fx-background-radius: 10;
+    -fx-alignment: center;
+    -fx-spacing: 10;
+    -fx-padding: 10 0 10 0;
+}
+
+.report_container Text {
+    -fx-font-weight: bold;
+    -fx-fill: #7AA95C;
+}
+
+.report_container Label {
+    -fx-text-alignment: center;
+    -fx-wrap-text: true;
+}
+
+.report_container Button {
+    -fx-pref-width: 80;
+    -fx-background-color: #7AA95C;
+    -fx-text-fill: #FFFFFF;
+}
+
+.report_container Button:hover {
+    -fx-cursor: hand;
+}
+
+.report_container Button FontAwesomeIconView {
+    -fx-fill: #FFFFFF;
+}
+
+.update-icon {
+    -fx-fill: green; /* Change the color of the update icon to green */
+}
+
+.delete-icon {
+    -fx-fill: red; /* Change the color of the delete icon to red */
+}
+
+.label-active {
+    -fx-text-fill: green;
+    -fx-font-size: 14px;
+
+}
+
+.label-inactive {
+    -fx-text-fill: red;
+    -fx-font-size: 14px;
+}
+
+.border-radius{
+    -fx-background-radius: 10;
+}
+
+
+
+
+
+
+
+
+
+

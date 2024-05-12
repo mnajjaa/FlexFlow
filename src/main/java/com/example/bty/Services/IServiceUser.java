@@ -14,5 +14,16 @@ public interface IServiceUser {
     public List<User> getAllMembers();
     public List<User> getAllCoaches();
 
+    public User findByEmail(String email);
+    public void desactiverAcc(int id);
 
+
+
+    void updateImage(String image, int id);
+
+    void updatePassword(String text, Integer id);
+
+    User findByID(int idUser);
+    public void setSecretKey(String secret, int id);
+    public void EnableOrDisablemfa(int id);
 }

@@ -12,6 +12,54 @@ public class User {
     private Role role;
     private  boolean etat =false;    // 0 = desactiver , 1 = activer
     private String image;
+    private boolean mfaEnabled ;//si l'utilisateur a activé l'authentification à deux facteurs
+    private String mfaSecret ;//la clé secrète de l'authentification à deux facteurs
+
+    public boolean isMfaEnabled() {
+        return mfaEnabled;
+    }
+
+    public void setMfaEnabled(boolean mfaEnabled) {
+        this.mfaEnabled = mfaEnabled;
+    }
+
+    public String getMfaSecret() {
+        return mfaSecret;
+    }
+
+    public void setMfaSecret(String mfaSecret) {
+        this.mfaSecret = mfaSecret;
+    }
+
+    public User(int id, String name, String email, String telephone, Role role, boolean b, String image) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.telephone = telephone;
+        this.role = role;
+        this.etat = b;
+        this.image = image;
+
+    }
+    public User(int id, String name, String email, String telephone, boolean etat) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.telephone = telephone;
+        this.etat = etat;
+
+
+    }
+    public User(int id, String name, String email, String telephone,Role role, boolean etat) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.telephone = telephone;
+        this.role = role;
+        this.etat = etat;
+
+
+    }
 
     public String getImage() {
         return image;
@@ -40,11 +88,20 @@ public class User {
 
     }
 
-    public User() {
+    public User( String name, String email, String password, String telephone, Role role,Boolean etat,String image) {
+
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.telephone=telephone;
+        this.role=role;
+        this.etat=etat;
+        this.image=image;
+
     }
 
-
-
+    public User() {
+    }
 
     public User(String name, String email, String password,String telephone,Role role,String image) {
         this.name = name;
@@ -96,14 +153,10 @@ public class User {
         this.password = password;
     }
 
-    public User(String name, String email, String password, String telephone, Role role, boolean etat, String image) {
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.telephone = telephone;
-        this.role = role;
-        this.etat = etat;
-        this.image = image;
+
+
+    public Role getRole() {
+        return  role;
     }
 
     @Override
@@ -115,13 +168,13 @@ public class User {
                 ", password='" + password + '\'' +
                 ", telephone='" + telephone + '\'' +
                 ", role=" + role +
-                ",image='"+image+'\''+
+                ", etat=" + etat +
+                ", image='" + image + '\'' +
+                ", mfaEnabled=" + mfaEnabled +
+                ", mfaSecret='" + mfaSecret + '\'' +
                 '}';
     }
 
-    public Role getRole() {
-        return  role;
-    }
     public String getTelephone() {
         return telephone;
     }

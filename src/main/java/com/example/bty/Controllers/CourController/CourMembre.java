@@ -1,5 +1,11 @@
 package com.example.bty.Controllers.CourController;
 
+import com.example.bty.Controllers.DashboardMembre;
+import com.example.bty.Controllers.EvenementController.clientVitrine;
+import com.example.bty.Controllers.ProduitController.VitrineClient;
+import com.example.bty.Controllers.ReclamationController.AjouterReclamation;
+import com.example.bty.Controllers.graphiqueGCP.FD;
+import com.example.bty.Controllers.graphiqueGCP.Formoffre;
 import com.example.bty.Entities.Role;
 import com.example.bty.Entities.User;
 import com.example.bty.Utils.ConnexionDB;
@@ -8,8 +14,10 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -25,6 +33,7 @@ import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -155,6 +164,7 @@ public class CourMembre extends Application {
 
 
     private AnchorPane createLeftDashboard(Stage primaryStage) {
+        User loggedInUser = Session.getInstance().getLoggedInUser();
         AnchorPane mainForm = new AnchorPane();
         mainForm.setPrefSize(1100, 900);
 
@@ -168,63 +178,104 @@ public class CourMembre extends Application {
         //leftAnchorPane.setPrefSize(70, 280);
 //        dashboardAdmin.setBottomAnchor(mainForm, 40.0);
 //        dashboardAdmin.setLeftAnchor(mainForm, 40.0);
-        dashboardAdmin.setTranslateY(-112);
-        dashboardAdmin.setPrefSize(234, 1600);
+        dashboardAdmin.setTranslateY(-69);
+        dashboardAdmin.setPrefSize(234, 1500);
         dashboardAdmin.getStyleClass().add("border-pane");
 
 
-
-
         FontAwesomeIconView usernameAdmin = createFontAwesomeIconView("USER", "WHITE", 50, 82, 91);
-        Label welcomeLabel = createLabel("Welcome,", "Tahoma", 15, 78, 101,"WHITE");
-        Label usernameLabel = createLabel("MarcoMan", "Arial Bold", 20, 11, 120,"WHITE");
+        Label welcomeLabel = createLabel("Bienvenue,", "Tahoma", 15, 78, 101,"WHITE");
+        Label usernameLabel = createLabel(loggedInUser.getName(), "Arial Bold", 20, 78, 120,"WHITE");
         // Line line = createLine(-100, 152, 100, 152, 111);
         Line line = createColoredLine(-100, 152, 100, 152, 111, "WHITE");
 
-        Button DashboardBtn = createButton("Dashboard", 22, 186);
+        Button DashboardBtn = createButton("Acceuil", 22, 186);
         Button CoursBtn = createButton("Cours", 22, 234);
         Button eventsBtn = createButton("Evenements", 22, 276);
         Button demandeBtn = createButton("Demande Coahing", 22, 319);
-        Button offreAdminBtn = createButton("Offre", 22, 361);
+        Button offreAdminBtn = createButton("Ajouter Offre", 22, 361);
         Button storeAdminBtn = createButton("Store", 22, 405);
+
+
+        DashboardBtn.setOnAction(event -> {
+            // Instancier et afficher la vue DashboardVitrineController
+            DashboardMembre m = new DashboardMembre();
+            try {
+                m.start(primaryStage);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
 
         CoursBtn.setOnAction(event -> {
             // Instancier et afficher la vue DashboardVitrineController
-            CourMembre v = new CourMembre();
-            v.start(primaryStage);
+            CourMembre c = new CourMembre();
+            c.start(primaryStage);
         });
 
 
         eventsBtn.setOnAction(event -> {
-            // Instancier et afficher la vue DashboardVitrineController
+            /*DashbordEvenement e = new DashbordEvenement();
+            e.start(primaryStage);*/
+            clientVitrine e = new clientVitrine();
+            e.start(primaryStage);
 
         });
 
 
-      /*  demandeBtn.setOnAction(event -> {
+        demandeBtn.setOnAction(event -> {
             // Instancier et afficher la vue DashboardVitrineController
             FD f = new FD();
             f.start(primaryStage);
-        });*/
+        });
 
 
         offreAdminBtn.setOnAction(event -> {
-            // Instancier et afficher la vue DashboardVitrineController
+
+
+
+            Formoffre o = new Formoffre();
+            o.start(primaryStage);
+
 
         });
 
 
         storeAdminBtn.setOnAction(event -> {
             // Instancier et afficher la vue DashboardVitrineController
-
+            VitrineClient v = new VitrineClient();
+            v.start(primaryStage);
         });
 
 
 
         Line line2 = createColoredLine(-100, 449, 100, 449, 112, "WHITE");
 
-        Button profileAdminBtn = createButton("Profile", 22, 462);
+//        Button profileAdminBtn = createButton("Profile", 22, 462);
         Button logoutBtn = createButton("Logout", 22, 503);
+// Add event handler to logoutBtn
+
+// Add event handler to logoutBtn
+        logoutBtn.setOnAction(event -> {
+            // Close all open interfaces
+            Stage primaryStage1 = (Stage) logoutBtn.getScene().getWindow(); // Assuming logoutBtn is in the same scene as the primaryStage
+            primaryStage1.close();
+
+            // Open the LoginGYM.fxml interface
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/LoginGym.fxml"));
+            Parent root;
+            try {
+                root = loader.load();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+
+            Scene scene = new Scene(root);
+            primaryStage.setScene(scene);
+            primaryStage.show();
+        });
+
 
         FontAwesomeIconView[] icons = {
                 createFontAwesomeIconView("HOME", "WHITE", 20, 38, 212),
@@ -235,33 +286,28 @@ public class CourMembre extends Application {
 
                 createFontAwesomeIconView("SHOPPING_CART", "WHITE", 20, 38, 429),
 
-                createFontAwesomeIconView("ID_CARD", "WHITE", 20, 38, 486),
+//                createFontAwesomeIconView("ID_CARD", "WHITE", 20, 38, 486),
                 createFontAwesomeIconView("EXTERNAL_LINK", "WHITE", 20, 38, 529)
         };
 
         VBox reportContainer = new VBox();
         reportContainer.setLayoutX(13);
-        reportContainer.setLayoutY(750);
+        reportContainer.setLayoutY(608);
         reportContainer.setPrefSize(180, 91);
-        reportContainer.setStyle(" -fx-background-color:WHITE; /* Bleu */\n" +
-                "    -fx-border-radius: 15;\n" +
-                "    -fx-background-radius:15;\n" +
-                "    -fx-border-color:#2c3e50; /* Couleur de bordure bleue légère */\n" +
-                "    -fx-padding: 12;\n" +
-                "    -fx-translate-y: -10;");
+        reportContainer.getStyleClass().add("report_container");
 
-        Text reportText = new Text("Report Suggestion/Bug?");
+
+        Text reportText = new Text("Signaler une suggestion?");
         reportText.getStyleClass().add("report_text");
 
-        Label reportLabel = new Label("Use this to report any errors or suggestions.");
-        reportLabel.getStyleClass().add("report_label");
 
-        Button reportButton = createButton("Report", 0, 0);
+        Button reportButton = createButton("Signaler", 0, 0);
+        reportButton.setOnAction(event -> openAjouterReclamationInterface(primaryStage));
         reportButton.getStyleClass().add("report_button");
 
 
 
-        reportContainer.getChildren().addAll(reportText, reportLabel, reportButton);
+        reportContainer.getChildren().addAll(reportText, reportButton);
 
         StackPane contentPlaceholder = new StackPane();
         contentPlaceholder.setLayoutX(220);
@@ -270,9 +316,9 @@ public class CourMembre extends Application {
         dashboardAdmin.getChildren().addAll(
                 usernameAdmin, welcomeLabel, usernameLabel, line,
                 DashboardBtn,CoursBtn, eventsBtn, demandeBtn, offreAdminBtn,
-                storeAdminBtn, line2, profileAdminBtn,
+                storeAdminBtn, line2,
                 logoutBtn, icons[0], icons[1], icons[2], icons[3],
-                icons[4], icons[5], icons[6],icons[7], reportContainer,
+                icons[4], icons[5], icons[6] ,reportContainer,
                 contentPlaceholder
         );
 
@@ -283,6 +329,23 @@ public class CourMembre extends Application {
     }
 
 
+    private void openAjouterReclamationInterface(Stage primaryStage) {
+        AjouterReclamation ajouterReclamation = new AjouterReclamation();
+        try {
+            ajouterReclamation.start(new Stage());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private void showAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
 
 
     private FontAwesomeIconView createFontAwesomeIconView(String glyphName, String fill, double size, double layoutX, double layoutY) {
@@ -403,7 +466,7 @@ public class CourMembre extends Application {
     public int getTotalLikes(String nomCour) {
         int totalLikes = 0;
         try {
-            String query = "SELECT COUNT(*) FROM rating WHERE nomCour = ? AND liked = true";
+            String query = "SELECT COUNT(*) FROM rating WHERE nom_cour = ? AND liked = true";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, nomCour);
             ResultSet resultSet = statement.executeQuery();
@@ -420,7 +483,7 @@ public class CourMembre extends Application {
     public int getTotalDislikes(String nomCour) {
         int totalDislikes = 0;
         try {
-            String query = "SELECT COUNT(*) FROM rating WHERE nomCour = ? AND disliked = true";
+            String query = "SELECT COUNT(*) FROM rating WHERE nom_cour = ? AND disliked = true";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, nomCour);
             ResultSet resultSet = statement.executeQuery();
@@ -516,7 +579,7 @@ public class CourMembre extends Application {
             Rating newRating = new Rating(cours.getNom(), loggedInUser.getId(), ratingValue, liked, disliked);
 
             // Insérer le nouvel objet Rating dans la base de données
-            String query = "INSERT INTO rating (nomCour, id_user, rating, liked, disliked) VALUES (?, ?, ?, ?, ?)";
+            String query = "INSERT INTO rating (nom_cour, user_id, rating, liked, disliked) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, newRating.getNomCour());
             statement.setInt(2, newRating.getUserId());
@@ -541,7 +604,7 @@ public class CourMembre extends Application {
 
         // Adresse e-mail Gmail et mot de passe Gmail
         final String username = "bahaeddinedridi1@gmail.com";
-        final String password = "inxx lwuu tsis yane"; // Remplacez par votre mot de passe Gmail
+        final String password = "oman kvgj hdks njqc"; // Remplacez par votre mot de passe Gmail
 
         // Configuration des propriétés pour l'envoi d'e-mails via SMTP
         Properties props = new Properties();
@@ -552,7 +615,7 @@ public class CourMembre extends Application {
 
         // Création de la session de messagerie en utilisant javax.mail.Session
         javax.mail.Session session = javax.mail.Session.getInstance(props,
-                new javax.mail.Authenticator() {
+                new Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {
                         return new PasswordAuthentication(username, password);
                     }
@@ -572,8 +635,9 @@ public class CourMembre extends Application {
                     "Vous êtes inscrit au cours : " + cours.getNom() + ".\n\n" +
                     "Détails du cours :\n" +
                     "- Intensité : " + cours.getIntensite() + "\n" +
-                    "- Durée : " + cours.getDuree() +  "minutes" +"\n"+
-                    "- Catégorie : " + cours.getCategorie() + "\n\n" +
+                    "- Durée : " + cours.getDuree() + " minutes" + "\n"+
+
+            "- Catégorie : " + cours.getCategorie() + "\n\n" +
                     "Recommandations :\n" +
                     "- Pensez à ramener une serviette et une bouteille d’eau.\n" +".\n"+
                     "Tenue recommandée :\n" +
@@ -650,7 +714,7 @@ public class CourMembre extends Application {
                 // L'utilisateur n'a pas encore participé, procéder à l'inscription
                 if (cours.getCapacite() > 0) {
                     // Insérer l'ID du membre et l'ID du cours dans la table de participation
-                    String queryInsert = "INSERT INTO participation (id_user, nomCour, nomParticipant) VALUES (?,?,?)";
+                    String queryInsert = "INSERT INTO participation (user_id, nom_cour, nom_participant) VALUES (?,?,?)";
                     PreparedStatement statementInsert = connection.prepareStatement(queryInsert);
                     statementInsert.setInt(1, userID);
                     statementInsert.setString(2, cours.getNom());
@@ -671,7 +735,7 @@ public class CourMembre extends Application {
                         sendConfirmationEmail( loggedInUser,cours);
                         // Diminuer la capacité du cours dans la base de données
                         cours.setCapacite(cours.getCapacite() - 1);
-                        String queryUpdate = "UPDATE cours SET capacite = ? WHERE id_cour = ?";
+                        String queryUpdate = "UPDATE cours SET capacite = ? WHERE id = ?";
                         PreparedStatement statementUpdate = connection.prepareStatement(queryUpdate);
                         statementUpdate.setInt(1, cours.getCapacite());
                         statementUpdate.setInt(2, cours.getId());
@@ -697,7 +761,7 @@ public class CourMembre extends Application {
     }
 
     private boolean aDejaParticipe(int userID, String coursID) throws SQLException {
-        String query = "SELECT COUNT(*) FROM participation WHERE id_user = ? AND nomCour = ?";
+        String query = "SELECT COUNT(*) FROM participation WHERE user_id = ? AND nom_cour = ?";
         PreparedStatement statement = connection.prepareStatement(query);
         statement.setInt(1, userID);
         statement.setString(2, coursID);
@@ -711,6 +775,7 @@ public class CourMembre extends Application {
 
     private void afficherCoursDansGridPane() {
         GridPane gridPane = new GridPane();
+        gridPane.setMinHeight(1500);
         gridPane.setPadding(new Insets(20));
         gridPane.setHgap(20);
         gridPane.setVgap(20);
@@ -721,7 +786,7 @@ public class CourMembre extends Application {
             VBox card = createCourseCard(cours);
             gridPane.add(card, columnIndex, rowIndex);
             columnIndex++;
-            if (columnIndex == 5) {
+            if (columnIndex == 4) {
                 columnIndex = 0;
                 rowIndex++;
             }
@@ -741,15 +806,15 @@ public class CourMembre extends Application {
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                int id = resultSet.getInt("id_cour");
-                String nom = resultSet.getString("nomCour");
-                String duree = resultSet.getString("Duree");
-                String intensite = resultSet.getString("Intensite");
-                String cible = resultSet.getString("Cible");
-                String categorie = resultSet.getString("Categorie");
-                String objectif = resultSet.getString("Objectif");
+                int id = resultSet.getInt("id");
+                String nom = resultSet.getString("nom_cour");
+                String duree = resultSet.getString("duree");
+                String intensite = resultSet.getString("intensite");
+                String cible = resultSet.getString("cible");
+                String categorie = resultSet.getString("categorie");
+                String objectif = resultSet.getString("objectif");
                 boolean etat = resultSet.getBoolean("etat");
-                int capacite = resultSet.getInt("Capacite");
+                int capacite = resultSet.getInt("capacite");
                 byte[] imageBytes = resultSet.getBytes("image");
 
                 Cours cours = new Cours();
@@ -782,17 +847,17 @@ public class CourMembre extends Application {
             boolean hasFilter = false;
 
             if (categorie != null && !categorie.isEmpty()) {
-                queryBuilder.append("AND Categorie = ? ");
+                queryBuilder.append("AND categorie = ? ");
                 hasFilter = true;
             }
 
             if (cible != null && !cible.isEmpty()) {
-                queryBuilder.append("AND Cible = ? ");
+                queryBuilder.append("AND cible = ? ");
                 hasFilter = true;
             }
 
             if (objectif != null && !objectif.isEmpty()) {
-                queryBuilder.append("AND Objectif = ? ");
+                queryBuilder.append("AND objectif = ? ");
                 hasFilter = true;
             }
 
@@ -817,15 +882,15 @@ public class CourMembre extends Application {
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
-                int id = resultSet.getInt("id_cour");
-                String nom = resultSet.getString("nomCour");
-                String duree = resultSet.getString("Duree");
-                String intensite = resultSet.getString("Intensite");
-                String cibleResult = resultSet.getString("Cible");
-                String categorieResult = resultSet.getString("Categorie");
-                String objectifResult = resultSet.getString("Objectif");
+                int id = resultSet.getInt("id");
+                String nom = resultSet.getString("nom_cour");
+                String duree = resultSet.getString("duree");
+                String intensite = resultSet.getString("intensite");
+                String cibleResult = resultSet.getString("cible");
+                String categorieResult = resultSet.getString("categorie");
+                String objectifResult = resultSet.getString("objectif");
                 boolean etat = resultSet.getBoolean("etat");
-                int capacite = resultSet.getInt("Capacite");
+                int capacite = resultSet.getInt("capacite");
                 byte[] imageBytes = resultSet.getBytes("image");
 
                 Cours cours = new Cours();

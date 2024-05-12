@@ -208,7 +208,7 @@ public class DashboardCour {
             }
 
             // Utilisez un bloc try-with-resources pour gérer les ressources JDBC
-            try (PreparedStatement statement = connexion.prepareStatement("DELETE FROM cours WHERE id_cour = ?")) {
+            try (PreparedStatement statement = connexion.prepareStatement("DELETE FROM cours WHERE id = ?")) {
                 statement.setInt(1, cours.getId());
                 int rowsAffected = statement.executeUpdate();
 
@@ -287,7 +287,7 @@ public class DashboardCour {
     }*/
 
     // Autres méthodes
-@FXML
+    @FXML
     private void reloadCours() {
         try {
             if (connexion.isClosed()) {
@@ -307,31 +307,34 @@ public class DashboardCour {
     private List<Cours> consulterCours() {
         List<Cours> coursList = new ArrayList<>();
         String query = "SELECT * FROM cours";
-        try (PreparedStatement statement = connexion.prepareStatement(query);
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgymweb", "root", "")) {
+        try (PreparedStatement statement = connection.prepareStatement(query);
              ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
                 Cours cr = new Cours();
-                cr.setId(resultSet.getInt("id_cour"));
-                cr.setNom(resultSet.getString("nomCour") + "    ");
-                cr.setCategorie(resultSet.getString("Categorie") + "    ");
-                cr.setCible(resultSet.getString("Cible") + "    ");
-                cr.setDuree(resultSet.getString("Duree") + "    ");
-                cr.setIntensite(resultSet.getString("Intensite") + "    ");
-                cr.setObjectif(resultSet.getString("Objectif") + "    ");
+                cr.setId(resultSet.getInt("id"));
+                cr.setNom(resultSet.getString("nom_cour") + "    ");
+                cr.setCategorie(resultSet.getString("categorie") + "    ");
+                cr.setCible(resultSet.getString("cible") + "    ");
+                cr.setDuree(resultSet.getString("duree") + "    ");
+                cr.setIntensite(resultSet.getString("intensite") + "    ");
+                cr.setObjectif(resultSet.getString("objectif") + "    ");
                 cr.setEtat(resultSet.getBoolean("etat"));
-                cr.setCapacite(resultSet.getInt("Capacite"));
-                int coachId = resultSet.getInt("id_user");
+                cr.setCapacite(resultSet.getInt("capacite"));
+                int coachId = resultSet.getInt("user_id");
 
                 String coachName = null;
-                try (PreparedStatement preparedStatement = connexion.prepareStatement("SELECT nom FROM user WHERE id = ?")) {
-                    preparedStatement.setInt(1, coachId);
-                    try (ResultSet coachResultSet = preparedStatement.executeQuery()) {
-                        if (coachResultSet.next()) {
-                            coachName = coachResultSet.getString("nom");
+                try (Connection connection1 = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgymweb", "root", "")) {
+
+                    try (PreparedStatement preparedStatement = connection1.prepareStatement("SELECT nom FROM user WHERE id = ?")) {
+                        preparedStatement.setInt(1, coachId);
+                        try (ResultSet coachResultSet = preparedStatement.executeQuery()) {
+                            if (coachResultSet.next()) {
+                                coachName = coachResultSet.getString("nom");
+                            }
                         }
                     }
                 }
-
                 User coach = new User();
                 coach.setId(coachId);
                 coach.setName(coachName);
@@ -339,7 +342,7 @@ public class DashboardCour {
 
                 coursList.add(cr);
             }
-        } catch (SQLException e) {
+        } }catch (SQLException e) {
             e.printStackTrace();
         }
         return coursList;
@@ -467,7 +470,7 @@ public class DashboardCour {
             }
             // Code pour sauvegarder les modifications dans la base de données
             try (PreparedStatement statement = connexion.prepareStatement(
-                    "UPDATE cours SET nomCour = ?, Duree = ?, Intensite = ?, Cible = ?, Categorie = ?, Objectif = ?, etat = ?, capacite = ?, id_user = ? WHERE id_cour = ?")) {
+                    "UPDATE cours SET nom_cour = ?, duree = ?, intensite = ?, cible = ?, categorie = ?, objectif = ?, etat = ?, capacite = ?, user_id = ? WHERE id = ?")) {
 
                 statement.setString(1, nomField.getText());
                 statement.setString(2, dureeField.getText());
@@ -609,7 +612,7 @@ public class DashboardCour {
     private boolean isNomCoursUnique(String nomCours, int courseId) {
         try {
             // Préparez votre requête SQL pour vérifier l'unicité du nom du cours
-            String query = "SELECT COUNT(*) AS count FROM cours WHERE nomCour = ? AND id_cour <> ?";
+            String query = "SELECT COUNT(*) AS count FROM cours WHERE nom_cour = ? AND id <> ?";
             PreparedStatement statement = connexion.prepareStatement(query);
             statement.setString(1, nomCours);
             statement.setInt(2, courseId); // Exclure le cours actuel de la vérification
@@ -683,4 +686,3 @@ public class DashboardCour {
         }
     }*/
 }
-
