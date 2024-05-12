@@ -1,33 +1,38 @@
 package com.example.bty.Entities;
 
+import javafx.stage.Stage;
+
 import java.util.Date;
 
 public class Reclamation {
-    int id;
-    Date date;
-    String sujet;
-    String description;
-    User user;
-    boolean etat;
+    private int id;
+    private Date date_reclamation;
+    private String titre_reclamation;
+    private String description;
+    private String etat;
+    //private User membre;
+
 
     public Reclamation() {
     }
 
-    public Reclamation(int id, Date date, String sujet, String description, User user, boolean etat) {
+    public Reclamation(int id, Date date_reclamation, String titre_reclamation, String description, String etat) {
         this.id = id;
-        this.date = date;
-        this.sujet = sujet;
+        this.date_reclamation = date_reclamation;
+        this.titre_reclamation = titre_reclamation;
         this.description = description;
-        this.user = user;
         this.etat = etat;
     }
 
-    public Reclamation(Date date, String sujet, String description, User user, boolean etat) {
-        this.date = date;
-        this.sujet = sujet;
+    public Reclamation(Date date_reclamation, String titre_reclamation, String description, String etat) {
+        this.date_reclamation = date_reclamation;
+        this.titre_reclamation = titre_reclamation;
         this.description = description;
-        this.user = user;
         this.etat = etat;
+    }
+
+    public Reclamation(int id) {
+        this.id = id;
     }
 
     public int getId() {
@@ -38,20 +43,20 @@ public class Reclamation {
         this.id = id;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getDate_reclamation() {
+        return date_reclamation;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setDate_reclamation(Date date_reclamation) {
+        this.date_reclamation = date_reclamation;
     }
 
-    public String getSujet() {
-        return sujet;
+    public String getTitre_reclamation() {
+        return titre_reclamation;
     }
 
-    public void setSujet(String sujet) {
-        this.sujet = sujet;
+    public void setTitre_reclamation(String titre_reclamation) {
+        this.titre_reclamation = titre_reclamation;
     }
 
     public String getDescription() {
@@ -62,19 +67,11 @@ public class Reclamation {
         this.description = description;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public boolean isEtat() {
+    public String getEtat() {
         return etat;
     }
 
-    public void setEtat(boolean etat) {
+    public void setEtat(String etat) {
         this.etat = etat;
     }
 
@@ -82,12 +79,17 @@ public class Reclamation {
     public String toString() {
         return "Reclamation{" +
                 "id=" + id +
-                ", date=" + date +
-                ", sujet='" + sujet + '\'' +
+                ", date_reclamation='" + date_reclamation + '\'' +
+                ", titre_reclamation='" + titre_reclamation + '\'' +
                 ", description='" + description + '\'' +
-                ", user=" + user +
-                ", etat=" + etat +
+                ", etat='" + etat + '\'' +
                 '}';
     }
+
+    public Reclamation(String titre_reclamation, String description) {
+        this.titre_reclamation = titre_reclamation;
+        this.description = description;
+    }
+
 
 }
