@@ -446,6 +446,7 @@ public class DashboardController implements Initializable {
     }
 
     public void goToEvents(ActionEvent actionEvent) {
+        
     }
 
     public void goToCoachs(ActionEvent actionEvent) {

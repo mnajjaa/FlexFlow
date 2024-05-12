@@ -311,10 +311,12 @@ public class Ajouter extends Application {
         primaryStage.show();
     }
 
+
+
     private boolean isNomCoursUnique(String nomCours, int courseId) {
         try {
             // Préparez votre requête SQL pour vérifier l'unicité du nom du cours
-            String query = "SELECT COUNT(*) AS count FROM cours WHERE nomCour = ? AND id_cour <> ?";
+            String query = "SELECT COUNT(*) AS count FROM cours WHERE nom_cour = ? AND id <> ?";
             PreparedStatement statement = connexion.prepareStatement(query);
             statement.setString(1, nomCours);
             statement.setInt(2, courseId); // Exclure le cours actuel de la vérification
@@ -332,7 +334,7 @@ public class Ajouter extends Application {
     }
 
     public boolean addPst(Cours c, File imageFile){
-        String requete="insert into cours (nomCour,Duree,Intensite,Cible,Categorie,Objectif,etat,capacite,id_user,image) values(?,?,?,?,?,?,?,?,?,?)";
+        String requete="insert into cours (nom_cour,duree,intensite,cible,categorie,objectif,etat,capacite,user_id,image) values(?,?,?,?,?,?,?,?,?,?)";
 
         try {
             FileInputStream fis = new FileInputStream(imageFile);
@@ -397,6 +399,8 @@ public class Ajouter extends Application {
         }
         return coachId;
     }
+
+
 
 
 

@@ -403,7 +403,7 @@ public class CourMembre extends Application {
     public int getTotalLikes(String nomCour) {
         int totalLikes = 0;
         try {
-            String query = "SELECT COUNT(*) FROM rating WHERE nomCour = ? AND liked = true";
+            String query = "SELECT COUNT(*) FROM rating WHERE nom_cour = ? AND liked = true";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, nomCour);
             ResultSet resultSet = statement.executeQuery();
@@ -420,7 +420,7 @@ public class CourMembre extends Application {
     public int getTotalDislikes(String nomCour) {
         int totalDislikes = 0;
         try {
-            String query = "SELECT COUNT(*) FROM rating WHERE nomCour = ? AND disliked = true";
+            String query = "SELECT COUNT(*) FROM rating WHERE nom_cour = ? AND disliked = true";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, nomCour);
             ResultSet resultSet = statement.executeQuery();
@@ -492,7 +492,7 @@ public class CourMembre extends Application {
         evaluationStage.showAndWait();
     }
 
-
+// Api Rating
     // Mettre à jour la méthode enregistrerEvaluation pour créer et enregistrer un objet Rating
     private void enregistrerEvaluation(Cours cours, String rating) {
         User loggedInUser = Session.getInstance().getLoggedInUser();
@@ -516,7 +516,7 @@ public class CourMembre extends Application {
             Rating newRating = new Rating(cours.getNom(), loggedInUser.getId(), ratingValue, liked, disliked);
 
             // Insérer le nouvel objet Rating dans la base de données
-            String query = "INSERT INTO rating (nomCour, id_user, rating, liked, disliked) VALUES (?, ?, ?, ?, ?)";
+            String query = "INSERT INTO rating (nom_cour, user_id, rating, liked, disliked) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, newRating.getNomCour());
             statement.setInt(2, newRating.getUserId());
@@ -541,7 +541,7 @@ public class CourMembre extends Application {
 
         // Adresse e-mail Gmail et mot de passe Gmail
         final String username = "bahaeddinedridi1@gmail.com";
-        final String password = "inxx lwuu tsis yane"; // Remplacez par votre mot de passe Gmail
+        final String password = "oman kvgj hdks njqc"; // Remplacez par votre mot de passe Gmail
 
         // Configuration des propriétés pour l'envoi d'e-mails via SMTP
         Properties props = new Properties();
@@ -650,7 +650,7 @@ public class CourMembre extends Application {
                 // L'utilisateur n'a pas encore participé, procéder à l'inscription
                 if (cours.getCapacite() > 0) {
                     // Insérer l'ID du membre et l'ID du cours dans la table de participation
-                    String queryInsert = "INSERT INTO participation (id_user, nomCour, nomParticipant) VALUES (?,?,?)";
+                    String queryInsert = "INSERT INTO participation (user_id, nom_cour, nom_participant) VALUES (?,?,?)";
                     PreparedStatement statementInsert = connection.prepareStatement(queryInsert);
                     statementInsert.setInt(1, userID);
                     statementInsert.setString(2, cours.getNom());
@@ -671,7 +671,7 @@ public class CourMembre extends Application {
                         sendConfirmationEmail( loggedInUser,cours);
                         // Diminuer la capacité du cours dans la base de données
                         cours.setCapacite(cours.getCapacite() - 1);
-                        String queryUpdate = "UPDATE cours SET capacite = ? WHERE id_cour = ?";
+                        String queryUpdate = "UPDATE cours SET capacite = ? WHERE id = ?";
                         PreparedStatement statementUpdate = connection.prepareStatement(queryUpdate);
                         statementUpdate.setInt(1, cours.getCapacite());
                         statementUpdate.setInt(2, cours.getId());
@@ -697,7 +697,7 @@ public class CourMembre extends Application {
     }
 
     private boolean aDejaParticipe(int userID, String coursID) throws SQLException {
-        String query = "SELECT COUNT(*) FROM participation WHERE id_user = ? AND nomCour = ?";
+        String query = "SELECT COUNT(*) FROM participation WHERE user_id = ? AND nom_cour = ?";
         PreparedStatement statement = connection.prepareStatement(query);
         statement.setInt(1, userID);
         statement.setString(2, coursID);
@@ -741,15 +741,15 @@ public class CourMembre extends Application {
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                int id = resultSet.getInt("id_cour");
-                String nom = resultSet.getString("nomCour");
-                String duree = resultSet.getString("Duree");
-                String intensite = resultSet.getString("Intensite");
-                String cible = resultSet.getString("Cible");
-                String categorie = resultSet.getString("Categorie");
-                String objectif = resultSet.getString("Objectif");
+                int id = resultSet.getInt("id");
+                String nom = resultSet.getString("nom_cour");
+                String duree = resultSet.getString("duree");
+                String intensite = resultSet.getString("intensite");
+                String cible = resultSet.getString("cible");
+                String categorie = resultSet.getString("categorie");
+                String objectif = resultSet.getString("objectif");
                 boolean etat = resultSet.getBoolean("etat");
-                int capacite = resultSet.getInt("Capacite");
+                int capacite = resultSet.getInt("capacite");
                 byte[] imageBytes = resultSet.getBytes("image");
 
                 Cours cours = new Cours();
@@ -782,17 +782,17 @@ public class CourMembre extends Application {
             boolean hasFilter = false;
 
             if (categorie != null && !categorie.isEmpty()) {
-                queryBuilder.append("AND Categorie = ? ");
+                queryBuilder.append("AND categorie = ? ");
                 hasFilter = true;
             }
 
             if (cible != null && !cible.isEmpty()) {
-                queryBuilder.append("AND Cible = ? ");
+                queryBuilder.append("AND cible = ? ");
                 hasFilter = true;
             }
 
             if (objectif != null && !objectif.isEmpty()) {
-                queryBuilder.append("AND Objectif = ? ");
+                queryBuilder.append("AND objectif = ? ");
                 hasFilter = true;
             }
 
@@ -817,15 +817,15 @@ public class CourMembre extends Application {
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
-                int id = resultSet.getInt("id_cour");
-                String nom = resultSet.getString("nomCour");
-                String duree = resultSet.getString("Duree");
-                String intensite = resultSet.getString("Intensite");
-                String cibleResult = resultSet.getString("Cible");
-                String categorieResult = resultSet.getString("Categorie");
-                String objectifResult = resultSet.getString("Objectif");
+                int id = resultSet.getInt("id");
+                String nom = resultSet.getString("nom_cour");
+                String duree = resultSet.getString("duree");
+                String intensite = resultSet.getString("intensite");
+                String cibleResult = resultSet.getString("cible");
+                String categorieResult = resultSet.getString("categorie");
+                String objectifResult = resultSet.getString("objectif");
                 boolean etat = resultSet.getBoolean("etat");
-                int capacite = resultSet.getInt("Capacite");
+                int capacite = resultSet.getInt("capacite");
                 byte[] imageBytes = resultSet.getBytes("image");
 
                 Cours cours = new Cours();

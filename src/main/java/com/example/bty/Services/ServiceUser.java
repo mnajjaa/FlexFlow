@@ -37,7 +37,7 @@ public class ServiceUser implements IServiceUser{
     //** Register a new user
     @Override
     public void register(User u) {
-        String req = "INSERT INTO `user` (`nom`,`email`, `password`,`telephone`,`role`) VALUE (?,?,?,?,?)";
+        String req = "INSERT INTO `user` (`nom`,`email`, `password`,`telephone`,`roles`) VALUE (?,?,?,?,?)";
         try {
             pste = cnx.prepareStatement(req);
             pste.setString(1, u.getName());

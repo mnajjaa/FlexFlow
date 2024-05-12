@@ -25,7 +25,7 @@ public class ServiceCours {
     }
 
     public void addPst(Cours c, File imageFile){
-        String requete="insert into cours (nomCour,Duree,Intensite,Cible,Categorie,Objectif,etat,capacite,id_user,image) values(?,?,?,?,?,?,?,?,?,?)";
+        String requete="insert into cours (nom_cour,duree,intensite,cible,categorie,objectif,etat,capacite,user_id,image) values(?,?,?,?,?,?,?,?,?,?)";
 
         try {
             FileInputStream fis = new FileInputStream(imageFile);
@@ -64,7 +64,7 @@ public class ServiceCours {
     }
 
     public void DeleteCours (int id) {
-        String DELETE = "DELETE FROM cours WHERE id_cour = ?";
+        String DELETE = "DELETE FROM cours WHERE id = ?";
         try (
                 PreparedStatement preparedStatement = connexion.prepareStatement(DELETE)) {
             preparedStatement.setInt(1, id);
@@ -75,7 +75,7 @@ public class ServiceCours {
 
 
     public void UpdateCours(Cours cours) {
-        String UPDATE = "UPDATE cours SET nomCour = ?, Duree = ?, Intensite = ?, Cible = ?, Categorie = ?, Objectif = ?, etat = ?, capacite = ?, id_user = ?  WHERE id_cour = ?";
+        String UPDATE = "UPDATE cours SET nom_cour = ?, duree = ?, intensite = ?, cible = ?, categorie = ?, objectif = ?, etat = ?, capacite = ?, user_id = ?  WHERE id = ?";
         try (
                 PreparedStatement preparedStatement = connexion.prepareStatement(UPDATE)) {
             preparedStatement.setString(1, cours.getNom());
@@ -137,16 +137,16 @@ public class ServiceCours {
              ResultSet resultSet = statement.executeQuery(query)) {
             while (resultSet.next()) {
                 Cours cr = new Cours();
-                cr.setId(resultSet.getInt("id_cour"));
-                cr.setNom(resultSet.getString("nomCour"));
-                cr.setCategorie(resultSet.getString("Categorie"));
-                cr.setCible(resultSet.getString("Cible"));
-                cr.setDuree(resultSet.getString("Duree"));
-                cr.setIntensite(resultSet.getString("Intensite"));
-                cr.setObjectif(resultSet.getString("Objectif"));
+                cr.setId(resultSet.getInt("id"));
+                cr.setNom(resultSet.getString("nom_cour"));
+                cr.setCategorie(resultSet.getString("categorie"));
+                cr.setCible(resultSet.getString("cible"));
+                cr.setDuree(resultSet.getString("duree"));
+                cr.setIntensite(resultSet.getString("intensite"));
+                cr.setObjectif(resultSet.getString("objectif"));
                 cr.setEtat(resultSet.getBoolean("etat"));
-                cr.setCapacite(resultSet.getInt("Capacite"));
-                int coachId = resultSet.getInt("id_user");
+                cr.setCapacite(resultSet.getInt("capacite"));
+                int coachId = resultSet.getInt("user_id");
 
                 // Récupérer le nom du coach à partir de la base de données
                 String coachName = null;
@@ -179,7 +179,7 @@ public class ServiceCours {
     // Méthode pour filtrer et afficher les cours par catégorie, cible ou objectif
     public static List<Cours> filtrerCours(String categorie, String cible, String objectif) {
         List<Cours> coursList = new ArrayList<>();
-        String FILTER = "SELECT * FROM cours WHERE Categorie = ? OR Cible = ? OR Objectif = ?";
+        String FILTER = "SELECT * FROM cours WHERE categorie = ? OR cible = ? OR objectif = ?";
         try (PreparedStatement preparedStatement = connexion.prepareStatement(FILTER)){
             preparedStatement.setString(1, categorie);
             preparedStatement.setString(2, cible);
@@ -188,8 +188,8 @@ public class ServiceCours {
                 while (rs.next()) {
                     Cours cour = new Cours();
                     User user =new User();
-                    cour.setId(rs.getInt("id_cour"));
-                    cour.setNom(rs.getString("nomCour"));
+                    cour.setId(rs.getInt("id"));
+                    cour.setNom(rs.getString("nom_cour"));
                     cour.setDuree(rs.getString("duree"));
                     cour.setIntensite(rs.getString("intensite"));
                     cour.setCible(rs.getString("cible"));
@@ -197,7 +197,7 @@ public class ServiceCours {
                     cour.setObjectif(rs.getString("objectif"));
                     cour.setEtat(rs.getBoolean("etat"));
                     cour.setCapacite(rs.getInt("capacite"));
-                    user.setId(rs.getInt("id_user"));
+                    user.setId(rs.getInt("user_id"));
                     coursList.add(cour);
                 }
             }
