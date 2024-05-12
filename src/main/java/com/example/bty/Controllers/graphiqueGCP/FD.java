@@ -595,7 +595,7 @@ public class FD extends Application {
         }
 
         // Vérifier si l'utilisateur connecté a le rôle de membre
-        if (!loggedInUser.getRole().equals(Role.MEMBRE)) {
+        if (!loggedInUser.getRoles().equals(Role.MEMBRE)) {
             showAlert("Erreur", "Vous devez être membre pour insérer une demande !");
             return;
         }

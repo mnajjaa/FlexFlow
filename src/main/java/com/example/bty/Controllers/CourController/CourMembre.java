@@ -668,7 +668,7 @@ public class CourMembre extends Application {
         // Vérifier si l'utilisateur est connecté
         if (loggedInUser != null) {
             // Vérifier si l'utilisateur est un membre
-            if (loggedInUser.getRole() == Role.MEMBRE) {
+            if (loggedInUser.getRoles() != null && loggedInUser.getRoles().length > 0 && loggedInUser.getRoles()[0] == Role.MEMBRE) {
                 // Afficher une boîte de dialogue de confirmation
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Confirmation de participation");

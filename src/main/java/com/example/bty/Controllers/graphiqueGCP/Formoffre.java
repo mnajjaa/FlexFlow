@@ -143,7 +143,7 @@ public class Formoffre extends Application {
             @Override
 
             public void handle(ActionEvent event) {
-                if(user.getRole().equals(Role.COACH)){
+                if(user.getRoles().equals(Role.COACH)){
                     ARD ardInterface = new ARD();
                     ardInterface.start(new Stage());
                 }
@@ -465,7 +465,7 @@ public class Formoffre extends Application {
         String password = "";
 
         try (Connection conn = DriverManager.getConnection(url, username, password)) {
-            if(user.getRole().equals(Role.COACH)){
+            if(user.getRoles().equals(Role.COACH)){
                 System.out.println("coach connected !!");
                 String id = nomField.getText();
                 // Vérifier si l'ID existe déjà

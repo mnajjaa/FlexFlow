@@ -22,6 +22,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -203,7 +204,7 @@ public class DashboardController implements Initializable {
 
        // border.getStyleClass().add("border-pane");
         this.user = session.getLoggedInUser();
-        if(user.getRole().equals(Role.ADMIN)){
+        if(Arrays.equals(user.getRoles(), new Role[]{Role.ADMIN})){
             dashboard_Admin.setVisible(true);
             //dashboard_coach.setVisible(false);
            // dashboard_membre.setVisible(false);
@@ -217,7 +218,7 @@ public class DashboardController implements Initializable {
 
 
         }
-        else if(user.getRole().equals(Role.COACH)){
+        else if(Arrays.equals(user.getRoles(), new Role[]{Role.COACH})){
             System.out.println("coach found");
             // Instancier la classe VitrineClient
             DashboardMembre v = new DashboardMembre();
@@ -235,7 +236,7 @@ public class DashboardController implements Initializable {
 //            v1.signupSlider1();
         }
 
-        else if(user.getRole().equals(Role.MEMBRE)){
+        else if(Arrays.equals(user.getRoles(), new Role[]{Role.MEMBRE})){
             System.out.println("membre found");
             // Instancier la classe VitrineClient
             DashboardMembre v = new DashboardMembre();
@@ -246,8 +247,10 @@ public class DashboardController implements Initializable {
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-            dashboard_coach.setVisible(false);
-            dashboard_Admin.setVisible(false);
+            //dashboard_coach.setVisible(false);
+            //dashboard_Admin.setVisible(false);
+            dashboard_membre.setVisible(true);
+
 
 
 
@@ -316,7 +319,7 @@ public class DashboardController implements Initializable {
         String email = coaches_email.getText();
         String password = coaches_password.getText();
         String telephone = coaches_telephone.getText();
-        Role defaultRole = Role.COACH; // Définissez le rôle par défaut ici
+        Role [] defaultRole = new Role[1]; // Définissez le rôle par défaut ici
 
         // Check if the email already exists
         if (serviceUser00.emailExists(email)) {

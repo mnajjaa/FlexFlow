@@ -42,7 +42,7 @@ public class CoachesFormController implements Initializable {
         String email = coaches_email.getText();
         //String password = coaches_password.getText();
         String telephone = coaches_telephone.getText();
-        Role defaultRole = Role.COACH; // Définissez le rôle par défaut ici
+        Role[] defaultRole = new Role[]{Role.COACH}; // Définissez le rôle par défaut ici
 
         // Check if the email already exists
         if (serviceUser00.emailExists(email)) {
@@ -123,7 +123,7 @@ public class CoachesFormController implements Initializable {
     public void coachesUpdateBtn(ActionEvent actionEvent) throws IOException {
         // User loggedInUser = Session.getInstance().getLoggedInUser();
 
-        User coach=new User(id, coaches_name.getText(),coaches_email.getText(),coaches_telephone.getText(),Role.COACH,true);
+        User coach=new User(id, coaches_name.getText(),coaches_email.getText(),coaches_telephone.getText(),new Role[1],true);
         serviceUser00.update(coach);
         CoachListController c=CoachListController.getInstance();
         c.consulterCoaches();
