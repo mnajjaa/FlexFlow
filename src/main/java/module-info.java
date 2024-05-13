@@ -12,6 +12,7 @@ module com.example.bty {
     requires com.google.zxing.javase;
     requires java.prefs;
     requires twilio;
+    requires controlsfx;
 
 
     opens com.example.bty to javafx.fxml;
