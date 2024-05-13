@@ -70,13 +70,17 @@ public class AdminInterface extends Application {
         TableColumn<OffreItem, String> idCoachColumn = new TableColumn<>("ID Coach");
         idCoachColumn.setCellValueFactory(new PropertyValueFactory<>("idCoach"));
 
-        TableColumn<OffreItem, String> etatOffreColumn = new TableColumn<>("État Offre");
-        etatOffreColumn.setCellValueFactory(new PropertyValueFactory<>("etatOffre"));
+        TableColumn<OffreItem, String> etat_offreColumn = new TableColumn<>("État Offre");
+        etat_offreColumn.setCellValueFactory(new PropertyValueFactory<>("etat_offre"));
 
         TableColumn<OffreItem, Void> actionColumn = new TableColumn<>("Action");
         actionColumn.setCellFactory(param -> new ButtonCell());
 
-        tableView.getColumns().addAll(idColumn, specialiteColumn, tarifHeureColumn, idCoachColumn, etatOffreColumn, actionColumn);
+        TableColumn<OffreItem, String> emailColumn = new TableColumn<>("String email");
+        emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
+
+
+        tableView.getColumns().addAll(idColumn, specialiteColumn, tarifHeureColumn, idCoachColumn, etat_offreColumn,emailColumn ,actionColumn);
 
         refreshOffresList();
     }
@@ -93,8 +97,10 @@ public class AdminInterface extends Application {
                         resultSet.getString("id"),
                         resultSet.getString("specialite"),
                         resultSet.getFloat("tarif_heure"),
-                        resultSet.getString("id_coach"),
-                        resultSet.getString("etatOffre")
+                        resultSet.getString("coach_id"),
+                        resultSet.getString("etat_offre"),
+                        resultSet.getString("email")
+
                 ));
             }
 
@@ -113,14 +119,16 @@ public class AdminInterface extends Application {
         private final SimpleStringProperty specialite;
         private final SimpleFloatProperty tarifHeure;
         private final SimpleStringProperty idCoach;
-        private final SimpleStringProperty etatOffre;
+        private final SimpleStringProperty etat_offre;
 
-        public OffreItem(String id, String specialite, float tarifHeure, String idCoach, String etatOffre) {
+        private final SimpleStringProperty email;
+        public OffreItem(String id, String specialite, float tarifHeure, String idCoach, String etat_offre,String email) {
             this.id = new SimpleStringProperty(id);
             this.specialite = new SimpleStringProperty(specialite);
             this.tarifHeure = new SimpleFloatProperty(tarifHeure);
             this.idCoach = new SimpleStringProperty(idCoach);
-            this.etatOffre = new SimpleStringProperty(etatOffre);
+            this.etat_offre = new SimpleStringProperty(etat_offre);
+            this.email = new SimpleStringProperty(email);
         }
 
         public String getId() {
@@ -140,8 +148,14 @@ public class AdminInterface extends Application {
         }
 
         public String getEtatOffre() {
-            return etatOffre.get();
+            return etat_offre.get();
         }
+
+        public String getEmail() {
+            return email.get();
+        }
+
+
     }
 
     private static class ButtonCell extends TableCell<OffreItem, Void> {
@@ -173,7 +187,7 @@ public class AdminInterface extends Application {
 
     private static void accepterOffre(String id) {
         try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE Offre SET etatOffre = 'Acceptée' WHERE id = ?");
+            PreparedStatement statement = connection.prepareStatement("UPDATE Offre SET etat_offre = 'Acceptée' WHERE id = ?");
             statement.setString(1, id);
             statement.executeUpdate();
             statement.close();
@@ -186,7 +200,7 @@ public class AdminInterface extends Application {
 
     private static void refuserOffre(String id) {
         try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE Offre SET etatOffre = 'Refusée' WHERE id = ?");
+            PreparedStatement statement = connection.prepareStatement("UPDATE Offre SET etat_offre = 'Refusée' WHERE id = ?");
             statement.setString(1, id);
             statement.executeUpdate();
             statement.close();

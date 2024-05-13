@@ -27,6 +27,7 @@ public class Formoffre extends Application {
     private ChoiceBox<String> specialiteChoice;
     private TextField tarifField;
     private TextField coachField;
+    private TextField emailField;
     private Label nomLabel;
     Session session = Session.getInstance();
     User u=session.getLoggedInUser();
@@ -84,6 +85,11 @@ public class Formoffre extends Application {
 
         Label etatLabel = new Label("Etat:");
         grid.add(etatLabel, 0, 4);
+
+        Label emailLabel = new Label("Email:");
+        emailField = new TextField();
+        grid.add(nomLabel, 0, 5);
+        grid.add(emailField, 1, 5);
 
         TextField etatField = new TextField("En Attente");
         etatField.setEditable(false);

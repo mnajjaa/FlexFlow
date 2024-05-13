@@ -57,25 +57,25 @@ public class ARD extends Application {
 
     private static void setupTableView() {
         TableColumn<DemandeItem, String> idColumn = new TableColumn<>("ID Demande");
-        idColumn.setCellValueFactory(new PropertyValueFactory<>("id_demande"));
+        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
 
         TableColumn<DemandeItem, String> butColumn = new TableColumn<>("But");
         butColumn.setCellValueFactory(new PropertyValueFactory<>("but"));
 
         TableColumn<DemandeItem, String> niveauPhysiqueColumn = new TableColumn<>("Niveau Physique");
-        niveauPhysiqueColumn.setCellValueFactory(new PropertyValueFactory<>("niveauPhysique"));
+        niveauPhysiqueColumn.setCellValueFactory(new PropertyValueFactory<>("niveau_physique"));
 
         TableColumn<DemandeItem, String> maladieChroniqueColumn = new TableColumn<>("Maladie Chronique");
-        maladieChroniqueColumn.setCellValueFactory(new PropertyValueFactory<>("maladieChronique"));
+        maladieChroniqueColumn.setCellValueFactory(new PropertyValueFactory<>("maladie_chronique"));
 
         TableColumn<DemandeItem, String> ageColumn = new TableColumn<>("Age");
         ageColumn.setCellValueFactory(new PropertyValueFactory<>("age"));
 
         TableColumn<DemandeItem, String> idUserColumn = new TableColumn<>("ID Utilisateur");
-        idUserColumn.setCellValueFactory(new PropertyValueFactory<>("id_user"));
+        idUserColumn.setCellValueFactory(new PropertyValueFactory<>("user_id"));
 
         TableColumn<DemandeItem, String> idOffreColumn = new TableColumn<>("ID Offre");
-        idOffreColumn.setCellValueFactory(new PropertyValueFactory<>("id_offre"));
+        idOffreColumn.setCellValueFactory(new PropertyValueFactory<>("offre_id"));
 
         TableColumn<DemandeItem, String> etatColumn = new TableColumn<>("État");
         etatColumn.setCellValueFactory(new PropertyValueFactory<>("etat"));
@@ -104,13 +104,13 @@ public class ARD extends Application {
 
             while (resultSet.next()) {
                 data.add(new DemandeItem(
-                        resultSet.getString("id_demande"),
+                        resultSet.getString("id"),
                         resultSet.getString("but"),
-                        resultSet.getString("NiveauPhysique"),
-                        resultSet.getString("MaladieChronique"),
+                        resultSet.getString("niveau_physique"),
+                        resultSet.getString("maladie_chronique"),
                         resultSet.getString("age"),
-                        resultSet.getString("id_user"),
-                        resultSet.getString("id_offre"),
+                        resultSet.getString("user_id"),
+                        resultSet.getString("offre_id"),
                         resultSet.getString("etat"),
                         resultSet.getTime("horaire"),
                         resultSet.getString("lesjours")
@@ -128,33 +128,33 @@ public class ARD extends Application {
     }
 
     public static class DemandeItem {
-        private final SimpleStringProperty id_demande;
+        private final SimpleStringProperty id;
         private final SimpleStringProperty but;
-        private final SimpleStringProperty niveauPhysique;
-        private final SimpleStringProperty maladieChronique;
+        private final SimpleStringProperty niveau_physique;
+        private final SimpleStringProperty maladie_chronique;
         private final SimpleStringProperty age;
-        private final SimpleStringProperty id_user;
-        private final SimpleStringProperty id_offre;
+        private final SimpleStringProperty user_id;
+        private final SimpleStringProperty offre_id;
         private final SimpleStringProperty etat;
         private final SimpleObjectProperty<Time> horaire;
         private final SimpleStringProperty lesjours;
 
-        public DemandeItem(String id_demande, String but, String niveauPhysique, String maladieChronique,
-                           String age, String id_user, String id_offre, String etat, Time horaire, String lesjours) {
-            this.id_demande = new SimpleStringProperty(id_demande);
+        public DemandeItem(String id, String but, String niveau_physique, String maladie_chronique,
+                           String age, String user_id, String offre_id, String etat, Time horaire, String lesjours) {
+            this.id = new SimpleStringProperty(id);
             this.but = new SimpleStringProperty(but);
-            this.niveauPhysique = new SimpleStringProperty(niveauPhysique);
-            this.maladieChronique = new SimpleStringProperty(maladieChronique);
+            this.niveau_physique = new SimpleStringProperty(niveau_physique);
+            this.maladie_chronique = new SimpleStringProperty(maladie_chronique);
             this.age = new SimpleStringProperty(age);
-            this.id_user = new SimpleStringProperty(id_user);
-            this.id_offre = new SimpleStringProperty(id_offre);
+            this.user_id = new SimpleStringProperty(user_id);
+            this.offre_id = new SimpleStringProperty(offre_id);
             this.etat = new SimpleStringProperty(etat);
             this.horaire = new SimpleObjectProperty<>(horaire);
             this.lesjours = new SimpleStringProperty(lesjours);
         }
 
         public String getId_demande() {
-            return id_demande.get();
+            return id.get();
         }
 
         public String getBut() {
@@ -162,11 +162,11 @@ public class ARD extends Application {
         }
 
         public String getNiveauPhysique() {
-            return niveauPhysique.get();
+            return niveau_physique.get();
         }
 
         public String getMaladieChronique() {
-            return maladieChronique.get();
+            return maladie_chronique.get();
         }
 
         public String getAge() {
@@ -174,11 +174,11 @@ public class ARD extends Application {
         }
 
         public String getId_user() {
-            return id_user.get();
+            return user_id.get();
         }
 
         public String getId_offre() {
-            return id_offre.get();
+            return offre_id.get();
         }
 
         public String getEtat() {
@@ -227,15 +227,15 @@ public class ARD extends Application {
         }
     }
 
-    private static void accepterDemande(String id_demande) {
+    private static void accepterDemande(String id) {
         try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE demande SET etat = 'Acceptée' WHERE id_demande = ?");
-            statement.setString(1, id_demande);
+            PreparedStatement statement = connection.prepareStatement("UPDATE demande SET etat = 'Acceptée' WHERE id = ?");
+            statement.setString(1, id);
             statement.executeUpdate();
             statement.close();
 
             // Afficher une interface pour ajouter l'horaire et autre information
-            afficherInterfaceAjoutHoraire(id_demande);
+            afficherInterfaceAjoutHoraire(id);
 
             // Afficher un message au client (demande acceptée)
             afficherMessageClientAccepte();
@@ -245,10 +245,10 @@ public class ARD extends Application {
         }
     }
 
-    private static void refuserDemande(String id_demande) {
+    private static void refuserDemande(String id) {
         try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE demande SET etat = 'Refusée' WHERE id_demande = ?");
-            statement.setString(1, id_demande);
+            PreparedStatement statement = connection.prepareStatement("UPDATE demande SET etat = 'Refusée' WHERE id = ?");
+            statement.setString(1, id);
             statement.executeUpdate();
             statement.close();
 
@@ -260,7 +260,7 @@ public class ARD extends Application {
         }
     }
 
-    private static void afficherInterfaceAjoutHoraire(String id_demande) {
+    private static void afficherInterfaceAjoutHoraire(String id) {
         Stage ajoutHoraireStage = new Stage();
         ajoutHoraireStage.setTitle("Ajouter Horaire");
 
@@ -273,9 +273,9 @@ public class ARD extends Application {
         Button ajouterButton = new Button("Ajouter");
         ajouterButton.setOnAction(e -> {
             try {
-                PreparedStatement statement = connection.prepareStatement("UPDATE demande SET horaire = ? WHERE id_demande = ?");
+                PreparedStatement statement = connection.prepareStatement("UPDATE demande SET horaire = ? WHERE id = ?");
                 statement.setString(1, horaireField.getText());
-                statement.setString(2, id_demande);
+                statement.setString(2, id);
                 statement.executeUpdate();
                 statement.close();
 
@@ -293,7 +293,7 @@ public class ARD extends Application {
         ajoutHoraireStage.show();
     }
 
-    private static void afficherInterfaceModifierJours(String id_demande) {
+    private static void afficherInterfaceModifierJours(String id) {
         Stage modifierJoursStage = new Stage();
         modifierJoursStage.setTitle("Modifier les jours");
 
@@ -306,9 +306,9 @@ public class ARD extends Application {
         Button modifierButton = new Button("Modifier");
         modifierButton.setOnAction(e -> {
             try {
-                PreparedStatement statement = connection.prepareStatement("UPDATE demande SET lesjours = ? WHERE id_demande = ?");
+                PreparedStatement statement = connection.prepareStatement("UPDATE demande SET lesjours = ? WHERE id = ?");
                 statement.setString(1, joursField.getText());
-                statement.setString(2, id_demande);
+                statement.setString(2, id);
                 statement.executeUpdate();
                 statement.close();
 

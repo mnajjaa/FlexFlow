@@ -256,6 +256,7 @@ public class Dashbordadmin {
                 new Label("Nouvelle spécialité :"), specialiteField,
                 new Label("Nouveau tarif :"), tarifField,
                 new Label("Nouveau coach :"), coachField,
+                new Label("Nouvelle email :"), specialiteField,
                 modifierButton
         );
         vbox.setPadding(new Insets(10));
@@ -370,12 +371,13 @@ public class Dashbordadmin {
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
-                data.add(new AdminInterface.OffreItem(
+                data.add(new AdminInterface.OffreItem (
                         resultSet.getString("id"),
                         resultSet.getString("specialite"),
                         resultSet.getFloat("tarif_heure"),
-                        resultSet.getString("id_coach"),
-                        resultSet.getString("etatOffre")
+                        resultSet.getString("Coach_id"),
+                        resultSet.getString("etat_offre"),
+                        resultSet.getString("email")
                 ));
             }
 

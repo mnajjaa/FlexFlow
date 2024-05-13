@@ -9,7 +9,8 @@ public class Offre {
     private Specialite specialite;
     private float tarif_heure;
     private User coach;
-    private Etat etatOffree;
+    private Etat etat_offre;
+    private String email;
 
 
 //private byte[] image;
@@ -23,19 +24,22 @@ public class Offre {
         this.nom = nom;
     }
 
-    public Offre(int id, String specialite, float tarifHeure, int idCoach, String etatOffre) {
+    public Offre(int id, String specialite, float tarifHeure, int idCoach, String etat_offre,String email) {
 
         this.specialite = this.specialite;
         this.tarif_heure = tarif_heure;
         this.coach = coach;
+        this.email = email;
+
     }
 
-    public Offre(int id, String nom,Specialite specialite, float tarif_heure, User coach) {
+    public Offre(int id, String nom,Specialite specialite, float tarif_heure, User coach,String email) {
         this.nom=nom;
         this.id = id;
         this.specialite = specialite;
         this.tarif_heure = tarif_heure;
         this.coach = coach;
+        this.email = email;
         //this.image=image;
     }
 
@@ -91,13 +95,22 @@ public class Offre {
         this.specialite = specialite;
     }
 
-    public Etat getEtatOffree() {
-        return etatOffree;
+    public Etat getEtat_offre() {
+        return etat_offre;
     }
 
-    public void setEtatOffree(Etat etatOffree) {
-        this.etatOffree = etatOffree;
+    public void setEtat_offre(Etat etat_offre) {
+        this.etat_offre = etat_offre;
     }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
 
     @Override
     public String toString() {
@@ -106,6 +119,7 @@ public class Offre {
                 ", specialite='" + specialite + '\'' +
                 ", tarif_heure=" + tarif_heure +
                 ", coach=" + coach +
+                ", email=" + email +
                 '}';
     }
 

@@ -30,8 +30,10 @@ public class ConsultationOffre1 extends Application {
         // Création du TableView et de ses colonnes
         tableView = new TableView<>();
 
-        // Création des colonnes
-        TableColumn<OffreItem, String> nomCol = new TableColumn<>("Description d'offre");
+        TableColumn<OffreItem, String> idCol = new TableColumn<>("ID_Offre");
+        idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+
+        TableColumn<OffreItem, String> nomCol = new TableColumn<>("Nom");
         nomCol.setCellValueFactory(new PropertyValueFactory<>("nom"));
 
         TableColumn<OffreItem, String> specialiteCol = new TableColumn<>("Spécialité");
@@ -46,6 +48,8 @@ public class ConsultationOffre1 extends Application {
         TableColumn<OffreItem, String> etatCol = new TableColumn<>("État");
         etatCol.setCellValueFactory(new PropertyValueFactory<>("etat"));
 
+        TableColumn<ConsultationOffre.OffreItem, String> emailCol = new TableColumn<>("Email");
+        emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
         // Colonne d'évaluation avec un type Void
         TableColumn<OffreItem, Void> evaluationCol = new TableColumn<>("Évaluation");
         evaluationCol.setCellFactory(param -> new TableCell<>() {
@@ -88,15 +92,12 @@ public class ConsultationOffre1 extends Application {
         TableColumn<OffreItem, Double> moyenneCol = new TableColumn<>("Moyenne des notes");
         moyenneCol.setCellValueFactory(new PropertyValueFactory<>("moyenne"));
 
-        // Ajouter les colonnes au TableView
-        tableView.getColumns().addAll(nomCol, specialiteCol, tarifCol, coachCol, etatCol, evaluationCol, moyenneCol);
+        tableView.getColumns().addAll(idCol, nomCol, specialiteCol, tarifCol, coachCol, etatCol, evaluationCol, moyenneCol);
 
         // Charger les données dans le TableView
         try {
             List<OffreItem> offreItems = retrieveOffreItemsArray();
-            for (OffreItem item : offreItems) {
-                tableView.getItems().add(item);
-            }
+            tableView.getItems().addAll(offreItems);
         } catch (SQLException e) {
             e.printStackTrace();
             // Gérer les erreurs de récupération des données
@@ -190,10 +191,12 @@ public class ConsultationOffre1 extends Application {
             // Gérer les erreurs de connexion
         }
     }
+
     public Node getView() {
         // Retourner la vue de la consultation des offres (dans ce cas, le TableView)
         return tableView;
     }
+
     public Node start() {
         VBox vbox = new VBox();
         vbox.setSpacing(20);
@@ -202,70 +205,69 @@ public class ConsultationOffre1 extends Application {
         return vbox;
     }
 
-    //la moyenne des notes pour qu'elle soit sur 20
     private List<OffreItem> retrieveOffreItemsArray() throws SQLException {
         List<OffreItem> offresList = new ArrayList<>();
         try {
-            // Exécuter une requête pour récupérer les offres depuis la base de données
             String query = "SELECT Offre.*, (AVG(evaluations.note) * 4) AS moyenne " +
                     "FROM Offre LEFT JOIN evaluations ON Offre.nom = evaluations.nom " +
-                    "WHERE Offre.etatOffre = 'Acceptée' " +
+                    "WHERE Offre.etat_offre = 'Acceptée' " +
                     "GROUP BY Offre.nom";
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet resultSet = statement.executeQuery();
 
-            // Parcourir les résultats de la requête
             while (resultSet.next()) {
-                // Créer un objet OffreItem pour chaque ligne de la base de données
                 OffreItem offreItem = new OffreItem(
+                        resultSet.getString("id"),
                         resultSet.getString("nom"),
-                        resultSet.getString("Specialite"),
+                        resultSet.getString("specialite"),
                         resultSet.getString("tarif_heure"),
-                        resultSet.getString("id_Coach"),
-                        resultSet.getString("etatOffre"),
+                        resultSet.getString("Coach_id"),
+                        resultSet.getString("etat_offre"),
+                        resultSet.getString("email"),
                         resultSet.getDouble("moyenne")
                 );
-                offresList.add(offreItem); // Ajouter l'objet à la liste
+                offresList.add(offreItem);
             }
 
-            // Fermer les ressources
             resultSet.close();
             statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
-            // Gérer les erreurs de requête
             throw e;
         }
 
         return offresList;
     }
 
-
     public static void main(String[] args) {
         launch(args);
     }
 
-
-
-    // Classe interne représentant un élément d'offre
     public static class OffreItem {
+        private String id;
         private String nom;
         private String specialite;
         private String tarif;
         private String coach;
         private String etat;
+        private String email;
         private Double moyenne;
 
-        public OffreItem(String nom, String specialite, String tarif, String coach, String etat, Double moyenne) {
+        public OffreItem(String id, String nom, String specialite, String tarif, String coach, String etat, String email, Double moyenne) {
+            this.id = id;
             this.nom = nom;
             this.specialite = specialite;
             this.tarif = tarif;
             this.coach = coach;
             this.etat = etat;
+            this.email= email;
             this.moyenne = moyenne;
         }
 
-        // Getters pour accéder aux champs de l'offre
+        public String getId() {
+            return id;
+        }
+
         public String getNom() {
             return nom;
         }
@@ -286,9 +288,12 @@ public class ConsultationOffre1 extends Application {
             return etat;
         }
 
+        public String getEmail() {
+            return email;
+        }
+
         public Double getMoyenne() {
             return moyenne;
         }
     }
 }
-

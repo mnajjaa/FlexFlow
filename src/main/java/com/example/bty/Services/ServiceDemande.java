@@ -30,11 +30,11 @@ public class ServiceDemande {
 
         public void addDemande(Demande d) {
             //try (Connection connection = DataSource.obtenirConnexion())
-            String query = "INSERT INTO Demande (id_demande,Age,nombreHeure,MaladieChronique,But,NiveauPhysique,id_user,id_Offre,etat) VALUES (?, ?, ?, ?, ?, ?, ?,?,?)";
+            String query = "INSERT INTO Demande (id,age,nombreheure,maladie_chronique,but,niveau_physique,user_id,offre_id,etat) VALUES (?, ?, ?, ?, ?, ?, ?,?,?)";
             try (PreparedStatement statement = connexion.prepareStatement(query)) {
                 statement.setInt(1, d.getId_demande());
                 statement.setInt(2, d.getAge());
-                statement.setInt(3, d.getNbre_heure());
+                statement.setInt(3, d.getNombreheure());
                 statement.setBoolean(4, d.getMaladie_chronique());
                 statement.setString(5, d.getBut());
                 statement.setString(6, d.getNiveau_physique());
@@ -55,7 +55,7 @@ public class ServiceDemande {
 
 
         public void DeleteDemande (int id) {
-            String DELETE = "DELETE FROM Demande WHERE id_demande = ?";
+            String DELETE = "DELETE FROM Demande WHERE id = ?";
             try {
                 pst = connexion.prepareStatement(DELETE);
                 pst.setInt(1, id);
@@ -66,11 +66,11 @@ public class ServiceDemande {
             }}
 
         public void UpdateDemande(Demande d) throws SQLException {
-            String UPDATE = "UPDATE Demande SET id_demande = ?, Age = ?, nombreHeure = ?, MaladieChronique = ?, But = ?, NiveauPhysique = ?, id_user = ? WHERE id_offre = ?";
+            String UPDATE = "UPDATE Demande SET id = ?, age = ?, nombreheure = ?, maladie_chronique = ?, but = ?, niveau_physique = ?, user_id = ? WHERE offre_id = ?";
             try {
                 pst = connexion.prepareStatement(UPDATE);
                 pst.setInt(1, d.getAge());
-                pst.setInt(2, d.getNbre_heure());
+                pst.setInt(2, d.getNombreheure());
                 pst.setBoolean(3, d.isMaladieCHronique);
                 pst.setString(4, d.getBut());
                 pst.setString(5, d.getNiveau_physique());

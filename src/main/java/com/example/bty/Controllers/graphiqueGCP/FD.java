@@ -253,7 +253,7 @@ public class FD extends Application {
         String password = "";
 
         try (Connection conn = DriverManager.getConnection(url, username, password)) {
-            String query = "INSERT INTO demande (nom,Age, But, NiveauPhysique, MaladieChronique, NombreHeure, ID_User, ID_Offre, Etat, Horaire, lesjours) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
+            String query = "INSERT INTO demande (nom,age, but, niveau_physique, maladie_chronique, nombreheure, user_id, offre_id, etat, horaire, lesjours) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
             String etat = "En Attente";
             java.sql.Time horaire = java.sql.Time.valueOf("08:00:00");
             PreparedStatement statement = conn.prepareStatement(query);

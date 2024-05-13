@@ -98,15 +98,15 @@ public class Statt extends Application {
                 while (resultSet.next()) {
                     ConsultationDemandes.DemandeItem demandeItem = new ConsultationDemandes.DemandeItem(
                             resultSet.getString("nom"),
-                            resultSet.getString("id_demande"),
+                            resultSet.getString("id"),
                             resultSet.getString("but"),
-                            resultSet.getString("NiveauPhysique"),
-                            resultSet.getString("MaladieChronique"),
+                            resultSet.getString("niveau_physique"),
+                            resultSet.getString("maladie_chronique"),
                             resultSet.getString("age"),
-                            resultSet.getString("id_user"),
-                            resultSet.getString("id_offre"),
+                            resultSet.getString("user_id"),
+                            resultSet.getString("offre_id"),
                             resultSet.getString("etat"),
-                            resultSet.getString("nombreHeure"),
+                            resultSet.getString("nombreheure"),
                             resultSet.getTime("horaire"),
                             resultSet.getString("lesjours")
                     );

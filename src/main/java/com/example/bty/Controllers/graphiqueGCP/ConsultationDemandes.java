@@ -53,23 +53,23 @@ public class ConsultationDemandes extends Application {
         TableColumn<DemandeItem, String> nomCol = new TableColumn<>("Nom");
         nomCol.setCellValueFactory(new PropertyValueFactory<>("nom"));
         TableColumn<DemandeItem, String> idCol = new TableColumn<>("ID");
-        idCol.setCellValueFactory(new PropertyValueFactory<>("id_demande"));
+        idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         TableColumn<DemandeItem, String> butCol = new TableColumn<>("But");
         butCol.setCellValueFactory(new PropertyValueFactory<>("but"));
         TableColumn<DemandeItem, String> niveauPhysiqueCol = new TableColumn<>("Niveau physique");
-        niveauPhysiqueCol.setCellValueFactory(new PropertyValueFactory<>("niveauPhysique"));
+        niveauPhysiqueCol.setCellValueFactory(new PropertyValueFactory<>("niveau_physique"));
         TableColumn<DemandeItem, String> maladieChroniqueCol = new TableColumn<>("Maladie chronique");
-        maladieChroniqueCol.setCellValueFactory(new PropertyValueFactory<>("maladieChronique"));
+        maladieChroniqueCol.setCellValueFactory(new PropertyValueFactory<>("maladie_chronique"));
         TableColumn<DemandeItem, String> ageCol = new TableColumn<>("Age");
         ageCol.setCellValueFactory(new PropertyValueFactory<>("age"));
         TableColumn<DemandeItem, String> id_userCol = new TableColumn<>("ID Utilisateur");
-        id_userCol.setCellValueFactory(new PropertyValueFactory<>("id_user"));
+        id_userCol.setCellValueFactory(new PropertyValueFactory<>("user_id"));
         TableColumn<DemandeItem, String> id_offreCol = new TableColumn<>("ID Offre");
-        id_offreCol.setCellValueFactory(new PropertyValueFactory<>("id_offre"));
+        id_offreCol.setCellValueFactory(new PropertyValueFactory<>("offre_id"));
         TableColumn<DemandeItem, String> etatCol = new TableColumn<>("État");
         etatCol.setCellValueFactory(new PropertyValueFactory<>("etat"));
         TableColumn<DemandeItem, String> nombreHeureCol = new TableColumn<>("Nombre d'Heures");
-        nombreHeureCol.setCellValueFactory(new PropertyValueFactory<>("nombreHeure"));
+        nombreHeureCol.setCellValueFactory(new PropertyValueFactory<>("nombreheure"));
         TableColumn<DemandeItem, String> horaireCol = new TableColumn<>("Horaire");
         horaireCol.setCellValueFactory(new PropertyValueFactory<>("horaire"));
         TableColumn<DemandeItem, String> lesjoursCol = new TableColumn<>("Lesjours");
@@ -160,15 +160,15 @@ public class ConsultationDemandes extends Application {
             while (resultSet.next()) {
                 DemandeItem demandeItem = new DemandeItem(
                         resultSet.getString("nom"),
-                        resultSet.getString("id_demande"),
+                        resultSet.getString("id"),
                         resultSet.getString("but"),
-                        resultSet.getString("NiveauPhysique"),
-                        resultSet.getString("MaladieChronique"),
+                        resultSet.getString("niveau_physique"),
+                        resultSet.getString("maladie_chronique"),
                         resultSet.getString("age"),
-                        resultSet.getString("id_user"),
-                        resultSet.getString("id_offre"),
+                        resultSet.getString("user_id"),
+                        resultSet.getString("offre_id"),
                         resultSet.getString("etat"),
-                        resultSet.getString("nombreHeure"),
+                        resultSet.getString("nombreheure"),
                         resultSet.getTime("horaire"),
                         resultSet.getString("lesjours")
                 );
@@ -189,12 +189,12 @@ public class ConsultationDemandes extends Application {
 
     // Méthode pour supprimer une demande
     // Méthode pour supprimer une demande
-    private static void supprimerDemande(String id_demande) {
+    private static void supprimerDemande(String id) {
         try {
             // Créer la requête SQL pour supprimer la demande
-            String query = "DELETE FROM Demande WHERE id_demande = ?";
+            String query = "DELETE FROM Demande WHERE id = ?";
             PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, id_demande); // Utilisation de l'ID de demande passé en paramètre
+            statement.setString(1, id); // Utilisation de l'ID de demande passé en paramètre
 
             int rowsDeleted = statement.executeUpdate();
 
@@ -203,7 +203,7 @@ public class ConsultationDemandes extends Application {
                 ObservableList<DemandeItem> updatedList = FXCollections.observableArrayList(retrieveDemandesList());
                 tableView.setItems(updatedList); // Rafraîchir la TableView avec la nouvelle liste de demandes
             } else {
-                System.out.println("Aucune demande à supprimer avec l'ID : " + id_demande);
+                System.out.println("Aucune demande à supprimer avec l'ID : " + id);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -212,12 +212,12 @@ public class ConsultationDemandes extends Application {
         }
     }
     // Méthode pour modifier les jours d'une demande
-    private static void modifierDemande(String id_demande) {
+    private static void modifierDemande(String id) {
         try {
             // Récupérer les détails de la demande spécifique à partir de la base de données en utilisant l'ID de la demande
-            String query = "SELECT * FROM Demande WHERE id_demande = ?";
+            String query = "SELECT * FROM Demande WHERE id = ?";
             PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, id_demande);
+            statement.setString(1, id);
             ResultSet resultSet = statement.executeQuery();
 
             // Vérifier si une demande correspondante est trouvée
@@ -231,13 +231,13 @@ public class ConsultationDemandes extends Application {
                 // Créer des champs de texte pour chaque attribut de la demande avec les valeurs actuelles
                 TextField nomField = new TextField(resultSet.getString("nom"));
                 TextField butField = new TextField(resultSet.getString("but"));
-                TextField niveauPhysiqueField = new TextField(resultSet.getString("NiveauPhysique"));
-                TextField maladieChroniqueField = new TextField(resultSet.getString("MaladieChronique"));
+                TextField niveauPhysiqueField = new TextField(resultSet.getString("niveau_physique"));
+                TextField maladieChroniqueField = new TextField(resultSet.getString("maladie_chronique"));
                 TextField ageField = new TextField(resultSet.getString("age"));
-                TextField id_userField = new TextField(resultSet.getString("id_user"));
-                TextField id_offreField = new TextField(resultSet.getString("id_offre"));
+                TextField id_userField = new TextField(resultSet.getString("user_id"));
+                TextField id_offreField = new TextField(resultSet.getString("offre_id"));
                 TextField etatField = new TextField(resultSet.getString("etat"));
-                TextField nombreHeureField = new TextField(resultSet.getString("nombreHeure"));
+                TextField nombreHeureField = new TextField(resultSet.getString("nombreheure"));
                 TextField horaireField = new TextField(resultSet.getTime("horaire").toString());
                 TextField lesjoursField = new TextField(resultSet.getString("lesjours"));
 
@@ -261,7 +261,7 @@ public class ConsultationDemandes extends Application {
                 confirmerButton.setOnAction(event -> {
                     try {
                         // Mettre à jour les informations de la demande dans la base de données avec les nouvelles valeurs
-                        String updateQuery = "UPDATE Demande SET nom=?, but=?, NiveauPhysique=?, MaladieChronique=?, age=?, id_user=?, id_offre=?, etat=?, nombreHeure=?, horaire=?, lesjours=? WHERE id_demande=?";
+                        String updateQuery = "UPDATE Demande SET nom=?, but=?, niveau_physique=?, maladie_chronique=?, age=?, user_id=?, offre_id=?, etat=?, nombreheure=?, horaire=?, lesjours=? WHERE id=?";
                         PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
                         updateStatement.setString(1, nomField.getText());
                         updateStatement.setString(2, butField.getText());
@@ -274,7 +274,7 @@ public class ConsultationDemandes extends Application {
                         updateStatement.setString(9, nombreHeureField.getText());
                         updateStatement.setString(10, horaireField.getText());
                         updateStatement.setString(11, lesjoursField.getText());
-                        updateStatement.setString(12, id_demande);
+                        updateStatement.setString(12, id);
 
                         int rowsUpdated = updateStatement.executeUpdate();
                         if (rowsUpdated > 0) {
@@ -299,7 +299,7 @@ public class ConsultationDemandes extends Application {
                 stage.setTitle("Modifier la demande");
                 stage.show();
             } else {
-                System.out.println("Aucune demande trouvée avec l'ID : " + id_demande);
+                System.out.println("Aucune demande trouvée avec l'ID : " + id);
             }
 
             // Fermer les ressources
@@ -326,20 +326,20 @@ public class ConsultationDemandes extends Application {
         private final Time horaire;
         private final String lesjours;
 
-        public DemandeItem(String nom, String id_demande, String but, String niveauPhysique, String maladieChronique,
-                           String age, String id_user, String id_offre, String etat, String nombreHeure, Time horaire, String lesjours) {
+        public DemandeItem(String nom, String id, String but, String niveau_physique, String maladie_chronique,
+                           String age, String user_id, String offre_id, String etat, String nombreheure, Time horaire, String lesjours) {
             super();
 
             this.nom = nom;
-            this.id_demande = id_demande;
+            this.id_demande = id;
             this.but = but;
-            this.niveauPhysique = niveauPhysique;
-            this.maladieChronique = maladieChronique;
+            this.niveauPhysique = niveau_physique;
+            this.maladieChronique = maladie_chronique;
             this.age = age;
-            this.id_user = id_user;
-            this.id_offre = id_offre;
+            this.id_user = user_id;
+            this.id_offre = offre_id;
             this.etat = etat;
-            this.nombreHeure = nombreHeure;
+            this.nombreHeure = nombreheure;
             this.horaire = horaire;
             this.lesjours = lesjours;
 

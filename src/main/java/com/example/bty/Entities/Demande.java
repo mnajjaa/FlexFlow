@@ -8,7 +8,7 @@ public class Demande {
 
     private int id;
      private int age;
-    private int nbre_heure;
+    private int nombreheure;
     private boolean maladie_chronique;
     private String but;
     private String niveau_physique;
@@ -19,10 +19,10 @@ public class Demande {
     private String lesjours;
     private Time horaire;
 
-    public Demande(String id, String age, String nbre_heure, String maladie_chronique, String but, String niveau_physique, String m, String f, String etat, Time lesjours, String horaire) {
+    public Demande(String id, String age, String nombreheure, String maladie_chronique, String but, String niveau_physique, String m, String f, String etat, Time lesjours, String horaire) {
     }
 
-    public Demande(Object nom, String idDemande, Object but, Object niveauPhysique, Object maladieChronique, Object age, Object idUser, Object idOffre, Object etat, Object nombreHeure, Object horaire, Object lesjours) {
+    public Demande(Object nom, String idDemande, Object but, Object niveauPhysique, Object maladieChronique, Object age, Object idUser, Object idOffre, Object etat, Object nombreheure, Object horaire, Object lesjours) {
     }
 
     public Time getHoraire() {
@@ -77,12 +77,12 @@ public class Demande {
         this.age = age;
     }
 
-    public int getNbre_heure() {
-        return nbre_heure;
+    public int getNombreheure() {
+        return nombreheure;
     }
 
-    public void setNbre_heure(int nbre_heure) {
-        this.nbre_heure = nbre_heure;
+    public void setNombreheure(int nombreheure) {
+        this.nombreheure = nombreheure;
     }
 
     public boolean isMaladie_chronique() {
@@ -126,10 +126,10 @@ public class Demande {
     }
 
 
-    public Demande(int id_demande, int age, int nbre_heure, boolean maladie_chronique, String but, String niveau_physique, User membre, Offre offre, Etat etat, String lesjours, Time horaire) {
+    public Demande(int id_demande, int age, int nombreheure, boolean maladie_chronique, String but, String niveau_physique, User membre, Offre offre, Etat etat, String lesjours, Time horaire) {
         this.id = id_demande;
         this.age = age;
-        this.nbre_heure = nbre_heure;
+        this.nombreheure= nombreheure;
         this.maladie_chronique = maladie_chronique;
         this.but = but;
         this.niveau_physique = niveau_physique;
@@ -140,9 +140,9 @@ public class Demande {
         this.horaire = horaire;
     }
 
-    public Demande(int age, int nbre_heure, boolean maladie_chronique, String but, String niveau_physique, User membre, Offre offre) {
+    public Demande(int age, int nombreheure, boolean maladie_chronique, String but, String niveau_physique, User membre, Offre offre) {
         this.age = age;
-        this.nbre_heure = nbre_heure;
+        this.nombreheure = nombreheure;
         this.maladie_chronique = maladie_chronique;
         this.but = but;
         this.niveau_physique = niveau_physique;
@@ -155,7 +155,7 @@ public class Demande {
         return "Demande{" +
                 "id=" + id +
                 ", age=" + age +
-                ", nbre_heure=" + nbre_heure +
+                ", nombreheure=" + nombreheure +
                 ", maladie_chronique=" + maladie_chronique +
                 ", but='" + but + '\'' +
                 ", niveau_physique='" + niveau_physique + '\'' +
