@@ -26,9 +26,7 @@ import java.time.chrono.Chronology;
 import java.time.format.DateTimeParseException;
 
 public class AjouterEvenementInterface extends Application {
-    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/pidevgym";
-    private static final String USERNAME = "root";
-    private static final String PASSWORD = "";
+
     private static Connection connexion;
     private PreparedStatement pde;
 
@@ -278,7 +276,7 @@ public class AjouterEvenementInterface extends Application {
 
 
     public Boolean ajouterEvenement(Evenement e, File imageFile) {
-        String req = "INSERT INTO evenement (nomEvenement, categorie, objectif, nbrplace, Date, Time, id_user, etat, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String req = "INSERT INTO evenement (nom_evenement, categorie, objectif, nbr_place, date, time, user_id, etat, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             FileInputStream fis = new FileInputStream(imageFile);
 

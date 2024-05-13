@@ -19,7 +19,7 @@ public class ServiceEvenement {
 
     //Methode pour ajouter un evenement
     public void ajouterEvenement(Evenement e){
-        String req="INSERT INTO evenement (nomEvenement,categorie,objectif,nbrplace,Date,Time,id_user,etat) VALUES (?,?,?,?,?,?,?,?)";
+        String req="INSERT INTO evenement (nom_evenement,categorie,objectif,nbr_place,date,time,user_id,etat) VALUES (?,?,?,?,?,?,?,?)";
         try {
             pde=connexion.prepareStatement(req);
             pde.setString(1,e.getNom());
@@ -39,7 +39,7 @@ public class ServiceEvenement {
     }
     //methode pour modifier un evenement
     public void modifierEvenement(Evenement e){
-        String req="UPDATE evenement SET nomEvenement=?,categorie=?,Objectif=?,nbrPlace=?,Date=?,Time=?,id_user=?,etat=? WHERE id_evenement=?";
+        String req="UPDATE evenement SET nom_evenement=?,categorie=?,objectif=?,nbr_place=?,date=?,time=?,user_id=?,etat=? WHERE id=?";
         try {
             pde=connexion.prepareStatement(req);
             pde.setString(1,e.getNom());
@@ -59,7 +59,7 @@ public class ServiceEvenement {
 //methode pour supprimer un evenement
 
     public Boolean supprimerEvenement(int id){
-        String req="DELETE FROM evenement WHERE id_evenement=?";
+        String req="DELETE FROM evenement WHERE id=?";
         try {
             pde=connexion.prepareStatement(req);
             pde.setInt(1,id);
@@ -81,14 +81,14 @@ public class ServiceEvenement {
              ResultSet resultSet = statement.executeQuery(query)) {
             while (resultSet.next()) {
                 Evenement E = new Evenement();
-                E.setId(resultSet.getInt("id_evenement"));
-                E.setNom(resultSet.getString("nomEvenement"));
+                E.setId(resultSet.getInt("id"));
+                E.setNom(resultSet.getString("nom_evenement"));
                 E.setCategorie(resultSet.getString("categorie"));
-                E.setObjectif(resultSet.getString("Objectif"));
-                E.setNbre_place(resultSet.getInt("nbrPlace"));
-                E.setDate(resultSet.getDate("Date"));
-                E.setTime(resultSet.getTime("Time"));
-                int coachId = resultSet.getInt("id_user");
+                E.setObjectif(resultSet.getString("objectif"));
+                E.setNbre_place(resultSet.getInt("nbr_place"));
+                E.setDate(resultSet.getDate("date"));
+                E.setTime(resultSet.getTime("time"));
+                int coachId = resultSet.getInt("user_id");
 
                 // Récupérer le nom du coach à partir de la base de données
                 String coachName = null;
@@ -119,20 +119,20 @@ public class ServiceEvenement {
     public List<Evenement> rechercherEvenementParNOom(String nom) {
         List<Evenement> evenements = new ArrayList<>();
         //try (Connection connection = ConnexionDB.obtenirConnexion()) {
-        String query = "SELECT * FROM evenement WHERE nomEvenement = ?";
+        String query = "SELECT * FROM evenement WHERE nom_evenement = ?";
         try (PreparedStatement statement = connexion.prepareStatement(query)) {
             statement.setString(1, nom);
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
                     Evenement E = new Evenement();
-                    E.setId(resultSet.getInt("id_evenement"));
-                    E.setNom(resultSet.getString("nomEvenement"));
+                    E.setId(resultSet.getInt("id"));
+                    E.setNom(resultSet.getString("nom_evenement"));
                     E.setCategorie(resultSet.getString("categorie"));
-                    E.setObjectif(resultSet.getString("Objectif"));
-                    E.setNbre_place(resultSet.getInt("nbrPlace"));
-                    E.setDate(resultSet.getDate("Date"));
-                    E.setTime(resultSet.getTime("Time"));
-                    int coachId = resultSet.getInt("id_user");
+                    E.setObjectif(resultSet.getString("objectif"));
+                    E.setNbre_place(resultSet.getInt("nbr_place"));
+                    E.setDate(resultSet.getDate("date"));
+                    E.setTime(resultSet.getTime("time"));
+                    int coachId = resultSet.getInt("user_id");
                     evenements.add(E);
                 }
             }
