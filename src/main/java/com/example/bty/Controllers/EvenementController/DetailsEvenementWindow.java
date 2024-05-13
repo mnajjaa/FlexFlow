@@ -198,7 +198,7 @@ public class DetailsEvenementWindow extends Stage {
 
         try {
             if (evenement.getNbre_place() > 0) {
-                String queryInsert = "INSERT INTO reservation (id_user, nomEvenement, nomParticipant,date_reservation) VALUES (?,?,?,?)";
+                String queryInsert = "INSERT INTO reservation (user_id, nom_evenement, nom_participant,date_reservation) VALUES (?,?,?,?)";
                 PreparedStatement statementInsert = connection.prepareStatement(queryInsert);
                 statementInsert.setInt(1, userID);
                 statementInsert.setString(2, evenement.getNom());
@@ -210,7 +210,7 @@ public class DetailsEvenementWindow extends Stage {
                     afficherMessage("Succès", "Vous avez participé à l'evenement avec succès !");
 
                     evenement.setNbre_place(evenement.getNbre_place() - 1);
-                    String queryUpdate = "UPDATE evenement SET nbrPlace = ? WHERE id_evenement  = ?";
+                    String queryUpdate = "UPDATE evenement SET nbr_place = ? WHERE id  = ?";
                     PreparedStatement statementUpdate = connection.prepareStatement(queryUpdate);
                     statementUpdate.setInt(1, evenement.getNbre_place());
                     statementUpdate.setInt(2, evenement.getId());
@@ -267,7 +267,7 @@ public class DetailsEvenementWindow extends Stage {
 
     private static boolean hasUserReservedEvent(int userId, String eventName) {
         try {
-            String queryCheckReservation = "SELECT COUNT(*) FROM reservation WHERE id_user = ? AND nomEvenement = ?";
+            String queryCheckReservation = "SELECT COUNT(*) FROM reservation WHERE user_id = ? AND nom_evenement = ?";
             PreparedStatement statementCheckReservation = connection.prepareStatement(queryCheckReservation);
             statementCheckReservation.setInt(1, userId);
             statementCheckReservation.setString(2, eventName);
