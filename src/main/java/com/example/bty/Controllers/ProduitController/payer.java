@@ -54,7 +54,7 @@ public class payer extends Application {
 
         Label totalLabel = new Label("Total : " + (Math.ceil(montantTotal * 0.3 / 10)) + " Dt");
         // Utiliser le montant total passé lors de la création de l'instance de payer
-        totalLabel.setStyle("-fx-font-size: 20;-fx-text-fill: #2c3e50;");
+        totalLabel.setStyle("-fx-font-size: 20;-fx-text-fill: #5b73e8;");
         totalLabel.setLayoutX(14);
         totalLabel.setLayoutY(11);
         totalPane.getChildren().add(totalLabel);
@@ -77,7 +77,7 @@ public class payer extends Application {
         paymentGrid.setLayoutY(25);
 
         Label nameLabel = new Label("Nom :");
-        nameLabel.setStyle("-fx-text-fill: #2c3e50;");
+        nameLabel.setStyle("-fx-text-fill: #5b73e8;");
 
         TextField nameTextField = new TextField();
         nameTextField.setPrefHeight(37);
@@ -94,7 +94,7 @@ public class payer extends Application {
         emailGrid.setLayoutY(174);
 
         Label emailLabel = new Label("Email :");
-        emailLabel.setStyle("-fx-text-fill:#2c3e50;");
+        emailLabel.setStyle("-fx-text-fill:#5b73e8;");
 
         TextField emailTextField = new TextField();
         emailTextField.setPrefHeight(37);
@@ -104,7 +104,7 @@ public class payer extends Application {
         emailGrid.add(emailTextField, 1, 0);
 
         Label cardLabel = new Label("N° de carte:");
-        cardLabel.setStyle("-fx-text-fill: #2c3e50;");
+        cardLabel.setStyle("-fx-text-fill: #5b73e8;");
         cardLabel.setLayoutX(127);
         cardLabel.setLayoutY(233);
 
@@ -135,10 +135,10 @@ public class payer extends Application {
         yySpinner.setPrefWidth(102);
 
         Label mmLabel = new Label("MM :");
-        mmLabel.setStyle("-fx-text-fill: #2c3e50;");
+        mmLabel.setStyle("-fx-text-fill: #5b73e8;");
 
         Label yyLabel = new Label("YY :");
-        yyLabel.setStyle("-fx-text-fill: #2c3e50;");
+        yyLabel.setStyle("-fx-text-fill: #5b73e8;");
 
         dateGrid.add(mmSpinner, 1, 0);
         dateGrid.add(yySpinner, 3, 0);
@@ -151,7 +151,7 @@ public class payer extends Application {
         cvcGrid.setLayoutY(388);
 
         Label cvcLabel = new Label("CVC  :");
-        cvcLabel.setStyle("-fx-text-fill: #2c3e50;");
+        cvcLabel.setStyle("-fx-text-fill: #5b73e8;");
 
         Spinner<Integer> cvcSpinner = new Spinner<>(100, 999, 100);
         cvcSpinner.setPrefHeight(37);

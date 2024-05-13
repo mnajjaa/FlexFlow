@@ -71,7 +71,7 @@ public clientVitrine(){
         VBox topBar = new VBox();
         topBar.setAlignment(Pos.CENTER_LEFT);
         topBar.getStyleClass().add("top-bar");
-        topBar.setStyle(" -fx-background-color: #2c3e50;\n" +
+        topBar.setStyle(" -fx-background-color: #5b73e8;\n" +
                 "    -fx-padding: 25;\n" +
                 "    -fx-border-radius: 15px;" +
                 " -fx-background-insets: 0 0 0 232;"
