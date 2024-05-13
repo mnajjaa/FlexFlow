@@ -71,7 +71,7 @@ public class CourMembre extends Application {
         VBox filterBox = new VBox();
         filterBox.setAlignment(Pos.CENTER_LEFT);
 
-        filterBox.setStyle("-fx-background-color: #2c3e50;\n" +
+        filterBox.setStyle("-fx-background-color: #5b73e8;\n" +
                 "    -fx-padding: 15;\n" +
                 "    -fx-border-radius: 15px;" +
                 "-fx-background-insets: 0 0 0 219");
