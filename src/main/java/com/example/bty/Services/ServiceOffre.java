@@ -38,12 +38,13 @@ public class ServiceOffre {
     public boolean addOffre (Offre f) {
 
         //try (Connection connection = DataSource.obtenirConnexion())
-        String query = "INSERT INTO Offre (id,specialite,tarif_heure,id_coach) VALUES ( ?, ?, ?,?)";
+        String query = "INSERT INTO Offre (id,specialite,tarif_heure,coach_id,email) VALUES ( ?, ?, ? ,? ,?)";
         try (PreparedStatement statement = connexion.prepareStatement(query)) {
             statement.setInt(1, f.getId());
             statement.setString(2, String.valueOf(f.getspecialite()));
             statement.setFloat(3, f.getTarif_heure());
             statement.setInt(4, f.getCoach().getId());
+            statement.setString(5, String.valueOf(f.getEmail()));
 
             statement.executeUpdate();
             return true;
@@ -70,13 +71,14 @@ public class ServiceOffre {
         }}
 
     public void UpdateOffre(Offre f) throws SQLException {
-        String UPDATE = "UPDATE Offre SET id = ?, specialite = ?, trif_heure = ?, id_coach= ? WHERE id_coach = ?";
+        String UPDATE = "UPDATE Offre SET id = ?, specialite = ?, trif_heure = ?, coach_id= ?, email = ? WHERE coach_id = ?";
         try {
             pst = connexion.prepareStatement(UPDATE);
             pst.setInt(1, f.getId());
             pst.setString(2, String.valueOf(f.getspecialite()));
             pst.setFloat(3, f.getTarif_heure());
             pst.setInt(4, f.getCoach().getId());
+            pst.setString(5, String.valueOf(f.getEmail()));
             pst.executeUpdate();
             System.out.println("Demande mise à jour avec succès !");
         } catch (SQLException e) {

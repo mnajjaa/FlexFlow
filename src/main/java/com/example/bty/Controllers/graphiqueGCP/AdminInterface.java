@@ -45,7 +45,7 @@ public class AdminInterface extends Application {
     private void connectToDatabase() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            String url = "jdbc:mysql://localhost:3306/pidevgym";
+            String url = "jdbc:mysql://localhost:3306/pidevgymweb";
             String utilisateur = "root";
             String motDePasse = "";
 
@@ -72,10 +72,14 @@ public class AdminInterface extends Application {
         TableColumn<OffreItem, String> etatOffreColumn = new TableColumn<>("État Offre");
         etatOffreColumn.setCellValueFactory(new PropertyValueFactory<>("etatOffre"));
 
+        TableColumn<OffreItem, String> emailColumn = new TableColumn<>("String email");
+        emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
+
+
         TableColumn<OffreItem, Void> actionColumn = new TableColumn<>("Action");
         actionColumn.setCellFactory(param -> new ButtonCell());
 
-        tableView.getColumns().addAll(idColumn, specialiteColumn, tarifHeureColumn, idCoachColumn, etatOffreColumn, actionColumn);
+        tableView.getColumns().addAll(idColumn, specialiteColumn, tarifHeureColumn, idCoachColumn, etatOffreColumn,emailColumn, actionColumn);
 
 
     }
@@ -110,11 +114,13 @@ public class AdminInterface extends Application {
     public static class OffreItem {
 
 
+
         private final StringProperty id = new SimpleStringProperty();
         private final StringProperty specialite = new SimpleStringProperty();
         private final StringProperty tarifHeure = new SimpleStringProperty();
         private final StringProperty idCoach = new SimpleStringProperty();
         private final StringProperty etatOffre = new SimpleStringProperty();
+        private final StringProperty email = new SimpleStringProperty();
 
         public OffreItem() {
 
@@ -140,7 +146,9 @@ public class AdminInterface extends Application {
             return etatOffre.get();
         }
 
-
+        public String getEmail() {
+            return email.get();
+        }
 
 
         public StringProperty idProperty() {
@@ -163,6 +171,10 @@ public class AdminInterface extends Application {
             return etatOffre;
         }
 
+        public StringProperty emailProperty() {
+            return email;
+        }
+
         public void setId(String id) {
             this.id.set(id);
         }
@@ -181,6 +193,10 @@ public class AdminInterface extends Application {
 
         public void setEtatOffre(String etatOffre) {
             this.etatOffre.set(etatOffre);
+        }
+
+        public void setEmail(String email) {
+            this.email.set(email);
         }
     }
 
@@ -213,7 +229,7 @@ public class AdminInterface extends Application {
 
     private static void accepterOffre(String id) {
         try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE Offre SET etatOffre = 'Acceptée' WHERE id = ?");
+            PreparedStatement statement = connection.prepareStatement("UPDATE Offre SET etat_offre = 'Acceptée' WHERE id = ?");
             statement.setString(1, id);
             statement.executeUpdate();
             statement.close();
@@ -226,7 +242,7 @@ public class AdminInterface extends Application {
 
     private static void refuserOffre(String id) {
         try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE Offre SET etatOffre = 'Refusée' WHERE id = ?");
+            PreparedStatement statement = connection.prepareStatement("UPDATE Offre SET etat_offre = 'Refusée' WHERE id = ?");
             statement.setString(1, id);
             statement.executeUpdate();
             statement.close();

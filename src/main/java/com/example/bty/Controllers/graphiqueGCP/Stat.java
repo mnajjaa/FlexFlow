@@ -22,7 +22,7 @@ public class Stat extends Application {
     // Méthode pour établir la connexion à la base de données
     private static void connectToDatabase() throws SQLException {
         // Remplacez les informations de connexion par les vôtres
-        String url = "jdbc:mysql://localhost:3306/pidevgym";
+        String url = "jdbc:mysql://localhost:3306/pidevgymweb";
         String user = "root";
         String password = "";
         connection = DriverManager.getConnection(url, user, password);
@@ -68,7 +68,7 @@ public class Stat extends Application {
         // Parcourir chaque demande dans la liste
         for (ConsultationDemandes.DemandeItem demande : demandesList) {
 
-            String offreId = demande.getId_offre(); // Récupérer l'ID de l'offre
+            String offreId = demande.getNom(); // Récupérer l'ID de l'offre
 
             // Mettre à jour le compteur pour cet ID d'offre
             offreStats.put(offreId, offreStats.getOrDefault(offreId, 0) + 1);
@@ -98,15 +98,15 @@ public class Stat extends Application {
                 while (resultSet.next()) {
                     ConsultationDemandes.DemandeItem demandeItem = new ConsultationDemandes.DemandeItem(
                             resultSet.getString("nom"),
-                            resultSet.getString("id_demande"),
+                            resultSet.getString("id"),
                             resultSet.getString("but"),
-                            resultSet.getString("NiveauPhysique"),
-                            resultSet.getString("MaladieChronique"),
+                            resultSet.getString("niveau_physique"),
+                            resultSet.getString("maladie_chronique"),
                             resultSet.getString("age"),
-                            resultSet.getString("id_user"),
-                            resultSet.getString("id_offre"),
+                            resultSet.getString("user_id"),
+                            resultSet.getString("offre_id"),
                             resultSet.getString("etat"),
-                            resultSet.getString("nombreHeure"),
+                            resultSet.getString("nombreheure"),
                             resultSet.getTime("horaire"),
                             resultSet.getString("lesjours")
                     );

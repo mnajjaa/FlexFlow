@@ -203,8 +203,8 @@ public class FD extends Application {
             @Override
 
             public void handle(ActionEvent event) {
-                   InterfaceOffre ardInterface = new InterfaceOffre();
-                    ardInterface.start(new Stage());
+                InterfaceOffre ardInterface = new InterfaceOffre();
+                ardInterface.start(new Stage());
 
 
             }
@@ -612,12 +612,12 @@ public class FD extends Application {
             return;
         }
 
-        String url = "jdbc:mysql://localhost:3306/pidevgym";
+        String url = "jdbc:mysql://localhost:3306/pidevgymweb";
         String username = "root";
         String password = "";
 
         try (Connection conn = DriverManager.getConnection(url, username, password)) {
-            String query = "INSERT INTO demande (nom,Age, But, NiveauPhysique, MaladieChronique, NombreHeure, ID_User, ID_Offre, Etat, Horaire, lesjours) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
+            String query = "INSERT INTO demande (nom,age, but, niveau_physique, maladie_chronique, nombreheure, user_id, offre_id, etat, horaire, lesjours) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
             String etat = "En Attente";
             java.sql.Time horaire = java.sql.Time.valueOf("08:00:00");
             PreparedStatement statement = conn.prepareStatement(query);
@@ -678,7 +678,7 @@ public class FD extends Application {
         consultationDemandes.start(new Stage());
     }
     private String getSpecialiteFromOffreId(int idOffre) {
-        String url = "jdbc:mysql://localhost:3306/pidevgym";
+        String url = "jdbc:mysql://localhost:3306/pidevgymweb";
         String username = "root";
         String password = "";
 

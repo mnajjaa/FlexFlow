@@ -158,7 +158,7 @@ public class ConsultationOffre1 extends Application {
     }
 
     private void saveRatingToDatabase(String nomOffre, int rating) {
-        String url = "jdbc:mysql://localhost:3306/pidevgym";
+        String url = "jdbc:mysql://localhost:3306/pidevgymweb";
         String username = "root";
         String password = "";
 
@@ -179,7 +179,7 @@ public class ConsultationOffre1 extends Application {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
             // Établir la connexion à la base de données MySQL
-            String url = "jdbc:mysql://localhost:3306/pidevgym";
+            String url = "jdbc:mysql://localhost:3306/pidevgymweb";
             String utilisateur = "root";
             String motDePasse = "";
 
@@ -208,7 +208,7 @@ public class ConsultationOffre1 extends Application {
         try {
             String query = "SELECT Offre.*, (AVG(evaluations.note) * 4) AS moyenne " +
                     "FROM Offre LEFT JOIN evaluations ON Offre.nom = evaluations.nom " +
-                    "WHERE Offre.etatOffre = 'Acceptée' " +
+                    "WHERE Offre.etat_offre = 'Acceptée' " +
                     "GROUP BY Offre.nom";
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet resultSet = statement.executeQuery();
@@ -219,8 +219,8 @@ public class ConsultationOffre1 extends Application {
                         resultSet.getString("nom"),
                         resultSet.getString("specialite"),
                         resultSet.getString("tarif_heure"),
-                        resultSet.getString("id_Coach"),
-                        resultSet.getString("etatOffre"),
+                        resultSet.getString("coach_id"),
+                        resultSet.getString("etat_offre"),
                         resultSet.getDouble("moyenne")
                 );
                 offresList.add(offreItem);

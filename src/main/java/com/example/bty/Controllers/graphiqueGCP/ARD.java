@@ -44,7 +44,7 @@ public class ARD extends Application {
     private void connectToDatabase() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            String url = "jdbc:mysql://localhost:3306/pidevgym";
+            String url = "jdbc:mysql://localhost:3306/pidevgymweb";
             String utilisateur = "root";
             String motDePasse = "";
 
@@ -104,13 +104,13 @@ public class ARD extends Application {
 
             while (resultSet.next()) {
                 data.add(new DemandeItem(
-                        resultSet.getString("id_demande"),
+                        resultSet.getString("id"),
                         resultSet.getString("but"),
-                        resultSet.getString("NiveauPhysique"),
-                        resultSet.getString("MaladieChronique"),
+                        resultSet.getString("niveau_physique"),
+                        resultSet.getString("maladie_chronique"),
                         resultSet.getString("age"),
-                        resultSet.getString("id_user"),
-                        resultSet.getString("id_offre"),
+                        resultSet.getString("user_id"),
+                        resultSet.getString("offre_id"),
                         resultSet.getString("etat"),
                         resultSet.getTime("horaire"),
                         resultSet.getString("lesjours")
@@ -229,7 +229,7 @@ public class ARD extends Application {
 
     private static void accepterDemande(String id_demande) {
         try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE demande SET etat = 'Acceptée' WHERE id_demande = ?");
+            PreparedStatement statement = connection.prepareStatement("UPDATE demande SET etat = 'Acceptée' WHERE id = ?");
             statement.setString(1, id_demande);
             statement.executeUpdate();
             statement.close();
@@ -247,7 +247,7 @@ public class ARD extends Application {
 
     private static void refuserDemande(String id_demande) {
         try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE demande SET etat = 'Refusée' WHERE id_demande = ?");
+            PreparedStatement statement = connection.prepareStatement("UPDATE demande SET etat = 'Refusée' WHERE id = ?");
             statement.setString(1, id_demande);
             statement.executeUpdate();
             statement.close();
@@ -273,7 +273,7 @@ public class ARD extends Application {
         Button ajouterButton = new Button("Ajouter");
         ajouterButton.setOnAction(e -> {
             try {
-                PreparedStatement statement = connection.prepareStatement("UPDATE demande SET horaire = ? WHERE id_demande = ?");
+                PreparedStatement statement = connection.prepareStatement("UPDATE demande SET horaire = ? WHERE id = ?");
                 statement.setString(1, horaireField.getText());
                 statement.setString(2, id_demande);
                 statement.executeUpdate();
@@ -306,7 +306,7 @@ public class ARD extends Application {
         Button modifierButton = new Button("Modifier");
         modifierButton.setOnAction(e -> {
             try {
-                PreparedStatement statement = connection.prepareStatement("UPDATE demande SET lesjours = ? WHERE id_demande = ?");
+                PreparedStatement statement = connection.prepareStatement("UPDATE demande SET lesjours = ? WHERE id = ?");
                 statement.setString(1, joursField.getText());
                 statement.setString(2, id_demande);
                 statement.executeUpdate();

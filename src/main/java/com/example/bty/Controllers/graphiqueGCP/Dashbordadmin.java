@@ -183,7 +183,7 @@ public class Dashbordadmin {
     private  void accepterOffre(String id) {
 
         try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE Offre SET etatOffre = 'Acceptée' WHERE id = ?");
+            PreparedStatement statement = connection.prepareStatement("UPDATE Offre SET etat_offre = 'Acceptée' WHERE id = ?");
             statement.setString(1, id);
             statement.executeUpdate();
             statement.close();
@@ -196,7 +196,7 @@ public class Dashbordadmin {
 
     private  void refuserOffre(String id) {
         try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE Offre SET etatOffre = 'Refusée' WHERE id = ?");
+            PreparedStatement statement = connection.prepareStatement("UPDATE Offre SET etat_offre = 'Refusée' WHERE id = ?");
             statement.setString(1, id);
             statement.executeUpdate();
             statement.close();
@@ -219,6 +219,7 @@ public class Dashbordadmin {
         TextField specialiteField = new TextField(offre.getSpecialite());
         TextField tarifField = new TextField(offre.getTarif());
         TextField coachField = new TextField(offre.getCoach());
+        TextField emailField = new TextField(offre.getEmail());
 
         // Créer un bouton pour appliquer les modifications
         Button modifierButton = new Button("Modifier");
@@ -229,15 +230,17 @@ public class Dashbordadmin {
                 String nouvelleSpecialite = specialiteField.getText();
                 String nouveauTarif = tarifField.getText();
                 String nouveauCoach = coachField.getText();
+                String nouvelleEmail = emailField.getText();
 
                 // Exécuter une requête SQL UPDATE pour mettre à jour l'offre dans la base de données
-                String query = "UPDATE Offre SET nom = ?, Specialite = ?, tarif_heure = ?, id_Coach = ? WHERE nom = ?";
+                String query = "UPDATE Offre SET nom = ?, Specialite = ?, tarif_heure = ?, coach_id = ?, email = ? WHERE nom = ?";
                 PreparedStatement statement = connection.prepareStatement(query);
                 statement.setString(1, nouveauNom);
                 statement.setString(2, nouvelleSpecialite);
                 statement.setString(3, nouveauTarif);
                 statement.setString(4, nouveauCoach);
-                statement.setString(5, offre.getNom()); // Utiliser l'ancien nom pour la clause WHERE
+                statement.setString(5, nouvelleEmail);
+                statement.setString(6, offre.getNom()); // Utiliser l'ancien nom pour la clause WHERE
                 int rowsAffected = statement.executeUpdate();
 
                 // Vérifier si la mise à jour a réussi
@@ -275,6 +278,7 @@ public class Dashbordadmin {
                 new Label("Nouvelle spécialité :"), specialiteField,
                 new Label("Nouveau tarif :"), tarifField,
                 new Label("Nouveau coach :"), coachField,
+                new Label("Nouvelle email :"), emailField,
                 modifierButton
         );
         vbox.setPadding(new Insets(10));
@@ -322,7 +326,7 @@ public class Dashbordadmin {
     public int getNombreDemandesEnAttente() {
         int nombreDemandesEnAttente = 0;
 
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgym", "root", "")) {
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgymweb", "root", "")) {
             String sql = "SELECT COUNT(*) AS total FROM demande WHERE etat = 'En attente'";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -360,7 +364,7 @@ public class Dashbordadmin {
 
     public static List<AdminInterface.OffreItem> consulterOffre() {
         List<AdminInterface.OffreItem> commandes = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgym", "root", "")) {
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgymweb", "root", "")) {
             String query = "SELECT * FROM Offre"; // Assurez-vous que le nom de la table est correct
 
             try (Statement statement = connection.createStatement();
@@ -373,8 +377,9 @@ public class Dashbordadmin {
                     offreItem.setId(resultSet.getString("id"));
                     offreItem.setSpecialite(resultSet.getString("specialite"));
                     offreItem.setTarifHeure(resultSet.getString("tarif_heure"));
-                    offreItem.setIdCoach(resultSet.getString("id_Coach"));
-                    offreItem.setEtatOffre(resultSet.getString("etatOffre"));
+                    offreItem.setIdCoach(resultSet.getString("coach_id"));
+                    offreItem.setEtatOffre(resultSet.getString("etat_offre"));
+                    offreItem.setEmail(resultSet.getString("email"));
                     commandes.add(offreItem);
                 }
 

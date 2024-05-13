@@ -42,7 +42,7 @@ public class InterfaceOffre extends Application {
 
         Image image = null;
         try {
-            image = new Image(new FileInputStream("C:\\Users\\hp\\Desktop\\pidev_Project\\FlexFlow\\src\\main\\resources\\images\\FlexFlow.png"));
+            image = new Image(new FileInputStream("C:\\Users\\BRHN\\Desktop\\FlexFlow\\FlewFlow\\src\\main\\resources\\Images\\FlexFlow.png"));
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }

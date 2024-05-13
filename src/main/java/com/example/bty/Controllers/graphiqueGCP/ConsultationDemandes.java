@@ -132,7 +132,7 @@ public class ConsultationDemandes extends Application {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
             // Établir la connexion à la base de données MySQL
-            String url = "jdbc:mysql://localhost:3306/pidevgym";
+            String url = "jdbc:mysql://localhost:3306/pidevgymweb";
             String utilisateur = "root";
             String motDePasse = "";
 
@@ -158,15 +158,15 @@ public class ConsultationDemandes extends Application {
             while (resultSet.next()) {
                 DemandeItem demandeItem = new DemandeItem(
                         resultSet.getString("nom"),
-                        resultSet.getString("id_demande"),
+                        resultSet.getString("id"),
                         resultSet.getString("but"),
-                        resultSet.getString("NiveauPhysique"),
-                        resultSet.getString("MaladieChronique"),
+                        resultSet.getString("niveau_physique"),
+                        resultSet.getString("maladie_chronique"),
                         resultSet.getString("age"),
-                        resultSet.getString("id_user"),
-                        resultSet.getString("id_offre"),
+                        resultSet.getString("user_id"),
+                        resultSet.getString("offre_id"),
                         resultSet.getString("etat"),
-                        resultSet.getString("nombreHeure"),
+                        resultSet.getString("nombreheure"),
                         resultSet.getTime("horaire"),
                         resultSet.getString("lesjours")
                 );
@@ -190,7 +190,7 @@ public class ConsultationDemandes extends Application {
     private static void supprimerDemande(String id_demande) {
         try {
             // Créer la requête SQL pour supprimer la demande
-            String query = "DELETE FROM Demande WHERE id_demande = ?";
+            String query = "DELETE FROM Demande WHERE id = ?";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, id_demande); // Utilisation de l'ID de demande passé en paramètre
 
@@ -213,7 +213,7 @@ public class ConsultationDemandes extends Application {
     private static void modifierDemande(String id_demande) {
         try {
             // Récupérer les détails de la demande spécifique à partir de la base de données en utilisant l'ID de la demande
-            String query = "SELECT * FROM Demande WHERE id_demande = ?";
+            String query = "SELECT * FROM Demande WHERE id = ?";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, id_demande);
             ResultSet resultSet = statement.executeQuery();
@@ -229,13 +229,13 @@ public class ConsultationDemandes extends Application {
                 // Créer des champs de texte pour chaque attribut de la demande avec les valeurs actuelles
                 TextField nomField = new TextField(resultSet.getString("nom"));
                 TextField butField = new TextField(resultSet.getString("but"));
-                TextField niveauPhysiqueField = new TextField(resultSet.getString("NiveauPhysique"));
-                TextField maladieChroniqueField = new TextField(resultSet.getString("MaladieChronique"));
+                TextField niveauPhysiqueField = new TextField(resultSet.getString("niveau_physique"));
+                TextField maladieChroniqueField = new TextField(resultSet.getString("maladie_chronique"));
                 TextField ageField = new TextField(resultSet.getString("age"));
-                TextField id_userField = new TextField(resultSet.getString("id_user"));
-                TextField id_offreField = new TextField(resultSet.getString("id_offre"));
+                TextField id_userField = new TextField(resultSet.getString("user_id"));
+                TextField id_offreField = new TextField(resultSet.getString("offre_id"));
                 TextField etatField = new TextField(resultSet.getString("etat"));
-                TextField nombreHeureField = new TextField(resultSet.getString("nombreHeure"));
+                TextField nombreHeureField = new TextField(resultSet.getString("nombreheure"));
                 TextField horaireField = new TextField(resultSet.getTime("horaire").toString());
                 TextField lesjoursField = new TextField(resultSet.getString("lesjours"));
 
@@ -259,7 +259,7 @@ public class ConsultationDemandes extends Application {
                 confirmerButton.setOnAction(event -> {
                     try {
                         // Mettre à jour les informations de la demande dans la base de données avec les nouvelles valeurs
-                        String updateQuery = "UPDATE Demande SET nom=?, but=?, NiveauPhysique=?, MaladieChronique=?, age=?, id_user=?, id_offre=?, etat=?, nombreHeure=?, horaire=?, lesjours=? WHERE id_demande=?";
+                        String updateQuery = "UPDATE Demande SET nom=?, but=?, niveau_physique=?, maladie_chronique=?, age=?, user_id=?, offre_id=?, etat=?, nombreheure=?, horaire=?, lesjours=? WHERE id=?";
                         PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
                         updateStatement.setString(1, nomField.getText());
                         updateStatement.setString(2, butField.getText());

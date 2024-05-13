@@ -32,6 +32,7 @@ public class Formoffre extends Application {
     private ChoiceBox<String> specialiteChoice;
     private TextField tarifField;
     private TextField coachField;
+    private TextField emailField;
     private Label nomLabel;
     Session session = Session.getInstance();
     User u=session.getLoggedInUser();
@@ -147,9 +148,9 @@ public class Formoffre extends Application {
                     ARD ardInterface = new ARD();
                     ardInterface.start(new Stage());
                 }
-            else {
+                else {
                     showAlert("Failed", "Vous n'etes pas un coach ");
-            }
+                }
 
             }
         });
@@ -196,7 +197,7 @@ public class Formoffre extends Application {
 
 
     private AnchorPane createLeftDashboard(Stage primaryStage) {
-       User loggedInUser = Session.getInstance().getLoggedInUser();
+        User loggedInUser = Session.getInstance().getLoggedInUser();
         AnchorPane mainForm = new AnchorPane();
         mainForm.setPrefSize(1100, 900);
 
@@ -436,7 +437,7 @@ public class Formoffre extends Application {
 //            return;
 //        }
 //
-//        String url = "jdbc:mysql://localhost:3306/pidevgym";
+//        String url = "jdbc:mysql://localhost:3306/pidevgymweb";
 //        String username = "root";
 //        String password = "";
 //
@@ -460,7 +461,7 @@ public class Formoffre extends Application {
     private void insertOffre() {
         this.user = session.getLoggedInUser();
 
-        String url = "jdbc:mysql://localhost:3306/pidevgym";
+        String url = "jdbc:mysql://localhost:3306/pidevgymweb";
         String username = "root";
         String password = "";
 
@@ -475,7 +476,7 @@ public class Formoffre extends Application {
                     return; // Arrêter l'exécution de la méthode car l'offre existe déjà
                 }
 
-                String query = "INSERT INTO Offre (nom, Specialite, tarif_heure, id_Coach,etatOffre) VALUES (?, ?, ?, ?,?)";
+                String query = "INSERT INTO Offre (nom, Specialite, tarif_heure, coach_id, etat_offre,email) VALUES (?, ?, ?, ? ,? ,?)";
                 String etatOffre = "En Attente";
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setString(1, nomField.getText());
@@ -483,6 +484,7 @@ public class Formoffre extends Application {
                 statement.setDouble(3, Double.parseDouble(tarifField.getText()));
                 statement.setInt(4, Integer.parseInt(coachField.getText()));
                 statement.setString(5, etatOffre);
+                statement.setString(1, emailField.getText());
 
                 int rowsInserted = statement.executeUpdate();
                 if (rowsInserted > 0) {

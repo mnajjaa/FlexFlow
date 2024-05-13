@@ -45,6 +45,9 @@ public class ConsultationOffre extends Application {
         TableColumn<OffreItem, String> etatCol = new TableColumn<>("État");
         etatCol.setCellValueFactory(new PropertyValueFactory<>("etat"));
 
+        TableColumn<OffreItem, String> emailCol = new TableColumn<>("Email");
+        emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
+
         TableColumn<OffreItem, Void> actionsCol = new TableColumn<>("Actions");
         actionsCol.setMinWidth(100);
         actionsCol.setSortable(false);
@@ -113,7 +116,7 @@ public class ConsultationOffre extends Application {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
             // Établir la connexion à la base de données MySQL
-            String url = "jdbc:mysql://localhost:3306/pidevgym";
+            String url = "jdbc:mysql://localhost:3306/pidevgymweb";
             String utilisateur = "root";
             String motDePasse = "";
 
@@ -140,8 +143,9 @@ public class ConsultationOffre extends Application {
                         resultSet.getString("nom"),
                         resultSet.getString("Specialite"),
                         resultSet.getString("tarif_heure"),
-                        resultSet.getString("id_Coach"),
-                        resultSet.getString("etatOffre")
+                        resultSet.getString("Coach_id"),
+                        resultSet.getString("etat_offre"),
+                        resultSet.getString("email")
                 );
                 offresList.add(offreItem); // Ajouter l'objet à la liste
             }
@@ -175,6 +179,7 @@ public class ConsultationOffre extends Application {
         TextField specialiteField = new TextField(offre.getSpecialite());
         TextField tarifField = new TextField(offre.getTarif());
         TextField coachField = new TextField(offre.getCoach());
+        TextField emailField = new TextField(offre.getEmail());
 
         // Créer un bouton pour appliquer les modifications
         Button modifierButton = new Button("Modifier");
@@ -185,15 +190,17 @@ public class ConsultationOffre extends Application {
                 String nouvelleSpecialite = specialiteField.getText();
                 String nouveauTarif = tarifField.getText();
                 String nouveauCoach = coachField.getText();
+                String nouvelleEmail = emailField.getText();
 
                 // Exécuter une requête SQL UPDATE pour mettre à jour l'offre dans la base de données
-                String query = "UPDATE Offre SET nom = ?, Specialite = ?, tarif_heure = ?, id_Coach = ? WHERE nom = ?";
+                String query = "UPDATE Offre SET nom = ?, Specialite = ?, tarif_heure = ?, coach_id = ?,email = ? WHERE nom = ?";
                 PreparedStatement statement = connection.prepareStatement(query);
                 statement.setString(1, nouveauNom);
                 statement.setString(2, nouvelleSpecialite);
                 statement.setString(3, nouveauTarif);
                 statement.setString(4, nouveauCoach);
-                statement.setString(5, offre.getNom()); // Utiliser l'ancien nom pour la clause WHERE
+                statement.setString(5, nouvelleEmail);
+                statement.setString(6, offre.getNom()); // Utiliser l'ancien nom pour la clause WHERE
                 int rowsAffected = statement.executeUpdate();
 
                 // Vérifier si la mise à jour a réussi
@@ -231,6 +238,7 @@ public class ConsultationOffre extends Application {
                 new Label("Nouvelle spécialité :"), specialiteField,
                 new Label("Nouveau tarif :"), tarifField,
                 new Label("Nouveau coach :"), coachField,
+                new Label("Nouvelle email :"), emailField,
                 modifierButton
         );
         vbox.setPadding(new Insets(10));
@@ -284,12 +292,15 @@ public class ConsultationOffre extends Application {
         private String coach;
         private String etat;
 
-        public OffreItem(String nom, String specialite, String tarif, String coach, String etat) {
+        private String email;
+
+        public OffreItem(String nom, String specialite, String tarif, String coach, String etat,String email) {
             this.nom = nom;
             this.specialite = specialite;
             this.tarif = tarif;
             this.coach = coach;
             this.etat = etat;
+            this.email = email;
         }
 
         public OffreItem() {
@@ -316,6 +327,11 @@ public class ConsultationOffre extends Application {
             this.etat = etat;
         }
 
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+
         // Getters pour accéder aux champs de l'offre
         public String getNom() {
             return nom;
@@ -336,5 +352,10 @@ public class ConsultationOffre extends Application {
         public String getEtat() {
             return etat;
         }
+
+        public String getEmail() {
+            return email;
+        }
     }
+
 }
