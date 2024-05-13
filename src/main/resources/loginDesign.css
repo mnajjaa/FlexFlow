@@ -10,7 +10,7 @@ and open the template in the editor.
 */
 
 .side-form{
-    -fx-background-color: linear-gradient(to top right, #2c3e50, #2c2c57);
+    -fx-background-color: linear-gradient(to top right, #5b73e8, #5b73e8);
     -fx-border-color: #000;
     -fx-border-width: .4px .2px .4px .4px;
 }
@@ -54,7 +54,7 @@ and open the template in the editor.
     -fx-font-family: Arial;
 }
 .login-btn:hover{
-    -fx-background-color: linear-gradient(to top right, #2c3e50, #2c2c57);
+    -fx-background-color: linear-gradient(to top right, #5b73e8, #5b73e8);
 }
 
 .textfield{

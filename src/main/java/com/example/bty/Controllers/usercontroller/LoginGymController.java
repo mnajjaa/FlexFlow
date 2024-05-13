@@ -270,19 +270,19 @@ public class LoginGymController implements Initializable {
                 // Appeler la méthode d'inscription avec les valeurs récupérées
                 serviceUser.register(u);
 
-//                // vérification par email pour activer le compte de l'utilisateur après l'inscription
-//                Validation v = new Validation();
-//                Random rand = new Random();
-//                v.setCode(rand.nextInt(9999));
-//                v.setCreated_at(Instant.now());
-//                v.setExpired_at(Instant.now().plusSeconds(600));
-//                User u1 = serviceUser.findByEmail(email);
-//                v.setUser(u1);
-//                System.out.println(v);
-//                serviceValidation.ajouterValidation(v);
-//                String msg = "Your validation code is : " + v.getCode();
-//                String subj = "Validation Code";
-//                mailerService.sendMail(u.getEmail(), msg, subj);
+                // vérification par email pour activer le compte de l'utilisateur après l'inscription
+                Validation v = new Validation();
+                Random rand = new Random();
+                v.setCode(rand.nextInt(9999));
+                v.setCreated_at(Instant.now());
+                v.setExpired_at(Instant.now().plusSeconds(600));
+                User u1 = serviceUser.findByEmail(email);
+                v.setUser(u1);
+                System.out.println(v);
+                serviceValidation.ajouterValidation(v);
+                String msg = "Your validation code is : " + v.getCode();
+                String subj = "Validation Code";
+                mailerService.sendMail(u.getEmail(), msg, subj);
                 //redirect to verification code page
                 try {
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("/verifCode.fxml"));

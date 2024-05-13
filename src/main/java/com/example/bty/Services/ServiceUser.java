@@ -29,7 +29,7 @@ public class ServiceUser implements IServiceUser {
     //** Register a new user
     @Override
     public void register(User u) {
-        String req = "INSERT INTO `user` (`nom`,`email`, `password`,`telephone`,`roles`,`is_verified`,`mdp_exp`,`created_at`) VALUE (?,?,?,?,?,?,?,?)";
+        String req = "INSERT INTO `user` (`nom`,`email`, `password`,`telephone`,`roles`,`is_verified`,`mdp_exp`,`created_at`,`mfa_enabled`) VALUE (?,?,?,?,?,?,?,?,?)";
         try {
             pste = cnx.prepareStatement(req);
             pste.setString(1, u.getName());
@@ -48,6 +48,7 @@ public class ServiceUser implements IServiceUser {
             pste.setDate(7,java.sql.Date.valueOf(exp ));
             pste.setDate(8, java.sql.Date.valueOf(java.time.LocalDate.now()));
             System.out.print(Arrays.toString(u.getRoles()));
+            pste.setBoolean(9, u.isMfaEnabled());
 
             pste.executeUpdate();
             System.out.println("utilisateur créée");
@@ -152,7 +153,7 @@ public class ServiceUser implements IServiceUser {
     public void desactiverAcc(int id) {
 
 
-        String req = "UPDATE user SET etat =!etat  WHERE id = ?";
+        String req = "UPDATE user SET is_verified =!is_verified  WHERE id = ?";
         try {
             pste = cnx.prepareStatement(req);
             pste.setInt(1, id);
@@ -191,7 +192,9 @@ public class ServiceUser implements IServiceUser {
         //verifier si l'utilisateur connecté est un admin
         Session s = Session.getInstance();
         User u = s.getLoggedInUser();
-        if (!"ADMIN".equals(Arrays.toString(u.getRoles()))) {
+        System.out.println((Arrays.toString(new Role[]{Role.ADMIN})));
+        System.out.println(Arrays.toString(u.getRoles()));
+        if (!(Arrays.equals(u.getRoles(), new Role[]{Role.ADMIN}))) {
             System.out.println("You are not allowed to perform this action");
             return;
         }
@@ -265,7 +268,7 @@ public class ServiceUser implements IServiceUser {
                     coach.setTelephone(rs.getString("telephone"));
 
                     Role []userRoles = new Role[]{Role.COACH};
-                    coach.setRoles(userRoles);                   coach.setRoles(userRoles);
+                    coach.setRoles(userRoles);
                     coach.setEtat(rs.getBoolean("is_verified"));
                     coaches.add(coach);
                 }
@@ -305,8 +308,8 @@ public class ServiceUser implements IServiceUser {
                 U.setImage(rs.getString("image"));
                 U.setTelephone(rs.getString("telephone"));
                 U.setEtat(rs.getBoolean("is_verified"));
-                U.setMfaEnabled(rs.getBoolean("mfaEnabled"));
-                U.setMfaSecret(rs.getString("mfaSecret"));
+                U.setMfaEnabled(rs.getBoolean("mfa_enabled"));
+                U.setMfaSecret(rs.getString("mfa_secret"));
                 //  U.setPassword(rs.getString("password"));
             }
         } catch (SQLException ex) {
@@ -355,9 +358,13 @@ public class ServiceUser implements IServiceUser {
                 user.setId(rs.getInt("id"));
                 user.setName(rs.getString("nom"));
                 user.setEmail(rs.getString("email"));
-                Role []userRoles = new Role[]{Role.valueOf(rs.getString("roles"))};
-                user.setRoles(userRoles);
-                user.setEtat(rs.getBoolean("etat"));
+                String role = rs.getString("roles");
+                JsonArray jsonArray = JsonParser.parseString(role).getAsJsonArray();
+                Role[] roles = convertJsonArrayToRolesArray(jsonArray);
+
+                //Role []userRoles = new Role[]{Role.valueOf(rs.getString("roles"))};
+                user.setRoles(roles);
+                user.setEtat(rs.getBoolean("is_verified"));
                 user.setPassword(rs.getString("password"));
                 user.setTelephone(rs.getString("telephone"));
                 user.setImage(rs.getString("image"));
@@ -376,7 +383,7 @@ public class ServiceUser implements IServiceUser {
     //** Set the secret key for multi-factor authentication
     @Override
     public void setSecretKey(String secret, int id) {
-        String req = "UPDATE user SET mfaSecret  = ? WHERE id = ?";
+        String req = "UPDATE user SET mfa_secret  = ? WHERE id = ?";
         try {
             pste = cnx.prepareStatement(req);
             pste.setString(1, secret);
@@ -389,7 +396,7 @@ public class ServiceUser implements IServiceUser {
     //** Enable or disable multi-factor authentication
     @Override
     public void EnableOrDisablemfa(int id) {
-        String req = "UPDATE user SET mfaEnabled = !mfaEnabled WHERE id = ?";
+        String req = "UPDATE user SET mfa_enabled = !mfa_enabled WHERE id = ?";
         try {
             pste = cnx.prepareStatement(req);
             pste.setInt(1, id);
