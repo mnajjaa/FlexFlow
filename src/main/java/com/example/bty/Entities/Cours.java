@@ -1,6 +1,10 @@
 package com.example.bty.Entities;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+
 public class Cours {
+
     int id;
     String nom;
     String duree;
@@ -9,9 +13,12 @@ public class Cours {
     String categorie;
     String objectif;
     boolean etat;
-    int nbr_participant;
+    int capacite;
 
+    private final ObjectProperty<byte[]> image = new SimpleObjectProperty<>();
     User coach;
+
+
 
     public Cours() {
     }
@@ -80,12 +87,12 @@ public class Cours {
         this.etat = etat;
     }
 
-    public int getNbr_participant() {
-        return nbr_participant;
+    public int getCapacite() {
+        return capacite;
     }
 
-    public void setNbr_participant(int nbr_participant) {
-        this.nbr_participant = nbr_participant;
+    public void setCapacite(int capacite) {
+        this.capacite = capacite;
     }
 
     public User getCoach() {
@@ -96,19 +103,7 @@ public class Cours {
         this.coach = coach;
     }
 
-    public Cours(String nom, String duree, String intensite, String cible, String categorie, String objectif, boolean etat, int nbr_participant, User coach) {
-        this.nom = nom;
-        this.duree = duree;
-        this.intensite = intensite;
-        this.cible = cible;
-        this.categorie = categorie;
-        this.objectif = objectif;
-        this.etat = etat;
-        this.nbr_participant = nbr_participant;
-        this.coach = coach;
-    }
-
-    public Cours(int id, String nom, String duree, String intensite, String cible, String categorie, String objectif, boolean etat, int nbr_participant, User coach) {
+    public Cours(int id, String nom, String duree, String intensite, String cible, String categorie, String objectif, boolean etat, int capacite, User coach, byte[] image) {
         this.id = id;
         this.nom = nom;
         this.duree = duree;
@@ -117,8 +112,47 @@ public class Cours {
         this.categorie = categorie;
         this.objectif = objectif;
         this.etat = etat;
-        this.nbr_participant = nbr_participant;
+        this.capacite = capacite;
         this.coach = coach;
+        this.image.set(image);
+    }
+
+    public Cours(String nom, String duree, String intensite, String cible, String categorie, String objectif, boolean etat, int capacite, User coach, byte[] image) {
+        this.nom = nom;
+        this.duree = duree;
+        this.intensite = intensite;
+        this.cible = cible;
+        this.categorie = categorie;
+        this.objectif = objectif;
+        this.etat = etat;
+        this.capacite = capacite;
+        this.coach = coach;
+        this.image.set(image);
+    }
+
+    public Cours(int id, String nom, String duree, String intensite, String cible, String categorie, String objectif, boolean etat, int capacite, User coach) {
+        this.id = id;
+        this.nom = nom;
+        this.duree = duree;
+        this.intensite = intensite;
+        this.cible = cible;
+        this.categorie = categorie;
+        this.objectif = objectif;
+        this.etat = etat;
+        this.capacite = capacite;
+        this.coach = coach;
+    }
+
+    public byte[] getImage() {
+        return image.get();
+    }
+
+    public ObjectProperty<byte[]> imageProperty() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image.set(image);
     }
 
     @Override
@@ -132,7 +166,7 @@ public class Cours {
                 ", categorie='" + categorie + '\'' +
                 ", objectif='" + objectif + '\'' +
                 ", etat=" + etat +
-                ", nbr_participant=" + nbr_participant +
+                ", capacité=" + capacite +
                 ", coach=" + coach +
                 '}';
     }

@@ -113,7 +113,7 @@ public class AjouterEvenementInterface extends Application {
                 }
 
 
-                Time t = java.sql.Time.valueOf(time);
+                Time t = Time.valueOf(time);
                 String nomCoach = nomCoachField.getText();
                 int idCoach = getCoachIdByName(nomCoach);
                 // Vérification si le nom de cours contient des chiffres

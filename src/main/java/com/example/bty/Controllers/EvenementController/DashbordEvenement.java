@@ -164,8 +164,10 @@ public class DashbordEvenement {
 
     private List<Evenement> consulterEvenement() {
         List<Evenement> EvenementList = new ArrayList<>();
-        String query = "SELECT * FROM evenement";
-        try (PreparedStatement statement = connexion .prepareStatement(query);
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgym", "root", "")) {
+            String query = "SELECT * FROM evenement";
+
+            try (PreparedStatement statement = connection .prepareStatement(query);
              ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
                 Evenement E = new Evenement();
@@ -183,15 +185,17 @@ public class DashbordEvenement {
 
                 int coachId = resultSet.getInt("id_user");
                 String coachName = null;
-                try (PreparedStatement preparedStatement = connexion.prepareStatement("SELECT nom FROM user WHERE id = ?")) {
-                    preparedStatement.setInt(1, coachId);
-                    try (ResultSet coachResultSet = preparedStatement.executeQuery()) {
-                        if (coachResultSet.next()) {
-                            coachName = coachResultSet.getString("nom");
+                try (Connection connection1 = DriverManager.getConnection("jdbc:mysql://localhost:3306/pidevgym", "root", "")) {
+
+                    try (PreparedStatement preparedStatement = connection1.prepareStatement("SELECT nom FROM user WHERE id = ?")) {
+                        preparedStatement.setInt(1, coachId);
+                        try (ResultSet coachResultSet = preparedStatement.executeQuery()) {
+                            if (coachResultSet.next()) {
+                                coachName = coachResultSet.getString("nom");
+                            }
                         }
                     }
                 }
-
                 User coach = new User();
                 coach.setId(coachId);
                 coach.setName(coachName);
@@ -199,7 +203,7 @@ public class DashbordEvenement {
 
                 EvenementList.add(E);
             }
-        } catch (SQLException e) {
+        } }catch (SQLException e) {
             e.printStackTrace();
         }
         return EvenementList;
@@ -364,7 +368,7 @@ public class DashbordEvenement {
                 evenement.setCategorie(CategorieComboBox.getValue());
                 evenement.setObjectif(ObjectiFComboBox.getValue());
                 evenement.setNbre_place(Integer.parseInt(nbrPlaceField.getText()));
-                evenement.setDate(java.sql.Date.valueOf(DateField.getValue()));
+                evenement.setDate(Date.valueOf(DateField.getValue()));
                 evenement.setTime(Time.valueOf(TimeField.getText()));
                 evenement.setEtat(etatCheckBox.isSelected());
 
@@ -485,6 +489,7 @@ public class DashbordEvenement {
         Optional<ButtonType> result = alert.showAndWait();
         return result.isPresent() && result.get() == yesButton;
     }
+
 
 
 }

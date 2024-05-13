@@ -1,17 +1,66 @@
 package com.example.bty.Entities;
 
 
+import java.sql.Array;
 
 public class User {
 
-   private int id;
-   private String name;
-   private String email;
-   private String password ;
-   private String telephone ;
-   private Role role;
-   private  boolean etat =false;    // 0 = desactiver , 1 = activer
+    private int id;
+    private String name;
+    private String email;
+    private String password ;
+    private String telephone ;
+    private Role[] roles;
+    private  boolean etat =false;    // 0 = desactiver , 1 = activer
     private String image;
+    private boolean mfaEnabled ;//si l'utilisateur a activé l'authentification à deux facteurs
+    private String mfaSecret ;//la clé secrète de l'authentification à deux facteurs
+
+    public boolean isMfaEnabled() {
+        return mfaEnabled;
+    }
+
+    public void setMfaEnabled(boolean mfaEnabled) {
+        this.mfaEnabled = mfaEnabled;
+    }
+
+    public String getMfaSecret() {
+        return mfaSecret;
+    }
+
+    public void setMfaSecret(String mfaSecret) {
+        this.mfaSecret = mfaSecret;
+    }
+
+    public User(int id, String name, String email, String telephone, Role[] roles, boolean b, String image) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.telephone = telephone;
+        this.roles = roles;
+        this.etat = b;
+        this.image = image;
+
+    }
+    public User(int id, String name, String email, String telephone, boolean etat) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.telephone = telephone;
+        this.etat = etat;
+
+
+    }
+    public User(int id, String name, String email, String telephone,Role[] roles, boolean etat) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.telephone = telephone;
+        this.roles = roles;
+        this.etat = etat;
+
+
+    }
 
     public String getImage() {
         return image;
@@ -29,13 +78,25 @@ public class User {
         this.etat = etat;
     }
 
-    public User(int id, String name, String email, String password, String telephone, Role role,String image) {
+    public User(int id, String name, String email, String password, String telephone, Role[] roles,String image) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
         this.telephone=telephone;
-        this.role=role;
+        this.roles=roles;
+        this.image=image;
+
+    }
+
+    public User( String name, String email, String password, String telephone, Role[] roles,Boolean etat,String image) {
+
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.telephone=telephone;
+        this.roles=roles;
+        this.etat=etat;
         this.image=image;
 
     }
@@ -43,12 +104,12 @@ public class User {
     public User() {
     }
 
-    public User(String name, String email, String password,String telephone,Role role,String image) {
+    public User(String name, String email, String password,String telephone,Role[] roles,String image) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.telephone = telephone;
-        this.role=role;
+        this.roles=roles;
         this.etat=etat;
         this.image=image;
     }
@@ -61,8 +122,8 @@ public class User {
         this.telephone = telephone;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void setRoles(Role[] roles) {
+        this.roles = roles;
     }
 
     public String getName() {
@@ -93,6 +154,12 @@ public class User {
         this.password = password;
     }
 
+
+
+    public Role[] getRoles() {
+        return  roles;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -101,14 +168,14 @@ public class User {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", telephone='" + telephone + '\'' +
-                ", role=" + role +
-                ",image='"+image+'\''+
+                ", role=" + roles +
+                ", etat=" + etat +
+                ", image='" + image + '\'' +
+                ", mfaEnabled=" + mfaEnabled +
+                ", mfaSecret='" + mfaSecret + '\'' +
                 '}';
     }
 
-    public Role getRole() {
-        return  role;
-    }
     public String getTelephone() {
         return telephone;
     }

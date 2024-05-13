@@ -1,16 +1,26 @@
-
-
 package com.example.bty.Controllers.EvenementController;
+
 import static com.example.bty.Controllers.EvenementController.DetailsEvenementWindow.createDetailsCard;
 
+import com.example.bty.Controllers.CourController.CourMembre;
+import com.example.bty.Controllers.DashboardMembre;
+import com.example.bty.Controllers.ProduitController.VitrineClient;
+import com.example.bty.Controllers.ReclamationController.AjouterReclamation;
+import com.example.bty.Controllers.graphiqueGCP.FD;
+import com.example.bty.Controllers.graphiqueGCP.Formoffre;
 import com.example.bty.Entities.Evenement;
+import com.example.bty.Entities.Role;
+import com.example.bty.Entities.User;
 import com.example.bty.Utils.ConnexionDB;
+import com.example.bty.Utils.Session;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -22,9 +32,8 @@ import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
-
-
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,7 +48,7 @@ public class clientVitrine extends Application {
     private Connection connection;
     private Map<Evenement, VBox> detailsMap = new HashMap<>();
     private FlowPane flowPane = new FlowPane();
-
+    User user;
     private Map<Integer, Boolean> popupOpenMap = new HashMap<>(); // Track open popups for each event
 public clientVitrine(){
     connection = ConnexionDB.getInstance().getConnexion();
@@ -146,13 +155,7 @@ public clientVitrine(){
 
 
 
-
-
-
-
-
-
-        Scene scene = new Scene(root, 1536, 780);
+        Scene scene = new Scene(root, 1366, 700);
         primaryStage.setResizable(true);
 
         primaryStage.setScene(scene);
@@ -168,6 +171,7 @@ public clientVitrine(){
         }
     }
     private AnchorPane createLeftDashboard(Stage primaryStage) {
+        User loggedInUser = Session.getInstance().getLoggedInUser();
         AnchorPane mainForm = new AnchorPane();
         mainForm.setPrefSize(1100, 900);
 
@@ -181,62 +185,104 @@ public clientVitrine(){
         //leftAnchorPane.setPrefSize(70, 280);
 //        dashboardAdmin.setBottomAnchor(mainForm, 40.0);
 //        dashboardAdmin.setLeftAnchor(mainForm, 40.0);
-        dashboardAdmin.setTranslateY(-90);
-        dashboardAdmin.setPrefSize(234, 1600);
+        dashboardAdmin.setTranslateY(-87);
+        dashboardAdmin.setPrefSize(234, 1500);
         dashboardAdmin.getStyleClass().add("border-pane");
 
 
         FontAwesomeIconView usernameAdmin = createFontAwesomeIconView("USER", "WHITE", 50, 82, 91);
-        Label welcomeLabel = createLabel("Welcome,", "Tahoma", 15, 78, 101,"WHITE");
-        Label usernameLabel = createLabel("MarcoMan", "Arial Bold", 20, 11, 120,"WHITE");
+        Label welcomeLabel = createLabel("Bienvenue, " , "Arial Bold", 15, 78, 101, "WHITE");
+        Label usernameLabel = createLabel( loggedInUser.getName(), "Arial Bold", 20, 78, 120,"WHITE");
         // Line line = createLine(-100, 152, 100, 152, 111);
         Line line = createColoredLine(-100, 152, 100, 152, 111, "WHITE");
 
-        Button DashboardBtn = createButton("Dashboard", 22, 186);
+        Button DashboardBtn = createButton("Acceuil", 22, 186);
         Button CoursBtn = createButton("Cours", 22, 234);
         Button eventsBtn = createButton("Evenements", 22, 276);
         Button demandeBtn = createButton("Demande Coahing", 22, 319);
-        Button offreAdminBtn = createButton("Offre", 22, 361);
+        Button offreAdminBtn = createButton("Ajouter Offre", 22, 361);
         Button storeAdminBtn = createButton("Store", 22, 405);
 
-//        CoursBtn.setOnAction(event -> {
-//            // Instancier et afficher la vue DashboardVitrineController
-//            CourMembre v = new CourMembre();
-//            v.start(primaryStage);
-//        });
 
-
-        eventsBtn.setOnAction(event -> {
+        DashboardBtn.setOnAction(event -> {
             // Instancier et afficher la vue DashboardVitrineController
-            clientVitrine v=new clientVitrine();
-            v.start(primaryStage);
+            DashboardMembre m = new DashboardMembre();
+            try {
+                m.start(primaryStage);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        CoursBtn.setOnAction(event -> {
+            // Instancier et afficher la vue DashboardVitrineController
+            CourMembre c = new CourMembre();
+            c.start(primaryStage);
         });
 
 
-      /*  demandeBtn.setOnAction(event -> {
+        eventsBtn.setOnAction(event -> {
+            /*DashbordEvenement e = new DashbordEvenement();
+            e.start(primaryStage);*/
+            clientVitrine e = new clientVitrine();
+            e.start(primaryStage);
+
+        });
+
+
+        demandeBtn.setOnAction(event -> {
             // Instancier et afficher la vue DashboardVitrineController
             FD f = new FD();
             f.start(primaryStage);
-        });*/
+        });
 
 
         offreAdminBtn.setOnAction(event -> {
-            // Instancier et afficher la vue DashboardVitrineController
+
+
+
+            Formoffre o = new Formoffre();
+            o.start(primaryStage);
+
 
         });
 
 
         storeAdminBtn.setOnAction(event -> {
             // Instancier et afficher la vue DashboardVitrineController
-
+            VitrineClient v = new VitrineClient();
+            v.start(primaryStage);
         });
 
 
 
         Line line2 = createColoredLine(-100, 449, 100, 449, 112, "WHITE");
 
-        Button profileAdminBtn = createButton("Profile", 22, 462);
+//        Button profileAdminBtn = createButton("Profile", 22, 462);
         Button logoutBtn = createButton("Logout", 22, 503);
+// Add event handler to logoutBtn
+
+// Add event handler to logoutBtn
+        logoutBtn.setOnAction(event -> {
+            // Close all open interfaces
+            Stage primaryStage1 = (Stage) logoutBtn.getScene().getWindow(); // Assuming logoutBtn is in the same scene as the primaryStage
+            primaryStage1.close();
+
+            // Open the LoginGYM.fxml interface
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/LoginGym.fxml"));
+            Parent root;
+            try {
+                root = loader.load();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+
+            Scene scene = new Scene(root);
+            primaryStage.setScene(scene);
+            primaryStage.show();
+        });
+
 
         FontAwesomeIconView[] icons = {
                 createFontAwesomeIconView("HOME", "WHITE", 20, 38, 212),
@@ -247,33 +293,29 @@ public clientVitrine(){
 
                 createFontAwesomeIconView("SHOPPING_CART", "WHITE", 20, 38, 429),
 
-                createFontAwesomeIconView("ID_CARD", "WHITE", 20, 38, 486),
+//                createFontAwesomeIconView("ID_CARD", "WHITE", 20, 38, 486),
                 createFontAwesomeIconView("EXTERNAL_LINK", "WHITE", 20, 38, 529)
         };
 
         VBox reportContainer = new VBox();
         reportContainer.setLayoutX(13);
-        reportContainer.setLayoutY(750);
+        reportContainer.setLayoutY(608);
         reportContainer.setPrefSize(180, 91);
-        reportContainer.setStyle(" -fx-background-color:WHITE; /* Bleu */\n" +
-                "    -fx-border-radius: 15;\n" +
-                "    -fx-background-radius:15;\n" +
-                "    -fx-border-color:#2c3e50; /* Couleur de bordure bleue légère */\n" +
-                "    -fx-padding: 12;\n" +
-                "    -fx-translate-y: -30;");
+        reportContainer.getStyleClass().add("report_container");
 
-        Text reportText = new Text("Report Suggestion/Bug?");
+
+        Text reportText = new Text("Signaler une suggestion?");
         reportText.getStyleClass().add("report_text");
 
-        Label reportLabel = new Label("Use this to report any errors or suggestions.");
-        reportLabel.getStyleClass().add("report_label");
 
-        Button reportButton = createButton("Report", 0, 0);
+        Button reportButton = createButton("Signaler", 0, 0);
+        reportButton.setOnAction(event -> openAjouterReclamationInterface(primaryStage));
+
         reportButton.getStyleClass().add("report_button");
 
 
 
-        reportContainer.getChildren().addAll(reportText, reportLabel, reportButton);
+        reportContainer.getChildren().addAll(reportText, reportButton);
 
         StackPane contentPlaceholder = new StackPane();
         contentPlaceholder.setLayoutX(220);
@@ -282,9 +324,9 @@ public clientVitrine(){
         dashboardAdmin.getChildren().addAll(
                 usernameAdmin, welcomeLabel, usernameLabel, line,
                 DashboardBtn,CoursBtn, eventsBtn, demandeBtn, offreAdminBtn,
-                storeAdminBtn, line2, profileAdminBtn,
+                storeAdminBtn, line2,
                 logoutBtn, icons[0], icons[1], icons[2], icons[3],
-                icons[4], icons[5], icons[6],icons[7], reportContainer,
+                icons[4], icons[5], icons[6] ,reportContainer,
                 contentPlaceholder
         );
 
@@ -293,15 +335,23 @@ public clientVitrine(){
 
 
     }
-    private void resetFlowPane() {
-        flowPane.getChildren().clear();
-        List<Evenement> evenements = getListeEvenements();
-        for (Evenement evenement : evenements) {
-            VBox carte = createEventCard(evenement);
-            flowPane.getChildren().add(carte);
+
+    private void openAjouterReclamationInterface(Stage primaryStage) {
+        AjouterReclamation ajouterReclamation = new AjouterReclamation();
+        try {
+            ajouterReclamation.start(new Stage());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
+    private void showAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
 
     private FontAwesomeIconView createFontAwesomeIconView(String glyphName, String fill, double size, double layoutX, double layoutY) {
         FontAwesomeIconView iconView = new FontAwesomeIconView();
@@ -358,6 +408,16 @@ public clientVitrine(){
         return button;
     }
 
+    private void resetFlowPane() {
+        flowPane.getChildren().clear();
+        List<Evenement> evenements = getListeEvenements();
+        for (Evenement evenement : evenements) {
+            VBox carte = createEventCard(evenement);
+            flowPane.getChildren().add(carte);
+        }
+    }
+
+
     private VBox createEventCard(Evenement evenement) {
 //        VBox carte = new VBox(10);
 //        carte.setPadding(new Insets(10));
@@ -385,7 +445,7 @@ public clientVitrine(){
 
 
         // Ajouter un bouton "See More"
-        Button SeeButton = new Button("See more");
+        Button SeeButton = new Button("Details");
         SeeButton.getStyleClass().add("add-to-cart-button");
 
 

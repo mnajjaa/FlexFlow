@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 public class DashboardView extends Application {
     @Override
     public void start(Stage stage) throws Exception {
-        FXMLLoader fxmlLoader = new FXMLLoader(LoginView.class.getResource("/com/example/bty/FxmlEvenement/dashbordEvenement.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(LoginView.class.getResource("/Accueil.fxml"));
 
         Parent root = fxmlLoader.load();
         Scene scene = new Scene(root);
@@ -19,11 +19,12 @@ public class DashboardView extends Application {
         stage.setResizable(true);
         stage.show();
 
+
+
         double screenWidth = Screen.getPrimary().getVisualBounds().getWidth();
         double screenHeight = Screen.getPrimary().getVisualBounds().getHeight();
 
         System.out.println("Largeur de l'écran : " + screenWidth);
         System.out.println("Hauteur de l'écran : " + screenHeight);
-
     }
 }

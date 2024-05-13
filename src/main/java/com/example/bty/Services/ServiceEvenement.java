@@ -11,7 +11,7 @@ import java.util.List;
 public class ServiceEvenement {
     private Connection connexion;
     private PreparedStatement pde;
-Boolean etat=true;
+    Boolean etat=true;
     public ServiceEvenement(){
         connexion= ConnexionDB.getInstance().getConnexion();
     }

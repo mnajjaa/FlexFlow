@@ -44,7 +44,7 @@ public class DetailsEvenementWindow extends Stage {
 
     private static Map<Evenement, VBox> detailsMap = new HashMap<>();
     private static final String TWILIO_ACCOUNT_SID = "AC8802c2e9768e4876ace30c6beb9ba980";
-    private static final String TWILIO_AUTH_TOKEN = "3c4c76aba0311dc8cfa7be9e240fdd6e";
+    private static final String TWILIO_AUTH_TOKEN = "6ecb828326a724faf557c7f259f06ef5";
     private static final String TWILIO_PHONE_NUMBER = "+19497102963";
 
     public DetailsEvenementWindow() {
@@ -92,7 +92,7 @@ public class DetailsEvenementWindow extends Stage {
             Button ReserverButton = new Button("Reserver");
             ReserverButton.getStyleClass().add("add-to-cart-button");
 
-            instance.scannerButton = new ToggleButton("Scanner Code");
+            instance.scannerButton = new ToggleButton("Scanner Passe");
             instance.scannerButton.getStyleClass().add("add-to-cart-button");
             instance.scannerButton.setDisable(true);
 
@@ -165,7 +165,7 @@ public class DetailsEvenementWindow extends Stage {
         User loggedInUser = Session.getInstance().getLoggedInUser();
 
         if (loggedInUser != null) {
-            if (loggedInUser.getRole() == Role.MEMBRE) {
+            if (loggedInUser.getRoles() != null && loggedInUser.getRoles().length > 0 && loggedInUser.getRoles()[0] == Role.MEMBRE) {
                 if (!hasUserReservedEvent(loggedInUser.getId(), evenement.getNom())) {
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                     alert.setTitle("Confirmation de Reservation");
@@ -203,7 +203,7 @@ public class DetailsEvenementWindow extends Stage {
                 statementInsert.setInt(1, userID);
                 statementInsert.setString(2, evenement.getNom());
                 statementInsert.setString(3, userName);
-                statementInsert.setTimestamp(4, new java.sql.Timestamp(System.currentTimeMillis()));
+                statementInsert.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
                 int rowsInserted = statementInsert.executeUpdate();
 
                 if (rowsInserted > 0) {

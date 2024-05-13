@@ -1,8 +1,5 @@
 package com.example.bty.Controllers.EvenementController;
 
-
-
-
 import com.example.bty.Entities.Evenement;
 import com.example.bty.Entities.User;
 import com.example.bty.Services.ServiceEvenement;
@@ -307,7 +304,7 @@ public class ConsulterEvenement extends Application {
                     evenement.setCategorie(CategorieComboBox.getValue());
                     evenement.setObjectif(ObjectiFComboBox.getValue());
                     evenement.setNbre_place(Integer.parseInt(nbrPlaceField.getText()));
-                    evenement.setDate(java.sql.Date.valueOf(DateField.getValue()));
+                    evenement.setDate(Date.valueOf(DateField.getValue()));
                     evenement.setTime(Time.valueOf(TimeField.getText()));
                     evenement.setEtat(etatCheckBox.isSelected());
 
