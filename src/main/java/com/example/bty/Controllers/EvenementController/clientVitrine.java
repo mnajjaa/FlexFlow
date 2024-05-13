@@ -42,7 +42,7 @@ import java.util.Map;
 
 
 public class clientVitrine extends Application {
-    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/pidevgym";
+    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/pidevgymweb";
     private static final String USERNAME = "root";
     private static final String PASSWORD = "";
     private Connection connection;
@@ -71,7 +71,7 @@ public clientVitrine(){
         VBox topBar = new VBox();
         topBar.setAlignment(Pos.CENTER_LEFT);
         topBar.getStyleClass().add("top-bar");
-        topBar.setStyle(" -fx-background-color: #2c3e50;\n" +
+        topBar.setStyle(" -fx-background-color: #5b73e8;\n" +
                 "    -fx-padding: 25;\n" +
                 "    -fx-border-radius: 15px;" +
                 " -fx-background-insets: 0 0 0 232;"
@@ -506,14 +506,14 @@ public clientVitrine(){
                  ResultSet resultSet = statement.executeQuery(query)) {
 
                 while (resultSet.next()) {
-                    int id = resultSet.getInt("id_evenement");
-                    String nom = resultSet.getString("nomEvenement");
+                    int id = resultSet.getInt("id");
+                    String nom = resultSet.getString("nom_evenement");
                     byte[] imageBytes = resultSet.getBytes("image");
                     String categorie = resultSet.getString("categorie");
-                    String Objectif =resultSet.getString("Objectif");
-                    Date date =resultSet.getDate("Date");
-                    Time time=resultSet.getTime("Time");
-                    int nbrPlace = resultSet.getInt("nbrPlace");
+                    String Objectif =resultSet.getString("objectif");
+                    Date date =resultSet.getDate("date");
+                    Time time=resultSet.getTime("time");
+                    int nbrPlace = resultSet.getInt("nbr_place");
 
 
                     try {
@@ -535,7 +535,7 @@ public clientVitrine(){
     private List<Evenement> rechercherEvenement(String typeRecherche) {
         List<Evenement> produitsRecherches = new ArrayList<>();
 
-        String query = "SELECT * FROM evenement WHERE nomEvenement LIKE ?";
+        String query = "SELECT * FROM evenement WHERE nom_evenement LIKE ?";
 
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -543,14 +543,14 @@ public clientVitrine(){
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
                     Evenement E = new Evenement();
-                    E.setId(resultSet.getInt("id_evenement"));
-                    E.setNom(resultSet.getString("nomEvenement"));
+                    E.setId(resultSet.getInt("id"));
+                    E.setNom(resultSet.getString("nom_evenement"));
                     E.setCategorie(resultSet.getString("categorie"));
-                    E.setObjectif(resultSet.getString("Objectif"));
-                    E.setNbre_place(resultSet.getInt("nbrPlace"));
-                    E.setDate(resultSet.getDate("Date"));
-                    E.setTime(resultSet.getTime("Time"));
-                    int coachId = resultSet.getInt("id_user");
+                    E.setObjectif(resultSet.getString("objectif"));
+                    E.setNbre_place(resultSet.getInt("nbr_place"));
+                    E.setDate(resultSet.getDate("date"));
+                    E.setTime(resultSet.getTime("time"));
+                    int coachId = resultSet.getInt("user_id");
                     E.setImage(resultSet.getBytes("image"));
 
                     produitsRecherches.add(E);

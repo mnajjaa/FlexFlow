@@ -158,18 +158,18 @@ public class ConsulterEvenement extends Application {
             while (resultSet.next()) {
                 Evenement E = new Evenement();
 
-                E.setId(resultSet.getInt("id_evenement"));
-                E.setNom(resultSet.getString("nomEvenement")+" ");
+                E.setId(resultSet.getInt("id"));
+                E.setNom(resultSet.getString("nom_evenement")+" ");
                 E.setCategorie(resultSet.getString("categorie")+" ");
-                E.setObjectif(resultSet.getString("Objectif")+"  ");
-                E.setNbre_place(Integer.parseInt(resultSet.getInt("nbrPlace") + "".trim()));
+                E.setObjectif(resultSet.getString("objectif")+"  ");
+                E.setNbre_place(Integer.parseInt(resultSet.getInt("nbr_place") + "".trim()));
 //                E.setDate(Date.valueOf(resultSet.getDate("Date")+"  "));
-                E.setDate(resultSet.getDate("Date"));
+                E.setDate(resultSet.getDate("date"));
 
-                E.setTime(resultSet.getTime("Time"));
+                E.setTime(resultSet.getTime("time"));
                 E.setEtat(resultSet.getBoolean("etat"));
 
-                int coachId = resultSet.getInt("id_user");
+                int coachId = resultSet.getInt("user_id");
                 String coachName = null;
                 try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT nom FROM user WHERE id = ?")) {
                     preparedStatement.setInt(1, coachId);
@@ -286,7 +286,7 @@ public class ConsulterEvenement extends Application {
             }
             // Code pour sauvegarder les modifications dans la base de données
             try (PreparedStatement statement = connection.prepareStatement(
-                    "UPDATE evenement SET nomEvenement = ?, categorie = ?, Objectif = ?, nbrPlace = ?, Date = ?, Time = ?,etat = ? ,id_user = ?  WHERE id_evenement  = ?")) {
+                    "UPDATE evenement SET nom_evenement = ?, categorie = ?, objectif = ?, nbr_place = ?, date = ?, time = ?,etat = ? ,user_id = ?  WHERE id  = ?")) {
 
                 statement.setString(1, nomField.getText());
                 statement.setString(2, CategorieComboBox.getValue());
@@ -422,7 +422,7 @@ public class ConsulterEvenement extends Application {
             }
 
             // Utilisez un bloc try-with-resources pour gérer les ressources JDBC
-            try (PreparedStatement statement = connection.prepareStatement("DELETE FROM evenement WHERE id_evenement = ?")) {
+            try (PreparedStatement statement = connection.prepareStatement("DELETE FROM evenement WHERE id = ?")) {
                 statement.setInt(1, evenement.getId());
                 int rowsAffected = statement.executeUpdate();
 

@@ -2,14 +2,12 @@ package com.example.bty.Controllers.ProduitController;
 
 import com.example.bty.Controllers.CourController.CourMembre;
 import com.example.bty.Controllers.DashboardMembre;
-import com.example.bty.Controllers.EvenementController.DashbordEvenement;
 import com.example.bty.Controllers.EvenementController.clientVitrine;
 import com.example.bty.Controllers.ReclamationController.AjouterReclamation;
 import com.example.bty.Controllers.graphiqueGCP.FD;
 import com.example.bty.Controllers.graphiqueGCP.Formoffre;
 import com.example.bty.Entities.Commande;
 import com.example.bty.Entities.Produit;
-import com.example.bty.Entities.Role;
 import com.example.bty.Entities.User;
 import com.example.bty.Utils.Session;
 import com.itextpdf.text.*;
@@ -79,7 +77,7 @@ payer p = new payer();
 
         VBox topBar = new VBox();
         topBar.setAlignment(Pos.CENTER_LEFT);
-        topBar.setStyle("-fx-background-color: #2c3e50;\n" +
+        topBar.setStyle("-fx-background-color: #5b73e8;\n" +
                 "-fx-padding: 15;\n" +
                 "-fx-border-radius: 15px;" +
                 "-fx-background-insets: 0 0 0 218;");
@@ -503,7 +501,7 @@ payer p = new payer();
         Label nomLabel = new Label("Nom: " + produit.getNom());
         nomLabel.setStyle("-fx-font-size: 17px; -fx-font-weight: bold;-fx-text-fill: #1E0F1C");
         Label typeLabel = new Label("Type: " + produit.getType());
-        typeLabel.setStyle("-fx-font-size: 15px; -fx-font-weight: bold;-fx-text-fill: #2c3e50;");
+        typeLabel.setStyle("-fx-font-size: 15px; -fx-font-weight: bold;-fx-text-fill: #5b73e8;");
         Label prixLabel = new Label("Prix: " + produit.getPrix() + " Dt");
         prixLabel.setStyle("-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #A62609;");
 
@@ -679,10 +677,14 @@ payer p = new payer();
             boolean paymentSuccesss = processPayment(montantTotal);
 
             if (buttonType == buttonTypeOui) {
+                String userEmail = loggedInUser.getEmail();
+                sendConfirmationEmail(loggedInUser, nomFichierFacture, userEmail);
+                showAlert("Succès", "Paiement et facture envoyés avec succès !");
+
                 if (paymentSuccesss) {
-                    String userEmail = loggedInUser.getEmail();
-                    sendConfirmationEmail(loggedInUser, nomFichierFacture, userEmail);
-                    showAlert("Succès", "Paiement et facture envoyés avec succès !");
+//                    String userEmail = loggedInUser.getEmail();
+//                    sendConfirmationEmail(loggedInUser, nomFichierFacture, userEmail);
+//                    showAlert("Succès", "Paiement et facture envoyés avec succès !");
                 } else {
                     showAlert("Erreur", "Le paiement a échoué. Veuillez réessayer.");
                 }
