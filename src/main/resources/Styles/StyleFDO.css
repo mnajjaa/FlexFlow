@@ -2,7 +2,7 @@ Baha Dridi
     /* style.css */
 
 .card-container {
-    -fx-background-color: #2c3e50;
+    -fx-background-color: #5b73e8;
     -fx-border-radius: 10;
     -fx-padding: 20;
     -fx-min-width: 200;
@@ -34,7 +34,7 @@ Baha Dridi
 
 .label {
     -fx-font-size: 15px;
-    -fx-text-fill: #2c3e50;
+    -fx-text-fill: #5b73e8;
     -fx-padding: 5 0 5 0;
     -fx-font-family: 'Segoe UI', Tahoma, Geneva, Verdana;
     -fx-font-weight: bold;
@@ -66,11 +66,11 @@ Baha Dridi
 }
 
 .upload-button {
-    -fx-background-color: #2c3e50;
+    -fx-background-color: #5b73e8;
 }
 
 .envoyer-button:hover {
-    -fx-background-color: #2c3e50;
+    -fx-background-color: #5b73e8;
 }
 
 .upload-button:hover {

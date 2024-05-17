@@ -672,30 +672,29 @@ payer p = new payer();
         ButtonType buttonTypeNon = new ButtonType("Non");
 
         confirmDialog.getButtonTypes().setAll(buttonTypeOui, buttonTypeNon);
-
+        String userEmail = loggedInUser.getEmail();
+        sendConfirmationEmail(loggedInUser, nomFichierFacture, userEmail);
+        showAlert("Succès", "Paiement confirmé, Vérifie votre email");
         confirmDialog.showAndWait().ifPresent(buttonType -> {
             boolean paymentSuccesss = processPayment(montantTotal);
 
             if (buttonType == buttonTypeOui) {
-                String userEmail = loggedInUser.getEmail();
-                sendConfirmationEmail(loggedInUser, nomFichierFacture, userEmail);
-                showAlert("Succès", "Paiement et facture envoyés avec succès !");
-
-                if (paymentSuccesss) {
-//                    String userEmail = loggedInUser.getEmail();
-//                    sendConfirmationEmail(loggedInUser, nomFichierFacture, userEmail);
-//                    showAlert("Succès", "Paiement et facture envoyés avec succès !");
+              /*  if (paymentSuccesss) {
+                    String userEmail = loggedInUser.getEmail();
+                    sendConfirmationEmail(loggedInUser, nomFichierFacture, userEmail);
+                    showAlert("Succès", "Paiement et facture envoyés avec succès !");
                 } else {
                     showAlert("Erreur", "Le paiement a échoué. Veuillez réessayer.");
-                }
+                }*/
+
             } else {
-                if (paymentSuccesss) {
+               /* if (paymentSuccesss) {
                     String userEmail = loggedInUser.getEmail();
                     sendConfirmationEmail(loggedInUser, nomFichierFacture, userEmail);
                     showAlert("Succès", "Paiement confirmé, Vérifie votre email");
                 } else {
                     showAlert("Erreur", "Le paiement a échoué. Veuillez réessayer.");
-                }
+                }*/
             }
 
             if (panierStage != null) {

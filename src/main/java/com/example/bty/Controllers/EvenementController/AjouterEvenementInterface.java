@@ -60,7 +60,7 @@ public class AjouterEvenementInterface extends Application {
             grid.setPadding(new Insets(20));
             grid.setVgap(10);
             grid.setHgap(10);
-            grid.setStyle("-fx-background-color: #DDE2C6; -fx-padding: 25; -fx-border-radius: 10; -fx-background-radius: 10; -fx-alignment: center;");
+            grid.setStyle("-fx-background-color: #5b73e8; -fx-padding: 25; -fx-border-radius: 10; -fx-background-radius: 10; -fx-alignment: center;");
 
 
 

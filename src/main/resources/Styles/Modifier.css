@@ -40,7 +40,8 @@
 
 .label {
     -fx-font-size: 15px;
-    -fx-text-fill: #2c3e50;
+    -fx-text-fill: #5b73e8
+;
     -fx-padding: 5 0 5 0;
     -fx-font-family: 'Segoe UI', Tahoma, Geneva, Verdana;
     -fx-font-weight: bold;
@@ -72,11 +73,11 @@
 }
 
 .upload-button {
-    -fx-background-color: #2c3e50;
+    -fx-background-color: #5b73e8;
 }
 
 .envoyer-button:hover {
-    -fx-background-color: #2c3e50;
+    -fx-background-color: #5b73e8;
 }
 
 .upload-button:hover {

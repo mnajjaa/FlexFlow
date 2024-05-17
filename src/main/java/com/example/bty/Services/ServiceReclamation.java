@@ -43,7 +43,7 @@ public class ServiceReclamation {
 
 
     public void addReclamationv2(Reclamation reclamation) {
-        reclamation.setEtat("Non traite");
+        reclamation.setEtat("Non_traite");
 //        Session s=Session.getInstance();
 //        User u = s.getLoggedInUser();
 //        reclamation.setMembre(u);
